@@ -258,7 +258,6 @@ UrjaKavach/
 ├── requirements.txt                   # Dependency definitions
 ├── run_dashboard.bat                  # One-click dashboard launcher
 ├── run_tests.bat                      # One-click test suite launcher
-├── deploy_to_vercel.bat               # Frontend deployment script
 ├── main.py                            # CLI entry point and API server
 ├── README.md                          # Master documentation
 ├── .gitignore                         # Git exclusion rules
@@ -270,11 +269,6 @@ UrjaKavach/
 │
 ├── frontend/                          # Next.js/React executive dashboard
 ├── tests/                             # 376 unit, integration, and voice tests
-│
-├── presentation/                      # Technical presentation materials and templates
-│   ├── PITCH_DECK.md                  # Technical architecture presentation outline
-│   ├── SPEAKER_NOTES.md               # Spoken technical walkthrough notes
-│   └── templates/                     # Master slide backgrounds and visual templates
 │
 ├── docs/                              # Structured technical specifications
 │   ├── methodology/                   # Mathematical proofs and assumptions

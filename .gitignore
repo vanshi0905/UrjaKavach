@@ -43,3 +43,14 @@ venv/
 .venv/
 env/
 ENV/
+# Internal presentation materials & slide decks
+presentation/
+presentation-and-pitching/
+
+# Internal deployment scripts
+deploy_to_vercel.bat
+
+# TypeScript build info cache
+*.tsbuildinfo
+
+

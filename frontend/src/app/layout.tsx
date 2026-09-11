@@ -1,31 +1,9 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "katex/dist/katex.min.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AssistantDrawer } from "@/components/agent/AssistantDrawer";
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  weight: ["500", "600", "700", "800"],
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Jindal Stainless Carbon & Energy Cockpit | JSL PS-3 2026",
@@ -39,11 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`dark ${plusJakarta.variable} ${inter.variable} ${jetbrainsMono.variable}`}
-    >
-      <body className={`${inter.className} min-h-screen bg-obsidian-950 text-steel-100 flex flex-col antialiased selection:bg-thermal-500/30 selection:text-thermal-300 font-sans`}>
+    <html lang="en" className="dark">
+      <body className="min-h-screen bg-obsidian-950 text-steel-100 flex flex-col antialiased selection:bg-thermal-500/30 selection:text-thermal-300 font-sans">
         <Navbar />
         <main className="flex-1 w-full">{children}</main>
         <Footer />
