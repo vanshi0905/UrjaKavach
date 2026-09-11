@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { ContactTeam } from "@/components/watermelon/contact-team";
 
 export const metadata: Metadata = {
-  title: "Team Hind | JSL Decarbonization Cockpit",
+  title: "Team Hind | UrjaKavach Decarbonization Platform",
   description:
-    "Meet Team Hind: Engineers building the closed-loop pyrometallurgical carbon and energy cockpit for Jindal Stainless Limited.",
+    "Meet Team Hind: Engineers building UrjaKavach — closed-loop pyrometallurgical carbon & energy intelligence platform for 3+ MTPA stainless steel production complexes.",
 };
 
 export default function ContactPage() {

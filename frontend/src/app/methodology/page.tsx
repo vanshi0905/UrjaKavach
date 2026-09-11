@@ -39,10 +39,10 @@ export default function MethodologyPage() {
       <div className="border-b border-steel-800 pb-5">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Engineering Methodology & Case Evidence
+            UrjaKavach Engineering Methodology & First-Principles Evidence
           </h1>
           <span className="rounded bg-thermal-500/10 px-2 py-0.5 text-xs font-semibold text-thermal-400 border border-thermal-500/30">
-            JSL PS-3 2026
+            UrjaKavach PS-3
           </span>
         </div>
         <p className="text-xs sm:text-sm text-steel-400 mt-1">
@@ -172,7 +172,7 @@ export default function MethodologyPage() {
               <tr>
                 <th className="py-3 px-4 font-bold">Benchmark Metric / Parameter</th>
                 <th className="py-3 px-4 text-right font-bold">METEC 2011 Published (Outokumpu)</th>
-                <th className="py-3 px-4 text-right font-bold">JSL Digital Twin Engine</th>
+                <th className="py-3 px-4 text-right font-bold text-thermal-400">UrjaKavach Digital Twin Engine</th>
                 <th className="py-3 px-4 text-right font-bold">Variance / Delta</th>
                 <th className="py-3 px-4 font-bold">Validation Basis</th>
               </tr>
@@ -211,7 +211,7 @@ export default function MethodologyPage() {
                 <td className="py-2.5 px-4 text-right text-steel-200">N/A (Solid Feed)</td>
                 <td className="py-2.5 px-4 text-right font-bold text-cyanPulse-300">-86.0 kWh / t</td>
                 <td className="py-2.5 px-4 text-right font-bold text-cyanPulse-300">Sensible Saving</td>
-                <td className="py-2.5 px-4 font-sans text-steel-400 text-[11px]">JSL Jajpur captive SAF direct ladle transfer</td>
+                <td className="py-2.5 px-4 font-sans text-steel-400 text-[11px]">Jajpur captive SAF direct ladle transfer</td>
               </tr>
               <tr className="hover:bg-steel-900/30 transition-colors">
                 <td className="py-2.5 px-4 font-sans font-semibold text-white">Tramp Elements Monitored</td>
@@ -533,7 +533,7 @@ export default function MethodologyPage() {
           <div>
             <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
               <Layers className="h-4 w-4 text-thermal-400" />
-              <span>JSL Metallurgical Grade Master Library (43 Grades)</span>
+              <span>UrjaKavach Metallurgical Grade Master Library (43 Grades)</span>
             </h2>
             <p className="text-xs text-steel-400 mt-0.5">
               Exact midpoints, tramp thresholds, PREN numbers, and physical scrap ceilings.
@@ -622,7 +622,7 @@ export default function MethodologyPage() {
                 </tr>
               ))}
               <tr>
-                <td className="py-2 px-3 font-sans text-white font-medium">JSL Jajpur Captive Coal CPP</td>
+                <td className="py-2 px-3 font-sans text-white font-medium">Jajpur Captive Coal CPP</td>
                 <td className="py-2 px-3 text-right font-bold text-thermal-400">1.00</td>
                 <td className="py-2 px-3 text-right text-steel-400 text-[11px]">tCO2 / MWh</td>
                 <td className="py-2 px-3 font-sans text-steel-400 text-[11px]">Subcritical Coal 250 MW Captive Thermal Plant</td>

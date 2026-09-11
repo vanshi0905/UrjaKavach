@@ -126,7 +126,7 @@ export const AUTHENTIC_TECH_STACK: TechIntegration[] = [
     description:
       "Asynchronous high-throughput pyrometallurgical compute microservices. Strict Pydantic v2 schemas validate chemical constraints, slag-metal kinetics, and thermal enthalpy models.",
     whyJudgesCare:
-      "Production-ready backend architecture ready for direct integration with JSL Jajpur SCADA and Level-2 melt-shop automation servers.",
+      "Production-ready backend architecture ready for direct integration with Jajpur SCADA and Level-2 melt-shop automation servers.",
     capabilities: [
       "Strict Pydantic v2 schema data contract enforcement",
       "Asynchronous non-blocking pyrometallurgical calculations",
@@ -511,7 +511,7 @@ export function IntegrationsStack({ className }: { className?: string }) {
 
           <p className="text-sm sm:text-base text-steel-400 leading-relaxed max-w-2xl">
             No black-box hallucinations. Our architecture combines mathematical simplex optimization,
-            exact 64-coalition cooperative game theory, and statutory regulatory compliance verified across JSL&apos;s physical footprint.
+            exact 64-coalition cooperative game theory, and statutory regulatory compliance verified across UrjaKavach&apos;s physical footprint.
           </p>
 
           {/* Architectural Filter Pills - Mobile-friendly horizontal scrolling */}
@@ -676,7 +676,7 @@ export function IntegrationsStack({ className }: { className?: string }) {
               Every formula, mass balance, and optimization constraint is auditable in source code.
             </p>
             <p className="text-xs text-steel-400">
-              No simulated stub responses. Direct algebraic parity with METEC 2011 & JSL FY2024-25 sustainability benchmarks.
+              No simulated stub responses. Direct algebraic parity with METEC 2011 & UrjaKavach FY2024-25 sustainability benchmarks.
             </p>
           </div>
 

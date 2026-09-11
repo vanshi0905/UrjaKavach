@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { IntegrationsStack } from "@/components/watermelon/integrations-stack";
 import { CinematicBackground } from "@/components/ui/cinematic-background";
+import { LogoShowcase } from "@/components/brand/LogoShowcase";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"baseline" | "optimized">("optimized");
@@ -32,24 +33,26 @@ export default function HomePage() {
       <CinematicBackground className="pt-8 pb-10 md:pt-14 md:pb-14 border-b border-steel-800/80">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center space-y-6 max-w-4xl mx-auto">
-            {/* Competition Badge */}
+            {/* UrjaKavach Platform Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-thermal-500/40 bg-thermal-500/10 px-4 py-1.5 text-xs font-semibold text-thermal-300 backdrop-blur-md animate-pulse">
               <Flame className="h-3.5 w-3.5 text-thermal-400" />
-              <span>JINDAL STAINLESS ENGINEERING CASE STUDY 2026 • PROBLEM STATEMENT 3</span>
+              <span>URJAKAVACH • ADVANCED CLEAN STEEL DECARBONIZATION COCKPIT</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight font-heading">
-              The Stainless Steel{" "}
-              <span className="bg-gradient-to-r from-thermal-400 via-orange-500 to-amber-300 bg-clip-text text-transparent">
-                Trilemma
-              </span>
-            </h1>
+            <div className="space-y-2">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight font-heading">
+                Urja<span className="bg-gradient-to-r from-thermal-400 via-orange-500 to-amber-300 bg-clip-text text-transparent">Kavach</span>
+              </h1>
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-steel-200 tracking-tight">
+                The Clean Stainless Steel Decarbonization &amp; Energy Armor
+              </p>
+            </div>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg md:text-xl text-steel-300 max-w-3xl leading-relaxed">
+            <p className="text-base sm:text-lg text-steel-300 max-w-3xl leading-relaxed">
               Decarbonization, Pyrometallurgical Phase Integrity, and Financial Sovereignty.
-              A precision engineering engine tailored for Jindal Stainless Limited&apos;s 3+ MTPA
+              An industrial digital twin engineered for UrjaKavach&apos;s 3+ MTPA
               manufacturing and supply complexes across{" "}
               <span className="text-white font-semibold">Jajpur (Odisha)</span>,{" "}
               <span className="text-white font-semibold">Hisar (Haryana)</span>, and{" "}
@@ -85,7 +88,7 @@ export default function HomePage() {
             <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 border-t border-steel-800/80 w-full text-center">
               <div className="p-3.5 sm:p-4 rounded-xl bg-obsidian-950/50 border border-steel-800/60 hover:border-steel-700 transition-colors shadow-sm">
                 <p className="text-2xl sm:text-3xl font-black font-mono text-white">43</p>
-                <p className="text-xs font-medium text-steel-400 mt-1">Authentic JSL Grades</p>
+                <p className="text-xs font-medium text-steel-400 mt-1">Authentic Master Grades</p>
               </div>
               <div className="p-3.5 sm:p-4 rounded-xl bg-obsidian-950/50 border border-steel-800/60 hover:border-thermal-500/40 transition-colors shadow-sm">
                 <p className="text-2xl sm:text-3xl font-black font-mono text-thermal-400">-67.2%</p>
@@ -165,7 +168,7 @@ export default function HomePage() {
                   The European CBAM takes definitive effect in 2026, but the Specific Embedded Free Allocation (SEFA)
                   formula cushions 97.5% of carbon costs in year one. The true existential cliff strikes between 2028 and 2034
                   as free allowances fall to zero, confronting unhedged exporters with full <strong className="text-white font-mono">€180/t</strong> tariffs.
-                  Our dual-horizon model hedges JSL&apos;s 600,000 MT/yr European export corridor against this cliff.
+                  Our dual-horizon model hedges UrjaKavach&apos;s 600,000 MT/yr European export corridor against this cliff.
                 </p>
               </div>
               <div className="pt-4 border-t border-steel-800/80 flex items-center justify-between text-xs font-semibold text-cyanPulse-400">
@@ -188,7 +191,7 @@ export default function HomePage() {
                 </h3>
                 <p className="text-xs sm:text-sm text-steel-300 leading-relaxed">
                   The Bureau of Energy Efficiency (BEE) has notified a strict specific emissions intensity trajectory of{" "}
-                  <strong className="text-white font-mono">0.8222 tCO2e/t</strong> for JSL Kalinga Nagar (Jajpur).
+                  <strong className="text-white font-mono">0.8222 tCO2e/t</strong> for Kalinga Nagar (Jajpur Works).
                   Beating this statutory trajectory generates tradeable Carbon Credit Certificates (CCCs) valued at ₹1,500/t,
                   converting regulatory compliance from a penalty burden into an EBITDA driver of over <strong className="text-white font-mono">+₹38 Cr/yr</strong>.
                 </p>
@@ -213,7 +216,7 @@ export default function HomePage() {
               <span>INTERACTIVE PROOF OF VALUE</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-heading">
-              Decarbonizing JSL&apos;s Flagship Grade J304 at Jajpur Works
+              Decarbonizing Flagship Grade J304 at Jajpur Works
             </h2>
             <p className="text-sm sm:text-base text-steel-400 max-w-2xl mx-auto">
               Comparing standard fossil-intensive operating baseline against our closed-loop
@@ -334,7 +337,7 @@ export default function HomePage() {
                     <span className="text-xs text-steel-400 font-medium">/ tonne exported</span>
                   </div>
                   <p className="text-xs text-steel-400 mt-2 leading-relaxed">
-                    On JSL&apos;s 600,000 MT/yr European export corridor, generates{" "}
+                    On UrjaKavach&apos;s 600,000 MT/yr European export corridor, generates{" "}
                     <span className="text-emerald-400 font-bold">
                       {activeTab === "optimized" ? "€77.6 Million / yr (₹714 Cr)" : "€0"}
                     </span>{" "}
@@ -423,6 +426,11 @@ export default function HomePage() {
       <IntegrationsStack />
 
       {/* ========================================================================= */}
+      {/* BEAT 5: BRAND MARKS & VISUAL IDENTITY                                     */}
+      {/* ========================================================================= */}
+      <LogoShowcase />
+
+      {/* ========================================================================= */}
       {/* CLOSING LAUNCHPAD: EVALUATOR COCKPIT NAVIGATION                           */}
       {/* ========================================================================= */}
       <section className="py-12 md:py-20 bg-obsidian-950 border-t border-steel-800/80 relative">
@@ -436,7 +444,7 @@ export default function HomePage() {
               Explore the Engineering Platform
             </h2>
             <p className="text-sm sm:text-base text-steel-400 max-w-2xl mx-auto">
-              Every engine, formula, and proof in our Jindal Stainless decarbonization cockpit is live and ready for rigorous examination.
+              Every engine, formula, and proof in UrjaKavach is live and ready for rigorous examination.
             </p>
           </div>
 
@@ -541,7 +549,7 @@ export default function HomePage() {
                   </h3>
                 </div>
                 <p className="text-xs text-steel-400 leading-relaxed">
-                  Meet the engineers behind the platform, explore our engineering approach for JSL Problem Statement 3, and view project repository links.
+                  Meet the engineers behind the platform, explore our engineering approach for Problem Statement 3 (Clean Steel Decarbonization), and view project repository links.
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-steel-800/80 flex items-center justify-between text-xs font-bold text-emerald-400">

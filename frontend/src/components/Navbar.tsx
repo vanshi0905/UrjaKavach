@@ -14,6 +14,8 @@ import {
   Users,
 } from "lucide-react";
 
+import { UrjaKavachLogo } from "@/components/brand/UrjaKavachLogo";
+
 export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,27 +31,9 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-steel-800/80 bg-obsidian-950/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-thermal-500 via-orange-600 to-amber-700 shadow-md group-hover:shadow-thermal-500/30 transition-all">
-            <span className="font-black text-white text-lg tracking-wider">JSL</span>
-            <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-400">
-              <Zap className="h-2 w-2 text-obsidian-950" />
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold tracking-tight text-white text-base">
-                JINDAL STAINLESS
-              </span>
-              <span className="rounded bg-thermal-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-thermal-400 border border-thermal-500/30 uppercase tracking-wide">
-                Engine 2026
-              </span>
-            </div>
-            <span className="text-[11px] font-medium text-steel-400 tracking-tight">
-              Carbon & Energy Pyrometallurgical Cockpit
-            </span>
-          </div>
+        {/* UrjaKavach Brand Logo */}
+        <Link href="/" className="hover:opacity-95 transition-opacity">
+          <UrjaKavachLogo variant="full" interactive={true} />
         </Link>
 
         {/* Desktop Navigation Links */}

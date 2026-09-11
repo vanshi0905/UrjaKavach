@@ -4,5 +4,8 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "outputDirectory": ".next",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "alias": [
+    "urjakavach.vercel.app"
+  ]
 }

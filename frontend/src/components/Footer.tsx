@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck, Flame, Scale, Globe } from "lucide-react";
+import { UrjaKavachLogo } from "@/components/brand/UrjaKavachLogo";
 
 export function Footer() {
   return (
@@ -8,24 +9,22 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-steel-800/60">
           {/* Col 1: About */}
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-white text-base tracking-wide">
-                JINDAL STAINLESS CARBON COCKPIT
-              </span>
-              <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/30">
+            <div className="flex items-center gap-3">
+              <UrjaKavachLogo variant="compact" iconSize={32} />
+              <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-mono font-semibold text-emerald-400 border border-emerald-500/30">
                 PS-3 SOLUTION
               </span>
             </div>
             <p className="text-xs text-steel-400 leading-relaxed max-w-lg">
-              A peer-reviewed pyrometallurgical carbon and energy intelligence platform engineered for
-              Jindal Stainless Limited (3+ MTPA melt capacity across Jajpur & Hisar). Integrates closed-loop
+              <strong className="text-white">UrjaKavach</strong> is a peer-reviewed pyrometallurgical carbon and energy intelligence platform engineered for
+              3+ MTPA stainless steel melt capacity across Jajpur &amp; Hisar manufacturing complexes. Integrates closed-loop
               stoichiometric mass balance, dynamic EAF enthalpy balances, EU CBAM definitive 2026/2034 liabilities,
               and India CCTS BEE June 2026 compliance.
             </p>
             <div className="flex items-center gap-4 text-xs text-steel-500 pt-1">
               <span>National Institute of Technology, Raipur</span>
               <span>•</span>
-              <span>JSL Case Study 2026</span>
+              <span>Clean Steel Case Study 2026</span>
             </div>
           </div>
 
@@ -91,7 +90,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-steel-500 gap-3">
-          <p>© 2026 Jindal Stainless Case Study Competition — Problem Statement 3. All calculations run serverless.</p>
+          <p>© 2026 UrjaKavach — Clean Steel Decarbonization Intelligence Platform. All calculations run serverless.</p>
           <div className="flex items-center gap-3 font-mono text-[11px]">
             <span className="text-emerald-400">● 100% Vercel Edge Compatible</span>
             <span>•</span>

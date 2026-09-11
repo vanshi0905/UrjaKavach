@@ -88,7 +88,7 @@ export function ContactTeam({ className }: { className?: string }) {
           </h1>
 
           <p className="text-muted-foreground max-w-2xl text-sm sm:text-base leading-relaxed">
-            3rd Year B.Tech Mining Engineering undergraduates from National Institute of Technology (NIT) Raipur building the closed-loop pyrometallurgical carbon & energy cockpit for Jindal Stainless Limited.
+            3rd Year B.Tech Mining Engineering undergraduates from National Institute of Technology (NIT) Raipur, creators of <strong className="text-white">UrjaKavach</strong> — the pyrometallurgical clean steel decarbonization platform.
           </p>
         </div>
 
@@ -212,7 +212,7 @@ export function ContactTeam({ className }: { className?: string }) {
         {/* Footer Note */}
         <div className="mt-8 text-center border-t border-steel-800/80 pt-6">
           <p className="text-muted-foreground mx-auto max-w-xl text-xs leading-relaxed">
-            Team Hind • National Institute of Technology (NIT) Raipur • Jindal Stainless Decarbonization & Pyrometallurgical Cockpit 2026.
+            Team Hind • National Institute of Technology (NIT) Raipur • UrjaKavach Decarbonization & Pyrometallurgical Cockpit 2026.
           </p>
         </div>
       </div>

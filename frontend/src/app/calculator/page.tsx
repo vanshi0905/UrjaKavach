@@ -233,7 +233,7 @@ export default function CalculatorPage() {
       { name: "Current Heat", value: currentTotal, isCurrent: true, color: "#f97316" },
       { name: "EU Scrap-EAF", value: 0.288, isCurrent: false, color: "#10b981" },
       { name: "CCTS 2026 Target", value: 0.8222, isCurrent: false, color: "#0ea5e9" },
-      { name: "JSL FY26 Disclosed", value: 1.760, isCurrent: false, color: "#f59e0b" },
+      { name: "Industry FY26 Baseline", value: 1.760, isCurrent: false, color: "#f59e0b" },
       { name: "Global Stainless Avg", value: 2.930, isCurrent: false, color: "#ef4444" },
     ];
   }, [results]);
@@ -248,24 +248,21 @@ export default function CalculatorPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Page Header */}
+      {/* Cockpit Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-steel-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Pyrometallurgical Calculator Cockpit
+              UrjaKavach Calculator Cockpit
             </h1>
             <span className="rounded bg-thermal-500/10 px-2 py-0.5 text-xs font-semibold text-thermal-400 border border-thermal-500/30">
-              0ms Latency
+              Closed-Loop Mass-Energy Balance
             </span>
           </div>
           <p className="text-xs sm:text-sm text-steel-400 mt-1">
-            Closed-loop mass balance, dynamic EAF enthalpy balance, EU CBAM SEFA & India CCTS BEE June 2026 intelligence.
+            Dynamic charge-sheet simulation across 43 stainless grades with ASTM tramp limits, sensible heat credits, and EU CBAM/CCTS statutory audits.
           </p>
-
-          {/* Authentic Engineering Tech Badges */}
-          <div className="flex flex-wrap items-center gap-2 mt-2.5 pt-2.5 border-t border-steel-800/60 text-[11px] font-mono">
-            <span className="text-steel-400 font-sans font-semibold">AUTHENTIC ENGINES:</span>
+          <div className="flex flex-wrap items-center gap-2 mt-2">
             <Link
               href="/#tech-stack"
               className="inline-flex items-center gap-1 rounded bg-cyanPulse-500/10 px-2 py-0.5 text-cyanPulse-300 border border-cyanPulse-500/30 hover:bg-cyanPulse-500/20 transition-colors"
@@ -322,7 +319,7 @@ export default function CalculatorPage() {
             className="flex items-center gap-1.5 rounded-lg border border-steel-700 bg-steel-900/60 px-3 py-1.5 text-xs font-medium text-steel-300 hover:text-white hover:bg-steel-800 transition-colors w-fit"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>Reset JSL Baseline</span>
+            <span>Reset UrjaKavach Baseline</span>
           </button>
         </div>
       </div>
@@ -575,7 +572,7 @@ export default function CalculatorPage() {
             {/* Facility & Power Mix */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
               <Select1
-                label="JSL Asset Twin"
+                label="Facility Digital Twin"
                 value={facilityId}
                 onChange={(val) => setFacilityId(val)}
                 badge={facilityId === "jajpur" ? "250 MW CPP" : facilityId === "hisar" ? "H2 + Northern Grid" : "Gas-DRI Corridor"}
@@ -622,7 +619,7 @@ export default function CalculatorPage() {
               />
               <div className="flex justify-between text-[10px] text-steel-500 font-mono">
                 <span>0% (100% Fossil CPP/Grid)</span>
-                <span>JSL Baseline (47%)</span>
+                <span>Baseline (47%)</span>
                 <span>100% Green PPA</span>
               </div>
             </div>
@@ -862,7 +859,7 @@ export default function CalculatorPage() {
             }}
             data={[
               { scenario: "Standard BF-BOF", scope1: 1.48, scope2: 0.28, scope3_raw: 0.52, scope3_scrap: 0.04 },
-              { scenario: "JSL Baseline EAF", scope1: 0.42, scope2: 0.58, scope3_raw: 0.44, scope3_scrap: 0.05 },
+              { scenario: "Baseline EAF", scope1: 0.42, scope2: 0.58, scope3_raw: 0.44, scope3_scrap: 0.05 },
               {
                 scenario: `Current Heat (${currentGrade.id})`,
                 scope1: Number(results.emissions.scope1DirectTco2.toFixed(2)),
@@ -870,7 +867,7 @@ export default function CalculatorPage() {
                 scope3_raw: Number((results.emissions.scope3PrecursorsTco2 * 0.85).toFixed(2)),
                 scope3_scrap: Number((results.emissions.scope3PrecursorsTco2 * 0.15).toFixed(2)),
               },
-              { scenario: "JSL Green Pilot (90% RE)", scope1: 0.18, scope2: 0.08, scope3_raw: 0.22, scope3_scrap: 0.07 },
+              { scenario: "UrjaKavach Green Pilot (90% RE)", scope1: 0.18, scope2: 0.08, scope3_raw: 0.22, scope3_scrap: 0.07 },
             ]}
           />
 

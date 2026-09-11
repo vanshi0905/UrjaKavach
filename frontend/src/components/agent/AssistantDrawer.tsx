@@ -486,7 +486,7 @@ export function AssistantDrawer() {
         <button
           onClick={() => setIsOpen(true)}
           className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-thermal-600 via-thermal-500 to-amber-500 text-white font-semibold text-xs shadow-2xl shadow-thermal-500/40 hover:scale-105 active:scale-95 transition-all border border-thermal-400/50 group"
-          title="Open JSL AI Metallurgical Assistant & Voice Agent"
+          title="Open UrjaKavach AI Metallurgical Assistant & Voice Agent"
         >
           <div className="relative">
             <Sparkles className="w-4 h-4 text-white animate-spin" />
@@ -512,7 +512,7 @@ export function AssistantDrawer() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-bold text-white tracking-wide">
-                      JSL Process AI Copilot & Voice Agent
+                      UrjaKavach Process AI Copilot & Voice Agent
                     </h3>
                     <span
                       className={`text-[9px] font-mono px-2 py-0.5 rounded-full border ${
@@ -623,7 +623,7 @@ export function AssistantDrawer() {
                         >
                           <div className="flex items-center justify-between text-[10px] text-steel-400 border-b border-steel-800/40 pb-1">
                             <span className="font-semibold text-white">
-                              {m.sender === "user" ? "Melt Shop Operator" : m.explanation?.title || "JSL Copilot"}
+                              {m.sender === "user" ? "Melt Shop Operator" : m.explanation?.title || "UrjaKavach Copilot"}
                             </span>
                             <span>{m.timestamp}</span>
                           </div>

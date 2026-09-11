@@ -68,7 +68,7 @@ export const FORMULATIONS: FormulationItem[] = [
     queryVoice:
       "Explain dynamic EAF electrical SEC and the sensible heat credit from molten FeCr charging",
     description:
-      "Replaces static energy assumptions with thermodynamic enthalpy accounting: scrap melting (285.6 kWh_th), endothermic FeO reduction in coal DRI (+159.2 kJ/mol), gangue fluxing, and sensible heat savings from JSL Jajpur captive SAF molten FeCr charging (-86 to -113 kWh/t).",
+      "Replaces static energy assumptions with thermodynamic enthalpy accounting: scrap melting (285.6 kWh_th), endothermic FeO reduction in coal DRI (+159.2 kJ/mol), gangue fluxing, and sensible heat savings from captive SAF molten FeCr hot charging (-86 to -113 kWh/t).",
     featured: true,
   },
   {

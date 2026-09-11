@@ -28,7 +28,23 @@ export function CinematicBackground({
   intensity = "medium",
 }: CinematicBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.defaultMuted = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          // Autoplay fallback
+          console.log("Video waiting for user interaction or low power mode:", err);
+        });
+      }
+    }
+  }, []);
 
   // Floating continuous embers on canvas
   useEffect(() => {
@@ -116,29 +132,32 @@ export function CinematicBackground({
 
   return (
     <div className={cn("relative w-full overflow-hidden bg-obsidian-950", className)}>
-      {/* 1. Base Cinematic Furnace Photograph with Seamless Ken Burns Pan/Zoom */}
+      {/* 1. Base Cinematic Furnace Photograph with Vibrant Industrial Glow */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 will-change-transform animate-ken-burns scale-105 pointer-events-none"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 will-change-transform scale-105 pointer-events-none"
         style={{
           backgroundImage: "url('/images/furnace-bg.jpg')",
-          filter: "brightness(0.55) contrast(1.15) saturate(1.1)",
+          filter: "brightness(0.85) contrast(1.18) saturate(1.3)",
         }}
       />
 
-      {/* 2. Optional Seamless Looping Video Layer (Overlayed with Screen Blend) */}
+      {/* 2. Seamless Looping Industrial Sparks & Fire Video Layer */}
       {showVideo && (
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
           onLoadedData={() => setVideoLoaded(true)}
           className={cn(
-            "absolute inset-0 h-full w-full object-cover pointer-events-none mix-blend-screen transition-opacity duration-1000",
-            videoLoaded ? "opacity-35" : "opacity-0"
+            "absolute inset-0 h-full w-full object-cover pointer-events-none mix-blend-screen transition-opacity duration-700",
+            videoLoaded ? "opacity-85" : "opacity-65"
           )}
           poster="/images/furnace-bg.jpg"
         >
+          <source src="/videos/sparks.mp4" type="video/mp4" />
           <source src="/videos/sparks.webm" type="video/webm" />
         </video>
       )}
@@ -149,21 +168,18 @@ export function CinematicBackground({
         className="absolute inset-0 h-full w-full pointer-events-none z-[2]"
       />
 
-      {/* 4. Deep Thermal Vignette & Text-Readability Masks */}
-      {/* Top & bottom linear gradient fades */}
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/85 via-obsidian-950/65 to-obsidian-950 pointer-events-none z-[3]" />
-      
-      {/* Radial center dark vignette for crystal-clear foreground text contrast */}
+      {/* 4. Deep Thermal Vignette & Text-Readability Masks (Tuned so furnace glow & sparks are vividly visible) */}
       <div
         className="absolute inset-0 pointer-events-none z-[3]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 30%, rgba(5, 7, 9, 0.65) 0%, rgba(5, 7, 9, 0.85) 60%, #050709 100%)",
+            "radial-gradient(ellipse at 50% 38%, rgba(5, 7, 9, 0.12) 0%, rgba(5, 7, 9, 0.40) 60%, rgba(5, 7, 9, 0.88) 100%)",
         }}
       />
+      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/40 via-transparent to-obsidian-950/90 pointer-events-none z-[3]" />
 
       {/* Subtle bottom molten orange horizon line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-thermal-500/40 to-transparent pointer-events-none z-[4]" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-thermal-500/50 to-transparent pointer-events-none z-[4]" />
 
       {/* 5. Foreground Content */}
       <div className="relative z-10 w-full">

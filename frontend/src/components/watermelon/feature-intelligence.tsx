@@ -40,7 +40,7 @@ export function FeatureIntelligence({ className }: { className?: string }) {
                 Furnace Enthalpy Stream
               </h3>
               <p className="text-steel-400 text-xs sm:text-sm leading-relaxed">
-                Track real-time specific electrical consumption (SEC) and hot-metal sensible heat transfer across JSL Jajpur EAFs in real time.
+                Track real-time specific electrical consumption (SEC) and hot-metal sensible heat transfer across Jajpur EAF operations in real time.
               </p>
             </div>
 

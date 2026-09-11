@@ -41,9 +41,9 @@ export interface EmissionsBreakdownWidgetProps {
 
 const defaultEmissionsData: ScopeBreakdownPoint[] = [
   { scenario: "Standard BF-BOF", scope1: 1.48, scope2: 0.28, scope3_raw: 0.52, scope3_scrap: 0.04 },
-  { scenario: "JSL Baseline EAF", scope1: 0.42, scope2: 0.58, scope3_raw: 0.44, scope3_scrap: 0.05 },
+  { scenario: "Industry Baseline EAF", scope1: 0.42, scope2: 0.58, scope3_raw: 0.44, scope3_scrap: 0.05 },
   { scenario: "Current Heat", scope1: 0.31, scope2: 0.41, scope3_raw: 0.35, scope3_scrap: 0.06 },
-  { scenario: "JSL Green Pilot", scope1: 0.18, scope2: 0.12, scope3_raw: 0.22, scope3_scrap: 0.07 },
+  { scenario: "UrjaKavach Green Pilot", scope1: 0.18, scope2: 0.12, scope3_raw: 0.22, scope3_scrap: 0.07 },
 ];
 
 const defaultScopeChannels: ScopeChannel[] = [

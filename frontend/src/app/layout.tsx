@@ -6,9 +6,9 @@ import { Footer } from "@/components/Footer";
 import { AssistantDrawer } from "@/components/agent/AssistantDrawer";
 
 export const metadata: Metadata = {
-  title: "Jindal Stainless Carbon & Energy Cockpit | JSL PS-3 2026",
+  title: "UrjaKavach | Stainless Steel Carbon & Energy Decarbonization Platform",
   description:
-    "Award-winning pyrometallurgical carbon & energy decision platform for Jindal Stainless Limited. 43 grades, closed-loop mass balance, dynamic enthalpy, EU CBAM & India CCTS financial intelligence.",
+    "UrjaKavach — High-precision pyrometallurgical carbon & energy decision platform. 43 grades, closed-loop mass balance, dynamic enthalpy, EU CBAM & India CCTS statutory optimization.",
 };
 
 export default function RootLayout({

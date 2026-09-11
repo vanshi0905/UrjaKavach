@@ -323,9 +323,9 @@ export default function OptimizerPage() {
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <div className="border-b border-steel-800 pb-5">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Multi-Objective Optimizer & Stochastic Risk Engine
+            UrjaKavach <span className="text-cyanPulse-400 font-bold">Pareto Optimizer &amp; Risk Engine</span>
           </h1>
           <span className="rounded bg-cyanPulse-500/10 px-2 py-0.5 text-xs font-semibold text-cyanPulse-400 border border-cyanPulse-500/30">
             Two-Phase Simplex LP
@@ -375,7 +375,7 @@ export default function OptimizerPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Grade selector */}
           <Select1
-            label="Target JSL Grade"
+            label="Target Steel Grade"
             badge={`Scrap Cap: ${currentGrade.scrap_cap}%`}
             badgeColor="text-cyanPulse-400 bg-cyanPulse-500/10 border-cyanPulse-500/30"
             value={selectedGradeId}
@@ -400,12 +400,12 @@ export default function OptimizerPage() {
                 ? "Sensible heat credit: -86 kWh/t | Coal CPP EF: 1.00 tCO2/MWh"
                 : facilityId === "hisar"
                 ? "No hot charging credit | Northern Grid EF: 0.72 tCO2/MWh"
-                : "Gas-DRI Corridor & JSSL Processing | Western Grid EF: 0.73 tCO2/MWh"
+                : "Gas-DRI Corridor & Industrial Processing | Western Grid EF: 0.73 tCO2/MWh"
             }
             options={[
-              { value: "jajpur", label: "JSL Jajpur (Molten FeCr Hot Charging, 250MW CPP)" },
-              { value: "hisar", label: "JSL Hisar (Specialty Works, Northern Regional Grid)" },
-              { value: "chhattisgarh", label: "JSL Raigarh Hub / Chhattisgarh (Gas-DRI & JSSL Industrial Belt)" },
+              { value: "jajpur", label: "Jajpur Complex (Molten FeCr Hot Charging, 250MW CPP)" },
+              { value: "hisar", label: "Hisar Specialty Works (Northern Regional Grid)" },
+              { value: "chhattisgarh", label: "Raigarh Hub / Chhattisgarh (Gas-DRI & Industrial Belt)" },
             ]}
           />
 
@@ -839,7 +839,7 @@ export default function OptimizerPage() {
               </span>
             </div>
             <p className="text-xs text-steel-400 mt-1">
-              Engineered decarbonization levers tailored to JSL Jajpur & Hisar facilities. Toggle levers to observe live LP charge re-optimization.
+              Engineered decarbonization levers tailored to Jajpur & Hisar industrial facilities. Toggle levers to observe live LP charge re-optimization.
             </p>
           </div>
 
@@ -1112,7 +1112,7 @@ export default function OptimizerPage() {
           {/* Export Volume Slider */}
           <div className="space-y-1 w-full sm:w-64">
             <div className="flex justify-between text-xs">
-              <span className="text-steel-400 font-medium">JSL EU Exports:</span>
+              <span className="text-steel-400 font-medium">EU Export Corridor:</span>
               <span
                 className="font-mono font-bold transition-colors duration-200"
                 style={{ color: getSliderColor(exportVolumeTpa, 100000, 1200000, 'low').text }}

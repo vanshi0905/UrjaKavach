@@ -32,21 +32,21 @@ export const JSL_FAQS: FaqItem[] = [
     badge: "ENERGY & HEAT RECOVERY",
     question: "How does pouring hot liquid ferrochrome save ₹18 Crore a year?",
     answer:
-      "Most mills melt cold, solid ferrochrome blocks inside the electric furnace, consuming massive power. At JSL Jajpur, we tap liquid ferrochrome at 1,650°C straight from captive submerged arc smelters into the furnace. Transferring that sensible heat directly cuts electrical energy demand by 113 kWh per tonne and saves ₹18 Crore in annual furnace power bills.",
+      "Most mills melt cold, solid ferrochrome blocks inside the electric furnace, consuming massive power. At our Jajpur facility, we tap liquid ferrochrome at 1,650°C straight from captive submerged arc smelters into the furnace. Transferring that sensible heat directly cuts electrical energy demand by 113 kWh per tonne and saves ₹18 Crore in annual furnace power bills.",
   },
   {
     id: "faq-4",
     badge: "EXPORT TARIFFS & CBAM",
-    question: "How does JSL protect export profits against European CBAM taxes?",
+    question: "How does UrjaKavach protect export profits against European CBAM taxes?",
     answer:
-      "Europe starts charging carbon border taxes in 2026, but the real cliff hits between 2028 and 2034 when free allowances disappear. We combine two shields: first, our clean power and scrap mix drops emissions below EU benchmark penalties; second, Article 9 lets JSL deduct domestic Indian carbon compliance costs directly from any European bill, keeping cash tariffs at zero.",
+      "Europe starts charging carbon border taxes in 2026, but the real cliff hits between 2028 and 2034 when free allowances disappear. We combine two shields: first, our clean power and scrap mix drops emissions below EU benchmark penalties; second, Article 9 lets UrjaKavach deduct domestic Indian carbon compliance costs directly from any European bill, keeping cash tariffs at zero.",
   },
   {
     id: "faq-5",
     badge: "REVENUE & CARBON CREDITS",
     question: "How does meeting Indian energy targets turn into ₹38 Crore in EBITDA?",
     answer:
-      "Under India's Carbon Credit Trading Scheme, the Bureau of Energy Efficiency sets an emissions target of 0.8222 tonnes of CO2 per tonne of steel for Jajpur. Because our optimized charge sheet beats that target, JSL earns over 380,000 surplus carbon credit certificates each year. Monetizing those credits adds ₹38 Crore directly to company EBITDA.",
+      "Under India's Carbon Credit Trading Scheme, the Bureau of Energy Efficiency sets an emissions target of 0.8222 tonnes of CO2 per tonne of steel for Jajpur. Because our optimized charge sheet beats that target, UrjaKavach earns over 380,000 surplus carbon credit certificates each year. Monetizing those credits adds ₹38 Crore directly to company EBITDA.",
   },
   {
     id: "faq-6",
@@ -69,7 +69,7 @@ export interface FaqSectionProps {
 
 export function FaqSection({
   badge = "KNOWLEDGE BASE & FAQ",
-  title = "Everything You Need to Know About the JSL Cockpit",
+  title = "Everything You Need to Know About UrjaKavach",
   faqs = JSL_FAQS,
   footerText = "Want to inspect the underlying thermodynamic and compliance equations?",
   footerLinkText = "Explore Technical Methodology",

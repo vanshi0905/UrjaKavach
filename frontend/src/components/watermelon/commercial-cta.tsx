@@ -211,7 +211,7 @@ export function CommercialCta({ className }: { className?: string }) {
                 {/* Top Notch */}
                 <div className="absolute top-2 left-1/2 z-20 h-5 w-24 -translate-x-1/2 rounded-full bg-steel-900 border border-steel-800/80 flex items-center justify-center">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse mr-1.5" />
-                  <span className="text-[9px] font-mono text-steel-400 font-bold uppercase tracking-wider">JSL Live</span>
+                  <span className="text-[9px] font-mono text-steel-400 font-bold uppercase tracking-wider">UrjaKavach Live</span>
                 </div>
 
                 {/* Device Screen Body */}
