@@ -31,6 +31,7 @@ from jsl_carbon_engine.core.slag_kinetics import compute_slag_kinetics
 from jsl_carbon_engine.core.financials import compute_financials
 from jsl_carbon_engine.core.optimizer import solve_charge_optimizer, compute_pareto_frontier, monte_carlo_pareto
 from jsl_carbon_engine.config.jsl_facilities import get_facility
+from jsl_carbon_engine.api.app import app
 
 
 def run_cli_calculation(args):
