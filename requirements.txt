@@ -1,0 +1,18 @@
+# Jindal Stainless Limited (JSL) Carbon & Energy Decision Engine
+# Requirements for jsl_carbon_engine v2.1
+
+# Core Pyrometallurgical & Optimization Solvers
+scipy>=1.12.0
+numpy>=1.26.0
+
+# REST SCADA API & Web Service
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.6.0
+anyio>=4.0.0
+
+# Voice Agent & Audio Streaming
+edge-tts>=7.0.0
+
+# Automated Testing Framework
+pytest>=8.0.0

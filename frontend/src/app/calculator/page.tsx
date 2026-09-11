@@ -1,0 +1,907 @@
+"use client";
+
+import { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
+import {
+  GRADES,
+  Grade,
+  getPren,
+  listGradesByFamily,
+  getGrade,
+} from "@/lib/grades";
+import {
+  FACILITIES,
+  PRODUCTS,
+  CASTING_ROUTES,
+  REFINING_ROUTES,
+  STATUTORY_BENCHMARKS,
+} from "@/lib/constants";
+import {
+  calculateSteelmaking,
+  CalculatorInputs,
+} from "@/lib/calculator";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  Legend,
+} from "recharts";
+import {
+  Flame,
+  Zap,
+  DollarSign,
+  ShieldCheck,
+  Search,
+  Scale,
+  Sparkles,
+  RotateCcw,
+  CheckCircle2,
+  AlertTriangle,
+  Info,
+  ChevronDown,
+  Layers,
+  ArrowRight,
+} from "lucide-react";
+import { InlineExplainButton, syncAssistantInputs, APPLY_COCKPIT_PARAMS_EVENT } from "@/components/agent/InlineExplainButton";
+import { AdaptiveSlider, getSliderColor } from "@/components/watermelon/adaptive-slider";
+
+export default function CalculatorPage() {
+  // State for all cockpit inputs
+  const [selectedGradeId, setSelectedGradeId] = useState<string>("J304");
+  const [familyFilter, setFamilyFilter] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [facilityId, setFacilityId] = useState<string>("jajpur");
+  const [scrapPct, setScrapPct] = useState<number>(60);
+  const [feSource, setFeSource] = useState<'coalDRI' | 'gasDRI' | 'pigIron'>("coalDRI");
+  const [fecrSource, setFecrSource] = useState<'fecrStandard' | 'fecrLowC'>("fecrStandard");
+  const [niSource, setNiSource] = useState<'niStandard' | 'niClass1' | 'niNPI'>("niStandard");
+  const [refiningRoute, setRefiningRoute] = useState<'aod' | 'aodvod'>("aod");
+  const [castingRoute, setCastingRoute] = useState<'continuous' | 'ingot'>("continuous");
+  const [product, setProduct] = useState<'crCoil' | 'hrCoil' | 'slab' | 'plate' | 'specialty' | 'rebar' | 'wireRod' | 'bloom'>("crCoil");
+  const [renewablePct, setRenewablePct] = useState<number>(47); // JSL baseline 47%
+  const [hotFecrCharging, setHotFecrCharging] = useState<boolean>(true);
+
+  const currentGrade = useMemo(() => getGrade(selectedGradeId), [selectedGradeId]);
+
+  // Handle scrap change clamped to grade scrap_cap
+  const effectiveScrapPct = Math.min(scrapPct, currentGrade.scrap_cap);
+
+  // Grade selection with scrap cap auto-clamping
+  const handleSelectGrade = (id: string) => {
+    setSelectedGradeId(id);
+    const target = getGrade(id);
+    if (scrapPct > target.scrap_cap) {
+      setScrapPct(target.scrap_cap);
+    }
+  };
+
+  // Quick Charge Preset Helper
+  const applyPreset = (preset: "baseline" | "balanced" | "decarb") => {
+    if (preset === "baseline") {
+      setScrapPct(Math.min(35, currentGrade.scrap_cap));
+      setFeSource("coalDRI");
+      setFecrSource("fecrStandard");
+      setNiSource("niStandard");
+      setRenewablePct(47);
+      setHotFecrCharging(false);
+    } else if (preset === "balanced") {
+      setScrapPct(Math.min(65, currentGrade.scrap_cap));
+      setFeSource("gasDRI");
+      setFecrSource("fecrStandard");
+      setNiSource("niClass1");
+      setRenewablePct(70);
+      setHotFecrCharging(true);
+    } else if (preset === "decarb") {
+      setScrapPct(currentGrade.scrap_cap);
+      setFeSource("gasDRI");
+      setFecrSource("fecrLowC");
+      setNiSource("niClass1");
+      setRenewablePct(100);
+      setHotFecrCharging(true);
+    }
+  };
+
+  // Active Cockpit Inputs Definition
+  const activeInputs: CalculatorInputs = useMemo(() => ({
+    gradeId: selectedGradeId,
+    scrapPct: effectiveScrapPct,
+    facilityId,
+    feSource,
+    fecrSource,
+    niSource,
+    refiningRoute,
+    castingRoute,
+    product,
+    renewablePct,
+    hotFecrCharging: facilityId === "jajpur" ? hotFecrCharging : false,
+  }), [
+    selectedGradeId,
+    effectiveScrapPct,
+    facilityId,
+    feSource,
+    fecrSource,
+    niSource,
+    refiningRoute,
+    castingRoute,
+    product,
+    renewablePct,
+    hotFecrCharging,
+  ]);
+
+  // Sync active cockpit telemetry with global SCADA AI Assistant
+  useEffect(() => {
+    syncAssistantInputs(activeInputs);
+  }, [activeInputs]);
+
+  // Listen for bidirectional action commands dispatched by SCADA Assistant
+  useEffect(() => {
+    const handleApplyCockpitParams = (e: any) => {
+      const p = e.detail;
+      if (!p) return;
+      if (p.gradeId || p.grade) {
+        const targetId = p.gradeId || p.grade;
+        handleSelectGrade(targetId);
+      }
+      if (p.scrapPct !== undefined) {
+        setScrapPct(Number(p.scrapPct));
+      }
+      if (p.facilityId) {
+        setFacilityId(p.facilityId);
+      }
+      if (p.feSource) {
+        setFeSource(p.feSource);
+      }
+      if (p.fecrSource) {
+        setFecrSource(p.fecrSource);
+      }
+      if (p.niSource) {
+        setNiSource(p.niSource);
+      }
+      if (p.refiningRoute) {
+        setRefiningRoute(p.refiningRoute);
+      }
+      if (p.castingRoute) {
+        setCastingRoute(p.castingRoute);
+      }
+      if (p.product) {
+        setProduct(p.product);
+      }
+      if (p.renewablePct !== undefined) {
+        setRenewablePct(Number(p.renewablePct));
+      }
+      if (p.hotFecrCharging !== undefined) {
+        setHotFecrCharging(Boolean(p.hotFecrCharging));
+      }
+    };
+
+    window.addEventListener(APPLY_COCKPIT_PARAMS_EVENT, handleApplyCockpitParams);
+    window.addEventListener("APPLY_COCKPIT_PARAMS", handleApplyCockpitParams);
+    return () => {
+      window.removeEventListener(APPLY_COCKPIT_PARAMS_EVENT, handleApplyCockpitParams);
+      window.removeEventListener("APPLY_COCKPIT_PARAMS", handleApplyCockpitParams);
+    };
+  }, []);
+
+  // Compute full steelmaking calculation in 0ms client-side
+  const results = useMemo(() => {
+    return calculateSteelmaking(activeInputs);
+  }, [activeInputs]);
+
+  // Filtered grade list
+  const filteredGrades = useMemo(() => {
+    return Object.values(GRADES).filter((g) => {
+      const matchesSearch =
+        g.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        g.id.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesFamily =
+        familyFilter === "All" || g.family.includes(familyFilter);
+      return matchesSearch && matchesFamily;
+    });
+  }, [searchQuery, familyFilter]);
+
+  // Emissions 10-driver waterfall data for Recharts
+  const waterfallData = useMemo(() => {
+    const em = results.emissions;
+    return [
+      { name: "Decarb Stack", value: em.scope1StackDecarbTco2, color: "#f97316" },
+      { name: "Reheat Fuel", value: em.scope1FuelCombustionTco2, color: "#ea580c" },
+      { name: "Electricity", value: em.scope2ElectricityTco2, color: "#38bdf8" },
+      { name: "Virgin DRI", value: em.scope3FeVirginTco2, color: "#eab308" },
+      { name: "Scrap Embodied", value: em.scope3ScrapTco2, color: "#10b981" },
+      { name: "FeCr Alloy", value: em.scope3FecrTco2, color: "#a855f7" },
+      { name: "Nickel Unit", value: em.scope3NickelTco2, color: "#ec4899" },
+      { name: "FeMo / FeMn", value: em.scope3FemoTco2 + em.scope3FemnTco2, color: "#6366f1" },
+      { name: "Slag Fluxes", value: em.scope3FluxesTco2, color: "#64748b" },
+    ];
+  }, [results]);
+
+  // Benchmark comparison data
+  const benchmarkData = useMemo(() => {
+    const currentTotal = results.emissions.totalCo2T;
+    return [
+      { name: "Current Heat", value: currentTotal, isCurrent: true, color: "#f97316" },
+      { name: "EU Scrap-EAF", value: 0.288, isCurrent: false, color: "#10b981" },
+      { name: "CCTS 2026 Target", value: 0.8222, isCurrent: false, color: "#0ea5e9" },
+      { name: "JSL FY26 Disclosed", value: 1.760, isCurrent: false, color: "#f59e0b" },
+      { name: "Global Stainless Avg", value: 2.930, isCurrent: false, color: "#ef4444" },
+    ];
+  }, [results]);
+
+  // Thermal color helper for Total tCO2
+  const getCarbonColorClass = (val: number) => {
+    if (val < 1.0) return "text-emerald-400";
+    if (val < 1.6) return "text-cyanPulse-400";
+    if (val < 2.3) return "text-amber-400";
+    return "text-red-400";
+  };
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-steel-800 pb-5">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Pyrometallurgical Calculator Cockpit
+            </h1>
+            <span className="rounded bg-thermal-500/10 px-2 py-0.5 text-xs font-semibold text-thermal-400 border border-thermal-500/30">
+              0ms Latency
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-steel-400 mt-1">
+            Closed-loop mass balance, dynamic EAF enthalpy balance, EU CBAM SEFA & India CCTS BEE June 2026 intelligence.
+          </p>
+
+          {/* Authentic Engineering Tech Badges */}
+          <div className="flex flex-wrap items-center gap-2 mt-2.5 pt-2.5 border-t border-steel-800/60 text-[11px] font-mono">
+            <span className="text-steel-400 font-sans font-semibold">AUTHENTIC ENGINES:</span>
+            <Link
+              href="/#tech-stack"
+              className="inline-flex items-center gap-1 rounded bg-cyanPulse-500/10 px-2 py-0.5 text-cyanPulse-300 border border-cyanPulse-500/30 hover:bg-cyanPulse-500/20 transition-colors"
+            >
+              <span>Next.js 14 Reactive Edge</span>
+              <span className="text-steel-400 text-[10px]">(Sub-4ms In-Browser)</span>
+            </Link>
+            <Link
+              href="/methodology#tech-stack"
+              className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-2 py-0.5 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 transition-colors"
+            >
+              <span>BEE CCTS + EU CBAM</span>
+              <span className="text-steel-400 text-[10px]">(Article 9 & SEFA)</span>
+            </Link>
+            <Link
+              href="/methodology"
+              className="inline-flex items-center gap-1 rounded bg-purple-500/10 px-2 py-0.5 text-purple-300 border border-purple-500/30 hover:bg-purple-500/20 transition-colors"
+            >
+              <span>Healy 1970 De-P</span>
+              <span className="text-steel-400 text-[10px]">(η_P = 0.99)</span>
+            </Link>
+            <Link
+              href="/#tech-stack"
+              className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold text-thermal-400 hover:text-thermal-300 ml-1 transition-colors"
+            >
+              <span>Inspect All 6 Engines</span>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Quick Reset to JSL Default Baseline */}
+        <button
+          onClick={() => {
+            setSelectedGradeId("J304");
+            setScrapPct(60);
+            setFacilityId("jajpur");
+            setFeSource("coalDRI");
+            setFecrSource("fecrStandard");
+            setNiSource("niStandard");
+            setRefiningRoute("aod");
+            setCastingRoute("continuous");
+            setProduct("crCoil");
+            setRenewablePct(47);
+            setHotFecrCharging(true);
+          }}
+          className="flex items-center gap-1.5 rounded-lg border border-steel-700 bg-steel-900/60 px-3 py-1.5 text-xs font-medium text-steel-300 hover:text-white hover:bg-steel-800 transition-colors w-fit"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          <span>Reset JSL Baseline</span>
+        </button>
+      </div>
+
+      {/* 2-Column Cockpit Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* ========================================================= */}
+        {/* LEFT COLUMN: CONTROL & RECIPE SLIDERS (5 Cols)           */}
+        {/* ========================================================= */}
+        <div className="lg:col-span-5 space-y-6">
+          {/* Section 1: Grade Selection */}
+          <div className="glass-panel rounded-2xl p-5 space-y-4 border border-steel-800">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Layers className="h-4 w-4 text-thermal-400" />
+                <span>1. Metallurgical Grade Library (43)</span>
+              </span>
+              <span className="text-[11px] font-mono text-cyanPulse-400">
+                PREN: {getPren(currentGrade)}
+              </span>
+            </div>
+
+            {/* Family filter pills */}
+            <div className="flex flex-wrap gap-1.5 text-[11px]">
+              {["All", "200 Series", "300 Series", "Ferritic", "Martensitic", "Duplex"].map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFamilyFilter(f)}
+                  className={`px-2.5 py-1 rounded-md transition-all ${
+                    familyFilter === f
+                      ? "bg-thermal-500 text-white font-semibold"
+                      : "bg-steel-900 text-steel-400 hover:text-steel-200 border border-steel-800"
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+
+            {/* Search Input */}
+            <div className="relative">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-steel-400" />
+              <input
+                type="text"
+                placeholder="Search grade (e.g. J304, J4, J2205, J430)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-lg border border-steel-700 bg-obsidian-950 pl-8 pr-3 py-1.5 text-xs text-white placeholder-steel-500 focus:border-thermal-500 focus:outline-none"
+              />
+            </div>
+
+            {/* Grade Selection Grid */}
+            <div className="max-h-36 overflow-y-auto space-y-1 pr-1">
+              {filteredGrades.map((g) => (
+                <button
+                  key={g.id}
+                  onClick={() => handleSelectGrade(g.id)}
+                  className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all ${
+                    selectedGradeId === g.id
+                      ? "bg-thermal-500/20 text-thermal-300 border border-thermal-500/40 font-semibold"
+                      : "text-steel-300 hover:bg-steel-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-bold text-white">{g.id}</span>
+                    <span className="text-[11px] text-steel-400 truncate max-w-[170px]">{g.name}</span>
+                  </div>
+                  <span className="text-[10px] text-steel-500 font-mono">Max {g.scrap_cap}%</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Selected Grade Chemistry Chips */}
+            <div className="rounded-xl bg-obsidian-950/90 p-3 border border-steel-800/80 space-y-1.5 text-xs">
+              <div className="flex justify-between text-[11px] text-steel-400">
+                <span className="font-semibold text-white">{currentGrade.name}</span>
+                <span>Scrap Limit: {currentGrade.scrap_cap}%</span>
+              </div>
+              <div className="grid grid-cols-4 gap-1.5 text-[10px] font-mono text-center">
+                <div className="bg-steel-900/90 rounded py-0.5 border border-steel-800">
+                  <span className="text-steel-400">Cr: </span>
+                  <span className="text-white font-bold">{currentGrade.cr}%</span>
+                </div>
+                <div className="bg-steel-900/90 rounded py-0.5 border border-steel-800">
+                  <span className="text-steel-400">Ni: </span>
+                  <span className="text-white font-bold">{currentGrade.ni}%</span>
+                </div>
+                <div className="bg-steel-900/90 rounded py-0.5 border border-steel-800">
+                  <span className="text-steel-400">Mo: </span>
+                  <span className="text-white font-bold">{currentGrade.mo}%</span>
+                </div>
+                <div className="bg-steel-900/90 rounded py-0.5 border border-steel-800">
+                  <span className="text-steel-400">Fe: </span>
+                  <span className="text-white font-bold">{currentGrade.fe}%</span>
+                </div>
+              </div>
+              <p className="text-[10px] text-steel-400 italic leading-tight pt-1">
+                {currentGrade.mechanical_applications}
+              </p>
+            </div>
+          </div>
+
+          {/* Section 2: Charge Sheet Inputs */}
+          <div className="glass-panel rounded-2xl p-5 space-y-5 border border-steel-800">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Flame className="h-4 w-4 text-thermal-400" />
+                <span>2. Charge Sheet & Sourcing Mix</span>
+              </span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => applyPreset("baseline")}
+                  className="px-2 py-0.5 rounded text-[10px] font-semibold bg-steel-900 border border-steel-700 text-steel-300 hover:text-white transition-colors"
+                >
+                  Baseline
+                </button>
+                <button
+                  onClick={() => applyPreset("balanced")}
+                  className="px-2 py-0.5 rounded text-[10px] font-semibold bg-cyanPulse-500/10 border border-cyanPulse-500/30 text-cyanPulse-300 hover:bg-cyanPulse-500/20 transition-colors"
+                >
+                  Balanced
+                </button>
+                <button
+                  onClick={() => applyPreset("decarb")}
+                  className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+                >
+                  Deep Decarb
+                </button>
+              </div>
+            </div>
+
+            {/* Contextual Optimizer Callout Badge */}
+            <Link
+              href="/optimizer"
+              className="flex items-center justify-between p-3 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-xs text-cyanPulse-300 hover:bg-cyan-950/50 hover:border-cyan-400/60 transition-all group shadow-sm shadow-cyan-950/20"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyanPulse-400">
+                  <Sparkles className="h-4 w-4 animate-pulse" />
+                </div>
+                <div>
+                  <div className="font-semibold text-white group-hover:text-cyanPulse-300 transition-colors flex items-center gap-1.5">
+                    <span>Evaluating charge optimization or procurement parity?</span>
+                    <span className="rounded bg-cyan-500/20 px-1.5 py-0.2 text-[9px] font-bold text-cyanPulse-300 border border-cyan-500/40">
+                      Swerim RAWMATMIX®
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-steel-400">
+                    Calculate binding tramp shadow prices (Cu, Sn, P, S), facility hot-charging credits, and Value-in-Use procurement parity.
+                  </p>
+                </div>
+              </div>
+              <span className="flex items-center gap-1 text-[11px] font-bold text-cyanPulse-400 group-hover:translate-x-0.5 transition-transform whitespace-nowrap ml-2">
+                Launch Optimizer <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+
+            {/* Scrap % Slider */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center text-xs">
+                <label className="text-steel-300 font-medium">
+                  Recycled Scrap Charged
+                </label>
+                <div className="flex items-center gap-1.5 font-mono">
+                  <span
+                    className="font-bold text-sm transition-colors duration-200"
+                    style={{ color: getSliderColor(effectiveScrapPct, 0, currentGrade.scrap_cap, 'high').text }}
+                  >
+                    {effectiveScrapPct}%
+                  </span>
+                  <span className="text-[10px] text-steel-500">
+                    (Ceiling: {currentGrade.scrap_cap}%)
+                  </span>
+                </div>
+              </div>
+              <AdaptiveSlider
+                min={0}
+                max={currentGrade.scrap_cap}
+                step={1}
+                value={effectiveScrapPct}
+                onChange={(val) => setScrapPct(val)}
+                goodDirection="high"
+                label="Recycled Scrap"
+              />
+              <div className="flex justify-between text-[10px] text-steel-500 font-mono">
+                <span>0% Virgin Heat</span>
+                <span
+                  className="transition-colors duration-200"
+                  style={{ color: getSliderColor(effectiveScrapPct, 0, currentGrade.scrap_cap, 'high').text }}
+                >
+                  {effectiveScrapPct >= currentGrade.scrap_cap ? "⚠ At Metallurgical Ceiling" : "Safe Zone"}
+                </span>
+                <span>{currentGrade.scrap_cap}% Max</span>
+              </div>
+            </div>
+
+            {/* Virgin Iron Sourcing */}
+            <div className="space-y-1.5">
+              <label className="text-xs text-steel-300 font-medium block">
+                Virgin Iron Unit (Balance after Scrap & Alloys)
+              </label>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                {[
+                  { key: "coalDRI", label: "Coal DRI", ef: "2.60 t" },
+                  { key: "gasDRI", label: "Gas DRI", ef: "0.90 t" },
+                  { key: "pigIron", label: "Pig Iron", ef: "1.80 t" },
+                ].map((s) => (
+                  <button
+                    key={s.key}
+                    onClick={() => setFeSource(s.key as any)}
+                    className={`py-2 px-2 rounded-lg border text-center transition-all ${
+                      feSource === s.key
+                        ? "bg-thermal-500/20 border-thermal-500 text-white font-semibold"
+                        : "bg-steel-950 border-steel-800 text-steel-400 hover:text-white"
+                    }`}
+                  >
+                    <span className="block text-xs">{s.label}</span>
+                    <span className="text-[10px] text-steel-500 font-mono">{s.ef} CO2/t</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Ferrochrome & Nickel Sourcing */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              {/* FeCr */}
+              <div className="space-y-1.5">
+                <label className="text-steel-300 font-medium block">
+                  Ferrochrome (FeCr) Route
+                </label>
+                <select
+                  value={fecrSource}
+                  onChange={(e) => setFecrSource(e.target.value as any)}
+                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
+                >
+                  <option value="fecrStandard">Standard HC FeCr (3.50 tCO2/t)</option>
+                  <option value="fecrLowC">Low-Carbon FeCr (1.90 tCO2/t)</option>
+                </select>
+              </div>
+
+              {/* Nickel */}
+              <div className="space-y-1.5">
+                <label className="text-steel-300 font-medium block">
+                  Primary Nickel Sourcing
+                </label>
+                <select
+                  value={niSource}
+                  onChange={(e) => setNiSource(e.target.value as any)}
+                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
+                >
+                  <option value="niStandard">Global Standard Ni (15 tCO2/t)</option>
+                  <option value="niClass1">Class 1 Hydro Ni (10 tCO2/t)</option>
+                  <option value="niNPI">Indonesian Coal NPI (55 tCO2/t)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Facility & Power Mix */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
+              {/* Facility */}
+              <div className="space-y-1.5">
+                <label className="text-steel-300 font-medium block">
+                  JSL Asset Twin
+                </label>
+                <select
+                  value={facilityId}
+                  onChange={(e) => setFacilityId(e.target.value)}
+                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
+                >
+                  <option value="jajpur">Jajpur Complex (250 MW CPP)</option>
+                  <option value="hisar">Hisar Precision (Northern Grid + H2)</option>
+                  <option value="chhattisgarh">Chhattisgarh Hub (Rotary Kilns)</option>
+                </select>
+              </div>
+
+              {/* Product */}
+              <div className="space-y-1.5">
+                <label className="text-steel-300 font-medium block">
+                  Downstream Product
+                </label>
+                <select
+                  value={product}
+                  onChange={(e) => setProduct(e.target.value as any)}
+                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
+                >
+                  {Object.entries(PRODUCTS).map(([k, p]) => (
+                    <option key={k} value={k}>
+                      {p.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Renewable PPA Slider */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex justify-between items-center text-xs">
+                <label className="text-steel-300 font-medium">
+                  Renewable PPA Blending (Wind/Solar)
+                </label>
+                <span
+                  className="font-bold font-mono text-sm transition-colors duration-200"
+                  style={{ color: getSliderColor(renewablePct, 0, 100, 'high').text }}
+                >
+                  {renewablePct}%
+                </span>
+              </div>
+              <AdaptiveSlider
+                min={0}
+                max={100}
+                step={1}
+                value={renewablePct}
+                onChange={(val) => setRenewablePct(val)}
+                goodDirection="high"
+                label="Renewable PPA Blending"
+              />
+              <div className="flex justify-between text-[10px] text-steel-500 font-mono">
+                <span>0% (100% Fossil CPP/Grid)</span>
+                <span>JSL Baseline (47%)</span>
+                <span>100% Green PPA</span>
+              </div>
+            </div>
+
+            {/* Molten FeCr hot charging toggle (Jajpur edge) */}
+            {facilityId === "jajpur" && (
+              <div className="rounded-xl bg-thermal-500/10 border border-thermal-500/30 p-3 flex items-center justify-between">
+                <div className="space-y-0.5 pr-2">
+                  <span className="text-xs font-bold text-thermal-300 flex items-center gap-1">
+                    <Sparkles className="h-3.5 w-3.5 text-thermal-400" />
+                    <span>Jajpur Molten FeCr Hot Charging</span>
+                  </span>
+                  <p className="text-[11px] text-steel-400">
+                    Ladle transfer from captive SAF delivers ~200 kWh/t sensible heat credit to EAF.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={hotFecrCharging}
+                  onChange={(e) => setHotFecrCharging(e.target.checked)}
+                  className="h-4 w-4 rounded accent-thermal-500 cursor-pointer"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ========================================================= */}
+        {/* RIGHT COLUMN: TELEMETRY & EMISSIONS WATERFALL (7 Cols)   */}
+        {/* ========================================================= */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* 4 HERO KPI CARDS */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {/* Card 1: Total CO2 */}
+            <div className="glass-card rounded-xl p-4 border border-steel-800 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-steel-400 uppercase tracking-wider block">
+                  Total Specific CO2
+                </span>
+                <InlineExplainButton target="total_co2_t" variant="icon" label="Explain Carbon (SHAP)" inputs={activeInputs} />
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className={`text-2xl sm:text-3xl font-black ${getCarbonColorClass(results.emissions.totalCo2T)}`}>
+                  {results.emissions.totalCo2T.toFixed(2)}
+                </span>
+                <span className="text-[11px] text-steel-400 font-mono">t/t</span>
+              </div>
+              <span className="text-[10px] text-steel-400 block truncate">
+                S1: {results.emissions.scope1DirectTco2.toFixed(2)} | S2: {results.emissions.scope2ElectricityTco2.toFixed(2)} | S3: {results.emissions.scope3PrecursorsTco2.toFixed(2)}
+              </span>
+            </div>
+
+            {/* Card 2: SEC */}
+            <div className="glass-card rounded-xl p-4 border border-steel-800 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-steel-400 uppercase tracking-wider block">
+                  Specific Electrical
+                </span>
+                <InlineExplainButton target="eaf_sec_kwh" variant="icon" label="Explain SEC (SHAP)" inputs={activeInputs} />
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl sm:text-3xl font-black text-cyanPulse-400">
+                  {results.thermo.totalElecKwhFinished.toFixed(0)}
+                </span>
+                <span className="text-[11px] text-steel-400 font-mono">kWh/t</span>
+              </div>
+              <span className="text-[10px] text-steel-400 block truncate">
+                EAF: {results.thermo.eafSecKwhLiquid} kWh | Fuel: {results.thermo.totalFuelGjFinished} GJ
+              </span>
+            </div>
+
+            {/* Card 3: EU CBAM */}
+            <div className="glass-card rounded-xl p-4 border border-steel-800 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-steel-400 uppercase tracking-wider block">
+                  CBAM 2026 Cash
+                </span>
+                <InlineExplainButton target="cbam_tariff_eur" variant="icon" label="Explain CBAM Tariff" inputs={activeInputs} />
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl sm:text-3xl font-black text-amber-400">
+                  €{results.financials.cbamCashTariff2026EurPerT.toFixed(2)}
+                </span>
+                <span className="text-[11px] text-steel-400 font-mono">/t</span>
+              </div>
+              <span className="text-[10px] text-steel-400 block truncate">
+                2034 Unhedged: €{results.financials.cbamTariff2034UnhedgedEurPerT.toFixed(1)}/t
+              </span>
+            </div>
+
+            {/* Card 4: India CCTS */}
+            <div className="glass-card rounded-xl p-4 border border-steel-800 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-steel-400 uppercase tracking-wider block">
+                  India CCTS Impact
+                </span>
+                <InlineExplainButton target="ccts_value_inr" variant="icon" label="Explain CCTS Surplus" inputs={activeInputs} />
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span
+                  className={`text-2xl sm:text-3xl font-black ${
+                    results.financials.cctsCarbonDeltaTco2 >= 0 ? "text-emerald-400" : "text-red-400"
+                  }`}
+                >
+                  {results.financials.cctsCarbonDeltaTco2 >= 0 ? "+" : ""}
+                  {results.financials.cctsAnnualEbitdaInrCr.toFixed(1)}
+                </span>
+                <span className="text-[11px] text-steel-400 font-mono">Cr/yr</span>
+              </div>
+              <span className="text-[10px] text-steel-400 block truncate">
+                {results.financials.cctsCarbonDeltaTco2 >= 0 ? "CCC Surplus Gain" : "Penalty Liability"}
+              </span>
+            </div>
+          </div>
+
+          {/* 10-DRIVER EMISSIONS WATERFALL */}
+          <div className="glass-panel rounded-2xl p-5 border border-steel-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Flame className="h-4 w-4 text-thermal-400" />
+                <span>Scope 1, 2 & 3 Process Emissions Waterfall (tCO2 / tonne)</span>
+              </span>
+              <div className="flex items-center gap-3">
+                <InlineExplainButton target="total_co2_t" label="ELI-Engineer SHAP" inputs={activeInputs} />
+                <span className="text-[11px] font-mono text-steel-400">
+                  Total: {results.emissions.totalCo2T.toFixed(3)} tCO2/t
+                </span>
+              </div>
+            </div>
+
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={waterfallData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                  <XAxis
+                    dataKey="name"
+                    stroke="#64748b"
+                    fontSize={10}
+                    tickLine={false}
+                    interval={0}
+                    angle={-25}
+                    textAnchor="end"
+                  />
+                  <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="rounded-lg bg-obsidian-950 border border-steel-700 p-2 shadow-xl text-xs">
+                            <span className="font-semibold text-white block">{data.name}</span>
+                            <span className="font-mono text-thermal-400">{Number(data.value).toFixed(3)} tCO2 / t</span>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                    {waterfallData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* STATUTORY BENCHMARK COMPARISON BAR */}
+          <div className="glass-panel rounded-2xl p-5 border border-steel-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Scale className="h-4 w-4 text-cyanPulse-400" />
+                <span>Statutory Benchmarks vs Current Run (tCO2 / t)</span>
+              </span>
+              <span className="text-[11px] text-emerald-400 font-mono font-semibold">
+                BEE 2026 Target: 0.8222
+              </span>
+            </div>
+
+            <div className="h-48 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={benchmarkData}
+                  layout="vertical"
+                  margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                >
+                  <XAxis type="number" stroke="#64748b" fontSize={11} tickLine={false} />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    stroke="#cbd5e1"
+                    fontSize={11}
+                    tickLine={false}
+                    width={110}
+                  />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="rounded-lg bg-obsidian-950 border border-steel-700 p-2 shadow-xl text-xs">
+                            <span className="font-semibold text-white block">{data.name}</span>
+                            <span className="font-mono text-cyanPulse-400">{Number(data.value).toFixed(3)} tCO2 / t</span>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                    {benchmarkData.map((entry, index) => (
+                      <Cell key={`bm-cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* CLOSED-LOOP MASS BALANCE VERIFICATION TABLE */}
+          <div className="glass-panel rounded-2xl p-5 border border-steel-800 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <span>Closed-Loop Stoichiometric Mass Balance Verification</span>
+              </span>
+              <span className="text-emerald-400 text-xs font-mono font-semibold">
+                Sum: {results.massBalance.totalLiquidSteelT.toFixed(3)} t (100% Balanced)
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead className="text-[11px] uppercase text-steel-400 border-b border-steel-800 bg-obsidian-950/50">
+                  <tr>
+                    <th className="py-2 px-3">Input Material</th>
+                    <th className="py-2 px-3 text-right">Mass Charged (t/t)</th>
+                    <th className="py-2 px-3 text-right">Contained Iron (t)</th>
+                    <th className="py-2 px-3 text-right">Allocated Role</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-steel-800/60 font-mono text-steel-300">
+                  <tr>
+                    <td className="py-2 px-3 text-white font-sans">Recycled Scrap</td>
+                    <td className="py-2 px-3 text-right">{results.massBalance.scrapMassT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right text-emerald-400">{results.massBalance.feFromScrapT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right font-sans text-steel-400">Primary Recycled Unit</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-white font-sans">Gross Virgin DRI</td>
+                    <td className="py-2 px-3 text-right">{results.massBalance.grossDriChargedT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right text-amber-400">{results.massBalance.netVirginFeT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right font-sans text-steel-400">Net Metallic Balance</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-white font-sans">Ferrochrome ({fecrSource})</td>
+                    <td className="py-2 px-3 text-right">{results.massBalance.fecrMassT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right text-cyanPulse-400">{results.massBalance.feFromFecrT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right font-sans text-steel-400">Cr Addition + Fe Credit</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-white font-sans">Primary Nickel ({niSource})</td>
+                    <td className="py-2 px-3 text-right">{results.massBalance.niMassT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right text-purple-400">{results.massBalance.feFromNiT.toFixed(3)}</td>
+                    <td className="py-2 px-3 text-right font-sans text-steel-400">Ni Addition + NPI Fe Credit</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[11px] text-steel-500 italic">
+              *Enforces metallurgical iron crediting: prevents double-counting the ~40% iron inherently contained in ferrochrome and ~81% in NPI.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
