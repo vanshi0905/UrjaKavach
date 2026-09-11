@@ -335,6 +335,7 @@ python -m pytest tests/test_financials.py -v
 
 ## 9 See also
 
+* [Live Interactive Web Platform](https://urjakavach-app.vercel.app) - Next.js production cockpit, 43-grade metallurgical library, and real-time HiGHS Simplex LP solver
 * [Mathematical Methodology and Stoichiometric Balance](docs/methodology/FORMULAS_AND_METHODOLOGY.md) - Complete thermodynamic, enthalpy, and chemical derivations
 * [Assumptions, Boundaries, and Limitations](docs/methodology/ASSUMPTIONS_AND_LIMITATIONS.md) - Metallurgical boundaries and scope allocations
 * [Validation and Technical Feasibility Report](docs/methodology/VALIDATION_AND_FEASIBILITY.md) - Empirical calibration against JSL plant operating data
