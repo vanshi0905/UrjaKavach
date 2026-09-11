@@ -42,7 +42,11 @@ Generic calculators (such as SteelOnTheNet and ICE) assume steel is produced via
 1. Carbon steel refining blows pure oxygen into molten pig iron to oxidize excess carbon ($4.5\% \rightarrow 0.05\% \text{ C}$).
 2. In stainless steel, chromium oxidizes at lower free energies than carbon at standard steelmaking temperatures ($1600^\circ\text{C}$).
 3. Blowing oxygen into stainless scrap in a basic oxygen furnace burns valuable chromium directly into slag before removing carbon:
-   $$\frac{4}{3}\text{Cr} + \text{O}_2 \rightarrow \frac{2}{3}\text{Cr}_2\text{O}_3 \quad (\Delta G^\circ < \Delta G^\circ_{\text{C}\rightarrow\text{CO}})$$
+
+   $$
+   \frac{4}{3}\text{Cr} + \text{O}_2 \longrightarrow \frac{2}{3}\text{Cr}_2\text{O}_3 \quad (\Delta G^\circ < \Delta G^\circ_{\text{C}\rightarrow\text{CO}})
+   $$
+
 4. Stainless production requires an Electric Arc Furnace (EAF) to melt scrap and a specialized Argon Oxygen Decarburization (AOD) converter that injects inert argon or nitrogen gas to reduce the partial pressure of carbon monoxide ($P_{\text{CO}}$), allowing carbon oxidation without losing chromium.
 
 > **Warning:** Using generic BF-BOF calculators for stainless steel leads to gross accounting errors. Ferroalloys make up only 20% to 25% of the charge mass but account for 65% to 85% of total cradle-to-gate emissions.
@@ -74,15 +78,25 @@ UrjaKavach runs on a three-layer decoupled architecture.
 ### 2.1 Layer 1: Closed-Loop Mass Conservation
 
 Mass conservation is evaluated to $1.0000\text{ t} \pm 0.0005\text{ t}$ across all 43 JSL production grades:
-$$M_{\text{liquid}} = M_{\text{scrap}} + M_{\text{FeCr}} + M_{\text{Ni/NPI}} + M_{\text{FeMo}} + M_{\text{FeMn}} + M_{\text{DRI,net}} + M_{\text{alloys}} - M_{\text{slag losses}}$$
+
+$$
+M_{\text{liquid}} = M_{\text{scrap}} + M_{\text{FeCr}} + M_{\text{Ni/NPI}} + M_{\text{FeMo}} + M_{\text{FeMn}} + M_{\text{DRI,net}} + M_{\text{alloys}} - M_{\text{slag losses}}
+$$
 
 The net virgin iron requirement dynamically deducts alloy iron:
-$$\text{Fe}_{\text{virgin,net}} = \text{Fe}_{\text{target}} - \left(\text{Fe}_{\text{scrap}} + \text{Fe}_{\text{FeCr}} + \text{Fe}_{\text{NPI}} + \text{Fe}_{\text{FeMo}} + \text{Fe}_{\text{FeMn}}\right)$$
+
+$$
+\text{Fe}_{\text{virgin,net}} = \text{Fe}_{\text{target}} - \left(\text{Fe}_{\text{scrap}} + \text{Fe}_{\text{FeCr}} + \text{Fe}_{\text{NPI}} + \text{Fe}_{\text{FeMo}} + \text{Fe}_{\text{FeMn}}\right)
+$$
 
 ### 2.2 Layer 2: Dynamic Enthalpy and Facility Decoupling
 
 Theoretical thermal enthalpy ($Q_{\text{thermal}}$) is decoupled from electrical specific energy consumption ($\text{SEC}$):
-$$\text{SEC}_{\text{electrical}} = \frac{Q_{\text{thermal}}}{\eta_{\text{thermal}}} + E_{\text{aux}}$$
+
+$$
+\text{SEC}_{\text{electrical}} = \frac{Q_{\text{thermal}}}{\eta_{\text{thermal}}} + E_{\text{aux}}
+$$
+
 Where:
 * $\eta_{\text{thermal}} = 0.65$ (furnace electrical-to-thermal efficiency).
 * $E_{\text{aux}} = 45.0\text{ kWh/t}$ (transformer, water cooling, and fume evacuation loads).
@@ -101,8 +115,15 @@ Where:
 ### 2.3 Layer 3: HiGHS Simplex LP and Monte Carlo Risk Engine
 
 Scrap blending is formulated as a multi-objective linear program:
-$$\min_{x} \quad \alpha \cdot \mathbf{c}^T x + (1 - \alpha) \cdot \mathbf{e}^T x$$
-$$\text{subject to} \quad A_{\text{eq}} x = b_{\text{eq}}, \quad A_{\text{ub}} x \le b_{\text{ub}}, \quad 0 \le x_i \le u_i$$
+
+$$
+\begin{aligned}
+\min_{\mathbf{x}} \quad & \alpha \cdot \mathbf{c}^T \mathbf{x} + (1 - \alpha) \cdot \mathbf{e}^T \mathbf{x} \\
+\text{subject to} \quad & A_{\text{eq}} \mathbf{x} = \mathbf{b}_{\text{eq}} \\
+& A_{\text{ub}} \mathbf{x} \le \mathbf{b}_{\text{ub}} \\
+& 0 \le x_i \le u_i \quad \forall i
+\end{aligned}
+$$
 
 Where $\mathbf{c}$ represents raw material costs, $\mathbf{e}$ represents cradle-to-gate Scope 1+2+3 emissions, and $\alpha \in [0, 1]$ represents the managerial preference weighting.
 * **Solver**: SciPy HiGHS Simplex/Interior-Point.
@@ -211,7 +232,10 @@ http://127.0.0.1:8000
 ### 5.1 EU CBAM SEFA (Regulation EU 2023/956)
 
 UrjaKavach implements the Simple Embedded Free Allocation (SEFA) methodology for the European Union Carbon Border Adjustment Mechanism (CBAM):
-$$\text{Taxable Emissions} = \max\left(0, \, \text{SEE}_{\text{direct}} - \text{CSCF} \cdot \text{BM}_{\text{EU}}\right)$$
+
+$$
+\text{Taxable Emissions} = \max\left(0, \, \text{SEE}_{\text{direct}} - \text{CSCF} \cdot \text{BM}_{\text{EU}}\right)
+$$
 
 * **Scope 2 Treatment**: Excluded per official EU steel guidance.
 * **CSCF Phase-Out**: Tracks the free allocation reduction trajectory from 97.5% (2026) down to 0% (2034).
