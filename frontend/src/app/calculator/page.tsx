@@ -48,6 +48,13 @@ import {
 } from "lucide-react";
 import { InlineExplainButton, syncAssistantInputs, APPLY_COCKPIT_PARAMS_EVENT } from "@/components/agent/InlineExplainButton";
 import { AdaptiveSlider, getSliderColor } from "@/components/watermelon/adaptive-slider";
+import { Select1 } from "@/components/watermelon/select-1";
+import { EmissionsBreakdownWidget } from "@/components/watermelon/emissions-breakdown-widget";
+import { ChargeMixDonutWidget } from "@/components/watermelon/charge-mix-donut-widget";
+import { EnergyTrendWidget } from "@/components/watermelon/energy-trend-widget";
+import { FluidTabs } from "@/components/watermelon/fluid-tabs";
+import { FloatingCockpitToolbar } from "@/components/watermelon/floating-cockpit-toolbar";
+import { SwitchMode } from "@/components/watermelon/switch-mode";
 
 export default function CalculatorPage() {
   // State for all cockpit inputs
@@ -290,26 +297,34 @@ export default function CalculatorPage() {
           </div>
         </div>
 
-        {/* Quick Reset to JSL Default Baseline */}
-        <button
-          onClick={() => {
-            setSelectedGradeId("J304");
-            setScrapPct(60);
-            setFacilityId("jajpur");
-            setFeSource("coalDRI");
-            setFecrSource("fecrStandard");
-            setNiSource("niStandard");
-            setRefiningRoute("aod");
-            setCastingRoute("continuous");
-            setProduct("crCoil");
-            setRenewablePct(47);
-            setHotFecrCharging(true);
-          }}
-          className="flex items-center gap-1.5 rounded-lg border border-steel-700 bg-steel-900/60 px-3 py-1.5 text-xs font-medium text-steel-300 hover:text-white hover:bg-steel-800 transition-colors w-fit"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          <span>Reset JSL Baseline</span>
-        </button>
+        {/* Compliance Mode Switcher & Quick Reset */}
+        <div className="flex flex-wrap items-center gap-3">
+          <SwitchMode
+            leftLabel="BEE India CCTS"
+            rightLabel="EU CBAM Art. 9"
+            defaultMode="cbam"
+          />
+
+          <button
+            onClick={() => {
+              setSelectedGradeId("J304");
+              setScrapPct(60);
+              setFacilityId("jajpur");
+              setFeSource("coalDRI");
+              setFecrSource("fecrStandard");
+              setNiSource("niStandard");
+              setRefiningRoute("aod");
+              setCastingRoute("continuous");
+              setProduct("crCoil");
+              setRenewablePct(47);
+              setHotFecrCharging(true);
+            }}
+            className="flex items-center gap-1.5 rounded-lg border border-steel-700 bg-steel-900/60 px-3 py-1.5 text-xs font-medium text-steel-300 hover:text-white hover:bg-steel-800 transition-colors w-fit"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            <span>Reset JSL Baseline</span>
+          </button>
+        </div>
       </div>
 
       {/* 2-Column Cockpit Layout */}
@@ -330,21 +345,19 @@ export default function CalculatorPage() {
               </span>
             </div>
 
-            {/* Family filter pills */}
-            <div className="flex flex-wrap gap-1.5 text-[11px]">
-              {["All", "200 Series", "300 Series", "Ferritic", "Martensitic", "Duplex"].map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setFamilyFilter(f)}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
-                    familyFilter === f
-                      ? "bg-thermal-500 text-white font-semibold"
-                      : "bg-steel-900 text-steel-400 hover:text-steel-200 border border-steel-800"
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
+            {/* Family filter tabs with Watermelon FluidTabs */}
+            <div className="overflow-x-auto pb-1 max-w-full">
+              <FluidTabs
+                activeId={familyFilter}
+                onChange={(id) => setFamilyFilter(id)}
+                tabs={[
+                  { id: "All", label: "All", icon: <Layers className="h-3.5 w-3.5" /> },
+                  { id: "200 Series", label: "200 Series", icon: <Flame className="h-3.5 w-3.5" /> },
+                  { id: "300 Series", label: "300 Series", icon: <Sparkles className="h-3.5 w-3.5" /> },
+                  { id: "Ferritic", label: "Ferritic", icon: <ShieldCheck className="h-3.5 w-3.5" /> },
+                  { id: "Duplex", label: "Duplex", icon: <Zap className="h-3.5 w-3.5" /> },
+                ]}
+              />
             </div>
 
             {/* Search Input */}
@@ -533,73 +546,56 @@ export default function CalculatorPage() {
 
             {/* Ferrochrome & Nickel Sourcing */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              {/* FeCr */}
-              <div className="space-y-1.5">
-                <label className="text-steel-300 font-medium block">
-                  Ferrochrome (FeCr) Route
-                </label>
-                <select
-                  value={fecrSource}
-                  onChange={(e) => setFecrSource(e.target.value as any)}
-                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
-                >
-                  <option value="fecrStandard">Standard HC FeCr (3.50 tCO2/t)</option>
-                  <option value="fecrLowC">Low-Carbon FeCr (1.90 tCO2/t)</option>
-                </select>
-              </div>
+              <Select1
+                label="Ferrochrome (FeCr) Route"
+                value={fecrSource}
+                onChange={(val) => setFecrSource(val as any)}
+                badge={fecrSource === "fecrLowC" ? "-46% CO2" : "Baseline"}
+                badgeColor={fecrSource === "fecrLowC" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" : "text-steel-400 bg-steel-800 border-steel-700"}
+                options={[
+                  { value: "fecrStandard", label: "Standard HC FeCr (3.50 tCO2/t)" },
+                  { value: "fecrLowC", label: "Low-Carbon FeCr (1.90 tCO2/t)" },
+                ]}
+              />
 
-              {/* Nickel */}
-              <div className="space-y-1.5">
-                <label className="text-steel-300 font-medium block">
-                  Primary Nickel Sourcing
-                </label>
-                <select
-                  value={niSource}
-                  onChange={(e) => setNiSource(e.target.value as any)}
-                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
-                >
-                  <option value="niStandard">Global Standard Ni (15 tCO2/t)</option>
-                  <option value="niClass1">Class 1 Hydro Ni (10 tCO2/t)</option>
-                  <option value="niNPI">Indonesian Coal NPI (55 tCO2/t)</option>
-                </select>
-              </div>
+              <Select1
+                label="Primary Nickel Sourcing"
+                value={niSource}
+                onChange={(val) => setNiSource(val as any)}
+                badge={niSource === "niClass1" ? "Class 1 Hydro" : niSource === "niNPI" ? "High-Carbon" : "Standard"}
+                badgeColor={niSource === "niClass1" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" : niSource === "niNPI" ? "text-red-400 bg-red-500/10 border-red-500/30" : "text-steel-400 bg-steel-800 border-steel-700"}
+                options={[
+                  { value: "niStandard", label: "Global Standard Ni (15 tCO2/t)" },
+                  { value: "niClass1", label: "Class 1 Hydro Ni (10 tCO2/t)" },
+                  { value: "niNPI", label: "Indonesian Coal NPI (55 tCO2/t)" },
+                ]}
+              />
             </div>
 
             {/* Facility & Power Mix */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
-              {/* Facility */}
-              <div className="space-y-1.5">
-                <label className="text-steel-300 font-medium block">
-                  JSL Asset Twin
-                </label>
-                <select
-                  value={facilityId}
-                  onChange={(e) => setFacilityId(e.target.value)}
-                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
-                >
-                  <option value="jajpur">Jajpur Complex (250 MW CPP)</option>
-                  <option value="hisar">Hisar Precision (Northern Grid + H2)</option>
-                  <option value="chhattisgarh">Chhattisgarh Hub (Rotary Kilns)</option>
-                </select>
-              </div>
+              <Select1
+                label="JSL Asset Twin"
+                value={facilityId}
+                onChange={(val) => setFacilityId(val)}
+                badge={facilityId === "jajpur" ? "250 MW CPP" : facilityId === "hisar" ? "H2 + Northern Grid" : "Gas-DRI Corridor"}
+                badgeColor="text-cyanPulse-400 bg-cyanPulse-500/10 border-cyanPulse-500/30"
+                options={[
+                  { value: "jajpur", label: "Jajpur Complex (250 MW CPP)" },
+                  { value: "hisar", label: "Hisar Precision (Northern Grid + H2)" },
+                  { value: "chhattisgarh", label: "Chhattisgarh Hub (Rotary Kilns)" },
+                ]}
+              />
 
-              {/* Product */}
-              <div className="space-y-1.5">
-                <label className="text-steel-300 font-medium block">
-                  Downstream Product
-                </label>
-                <select
-                  value={product}
-                  onChange={(e) => setProduct(e.target.value as any)}
-                  className="w-full rounded-lg border border-steel-700 bg-obsidian-950 p-2 text-xs text-white focus:border-thermal-500 focus:outline-none"
-                >
-                  {Object.entries(PRODUCTS).map(([k, p]) => (
-                    <option key={k} value={k}>
-                      {p.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select1
+                label="Downstream Product"
+                value={product}
+                onChange={(val) => setProduct(val as any)}
+                options={Object.entries(PRODUCTS).map(([k, p]) => ({
+                  value: k,
+                  label: p.label,
+                }))}
+              />
             </div>
 
             {/* Renewable PPA Slider */}
@@ -742,6 +738,68 @@ export default function CalculatorPage() {
             </div>
           </div>
 
+          {/* WATERMELON UI PYROMETALLURGICAL TWIN WIDGETS */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ChargeMixDonutWidget
+              title="Metallic Charge Burden"
+              subtitle={`Live burden distribution for ${currentGrade.name} (${currentGrade.id})`}
+              data={[
+                {
+                  id: "scrap",
+                  label: `SS Scrap (${effectiveScrapPct}%)`,
+                  value: `${(effectiveScrapPct * 10).toFixed(0)} kg/t`,
+                  numericValue: effectiveScrapPct * 10,
+                  percentage: effectiveScrapPct,
+                  fill: "#06b6d4",
+                  badge: `Cap: ${currentGrade.scrap_cap}%`,
+                },
+                {
+                  id: "fecr",
+                  label: hotFecrCharging ? "Molten FeCr (Hot Ladle)" : "Ferrochrome (Cold)",
+                  value: `${(currentGrade.cr * 14.5).toFixed(0)} kg/t`,
+                  numericValue: Math.round(currentGrade.cr * 14.5),
+                  percentage: Number(((currentGrade.cr * 14.5) / 10).toFixed(1)),
+                  fill: "#f97316",
+                  badge: hotFecrCharging ? "-86 kWh/t credit" : "Cold Charge",
+                },
+                {
+                  id: "iron",
+                  label: feSource === "gasDRI" ? "Gas-DRI (Raigarh)" : feSource === "pigIron" ? "Foundry Pig Iron" : "Coal-DRI (Standard)",
+                  value: `${Math.max(0, 1000 - effectiveScrapPct * 10 - Math.round(currentGrade.cr * 14.5) - Math.round(currentGrade.ni * 12) - 25)} kg/t`,
+                  numericValue: Math.max(0, 1000 - effectiveScrapPct * 10 - Math.round(currentGrade.cr * 14.5) - Math.round(currentGrade.ni * 12) - 25),
+                  percentage: Number((Math.max(0, 1000 - effectiveScrapPct * 10 - Math.round(currentGrade.cr * 14.5) - Math.round(currentGrade.ni * 12) - 25) / 10).toFixed(1)),
+                  fill: "#a855f7",
+                  badge: feSource === "gasDRI" ? "Low Carbon DRI" : "Virgin Fe",
+                },
+                {
+                  id: "nickel",
+                  label: niSource === "niClass1" ? "Class-1 Pure Ni" : niSource === "niNPI" ? "Nickel Pig Iron" : "Ferronickel",
+                  value: `${(currentGrade.ni * 12).toFixed(0)} kg/t`,
+                  numericValue: Math.round(currentGrade.ni * 12),
+                  percentage: Number(((currentGrade.ni * 12) / 10).toFixed(1)),
+                  fill: "#3b82f6",
+                  badge: `${currentGrade.ni}% Ni Spec`,
+                },
+                {
+                  id: "fluxes",
+                  label: "Slag Fluxes (CaO/MgO)",
+                  value: "25 kg/t",
+                  numericValue: 25,
+                  percentage: 2.5,
+                  fill: "#10b981",
+                  badge: "Basicity B2 > 1.8",
+                },
+              ]}
+              totalMassKg={1000}
+            />
+
+            <EnergyTrendWidget
+              title="Specific Electrical Energy (SEC)"
+              subtitle={`EAF + SAF Enthalpy Profile for ${facilityId === "jajpur" ? "Jajpur Works (Hot FeCr)" : facilityId === "hisar" ? "Hisar Specialty Works" : "Raigarh Gas Hub"}`}
+              defaultRange="7h"
+            />
+          </div>
+
           {/* 10-DRIVER EMISSIONS WATERFALL */}
           <div className="glass-panel rounded-2xl p-5 border border-steel-800 space-y-4">
             <div className="flex items-center justify-between">
@@ -793,6 +851,28 @@ export default function CalculatorPage() {
               </ResponsiveContainer>
             </div>
           </div>
+
+          {/* SCOPE 1, 2 & 3 EMISSIONS ARCHITECTURE (WIDGET-3 ADAPTED) */}
+          <EmissionsBreakdownWidget
+            title="Scope 1, 2 & 3 Emissions Architecture"
+            subtitle={`Direct stack, captive power & upstream supply chain comparison for ${currentGrade.name}`}
+            actionLabel="Export CBAM Verification"
+            onActionClick={() => {
+              window.alert(`CBAM & CCTS Audit Verification for ${currentGrade.id}:\n- Total Intensity: ${results.emissions.totalCo2T.toFixed(3)} tCO2/t steel\n- Scope 1: ${results.emissions.scope1DirectTco2.toFixed(3)} tCO2/t\n- Scope 2: ${results.emissions.scope2ElectricityTco2.toFixed(3)} tCO2/t\n- Scope 3: ${results.emissions.scope3PrecursorsTco2.toFixed(3)} tCO2/t`);
+            }}
+            data={[
+              { scenario: "Standard BF-BOF", scope1: 1.48, scope2: 0.28, scope3_raw: 0.52, scope3_scrap: 0.04 },
+              { scenario: "JSL Baseline EAF", scope1: 0.42, scope2: 0.58, scope3_raw: 0.44, scope3_scrap: 0.05 },
+              {
+                scenario: `Current Heat (${currentGrade.id})`,
+                scope1: Number(results.emissions.scope1DirectTco2.toFixed(2)),
+                scope2: Number(results.emissions.scope2ElectricityTco2.toFixed(2)),
+                scope3_raw: Number((results.emissions.scope3PrecursorsTco2 * 0.85).toFixed(2)),
+                scope3_scrap: Number((results.emissions.scope3PrecursorsTco2 * 0.15).toFixed(2)),
+              },
+              { scenario: "JSL Green Pilot (90% RE)", scope1: 0.18, scope2: 0.08, scope3_raw: 0.22, scope3_scrap: 0.07 },
+            ]}
+          />
 
           {/* STATUTORY BENCHMARK COMPARISON BAR */}
           <div className="glass-panel rounded-2xl p-5 border border-steel-800 space-y-4">
@@ -902,6 +982,18 @@ export default function CalculatorPage() {
           </div>
         </div>
       </div>
+
+      {/* FLOATING COCKPIT TOOLBAR (WATERMELON FLOATING-DISCLOSURE ADAPTED) */}
+      <FloatingCockpitToolbar
+        onSelectPreset={(preset) => {
+          if (preset === "baseline") applyPreset("baseline");
+          else if (preset === "jajpur_optimum") applyPreset("balanced");
+          else if (preset === "max_scrap") applyPreset("decarb");
+          else if (preset === "cbam_export") {
+            window.alert(`CBAM Verification Dossier for ${currentGrade.id} generated!\nSpecific Carbon Intensity: ${results.emissions.totalCo2T.toFixed(3)} tCO2/t steel\nStatutory Phase-in Cash Liability: €${results.financials.cbamCashTariff2026EurPerT.toFixed(2)}/t`);
+          }
+        }}
+      />
     </div>
   );
 }

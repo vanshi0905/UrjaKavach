@@ -55,6 +55,9 @@ import {
   DollarSign,
 } from "lucide-react";
 import { AdaptiveSlider, getSliderColor } from "@/components/watermelon/adaptive-slider";
+import { Select1 } from "@/components/watermelon/select-1";
+import { ChargeMixDonutWidget } from "@/components/watermelon/charge-mix-donut-widget";
+import { FloatingCockpitToolbar } from "@/components/watermelon/floating-cockpit-toolbar";
 
 interface RoadmapStep {
   id: string;
@@ -371,53 +374,40 @@ export default function OptimizerPage() {
       <div className="glass-panel rounded-2xl p-6 border border-steel-800 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Grade selector */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-steel-300 uppercase tracking-wider block">
-              Target JSL Grade
-            </label>
-            <select
-              value={selectedGradeId}
-              onChange={(e) => setSelectedGradeId(e.target.value)}
-              className="w-full rounded-xl border border-steel-700 bg-obsidian-950 p-2.5 text-xs text-white focus:border-thermal-500 focus:outline-none font-semibold"
-            >
-              {Object.values(GRADES).map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.id} — {g.name} ({g.family})
-                </option>
-              ))}
-            </select>
-            <span className="text-[11px] text-steel-500 block">
-              Scrap Cap: {currentGrade.scrap_cap}% | Cr: {currentGrade.cr}% | Ni: {currentGrade.ni}%
-            </span>
-          </div>
+          <Select1
+            label="Target JSL Grade"
+            badge={`Scrap Cap: ${currentGrade.scrap_cap}%`}
+            badgeColor="text-cyanPulse-400 bg-cyanPulse-500/10 border-cyanPulse-500/30"
+            value={selectedGradeId}
+            onChange={(val) => setSelectedGradeId(val)}
+            description={`Cr: ${currentGrade.cr}% | Ni: ${currentGrade.ni}% | ${currentGrade.family}`}
+            options={Object.values(GRADES).map((g) => ({
+              value: g.id,
+              label: `${g.id} — ${g.name}`,
+              sublabel: g.family,
+            }))}
+          />
 
           {/* Facility Twin selector */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-steel-300 uppercase tracking-wider block">
-                Digital Twin Facility
-              </label>
-              <span className="text-[10px] text-cyanPulse-400 font-mono">
-                {facilityId === "jajpur" ? "-86 kWh/t Hot FeCr" : facilityId === "chhattisgarh" ? "Gas-DRI Hub" : "Cold FeCr 500 kWh/t"}
-              </span>
-            </div>
-            <select
-              value={facilityId}
-              onChange={(e) => handleFacilityChange(e.target.value)}
-              className="w-full rounded-xl border border-steel-700 bg-obsidian-950 p-2.5 text-xs text-white focus:border-cyanPulse-500 focus:outline-none font-semibold"
-            >
-              <option value="jajpur">JSL Jajpur (Molten FeCr Hot Charging, 250MW CPP)</option>
-              <option value="hisar">JSL Hisar (Specialty Works, Northern Regional Grid)</option>
-              <option value="chhattisgarh">JSL Raigarh Hub / Chhattisgarh (Gas-DRI & JSSL Industrial Belt)</option>
-            </select>
-            <span className="text-[11px] text-steel-500 block">
-              {facilityId === "jajpur"
+          <Select1
+            label="Digital Twin Facility"
+            badge={facilityId === "jajpur" ? "-86 kWh/t Hot FeCr" : facilityId === "chhattisgarh" ? "Gas-DRI Hub" : "Cold FeCr 500 kWh/t"}
+            badgeColor={facilityId === "jajpur" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" : "text-amber-400 bg-amber-500/10 border-amber-500/30"}
+            value={facilityId}
+            onChange={(val) => handleFacilityChange(val)}
+            description={
+              facilityId === "jajpur"
                 ? "Sensible heat credit: -86 kWh/t | Coal CPP EF: 1.00 tCO2/MWh"
                 : facilityId === "hisar"
                 ? "No hot charging credit | Northern Grid EF: 0.72 tCO2/MWh"
-                : "Gas-DRI Corridor & JSSL Processing | Western Grid EF: 0.73 tCO2/MWh"}
-            </span>
-          </div>
+                : "Gas-DRI Corridor & JSSL Processing | Western Grid EF: 0.73 tCO2/MWh"
+            }
+            options={[
+              { value: "jajpur", label: "JSL Jajpur (Molten FeCr Hot Charging, 250MW CPP)" },
+              { value: "hisar", label: "JSL Hisar (Specialty Works, Northern Regional Grid)" },
+              { value: "chhattisgarh", label: "JSL Raigarh Hub / Chhattisgarh (Gas-DRI & JSSL Industrial Belt)" },
+            ]}
+          />
 
           {/* Electricity Tariff control */}
           <div className="space-y-1.5">
@@ -583,6 +573,28 @@ export default function OptimizerPage() {
                 })}
               </tbody>
             </table>
+          </div>
+
+          {/* Visual Charge Donut Breakdown (Watermelon UI widget-4 adapted) */}
+          <div className="pt-2 border-t border-steel-800">
+            <ChargeMixDonutWidget
+              title="LP Optimal Metallic Distribution"
+              subtitle={`HiGHS Interior-Point Solved for ${currentGrade.name}`}
+              data={Object.entries(optResult.chargeSheetPct).map(([k, pct], idx) => {
+                const kg = (optResult.chargeSheetT[k] || 0) * 1000;
+                const colors = ["#06b6d4", "#f97316", "#a855f7", "#3b82f6", "#10b981", "#eab308"];
+                return {
+                  id: k,
+                  label: k.replace(/([A-Z])/g, " $1").trim(),
+                  value: `${kg.toFixed(0)} kg/t`,
+                  numericValue: Math.round(kg),
+                  percentage: Number(pct.toFixed(1)),
+                  fill: colors[idx % colors.length],
+                  badge: `${pct.toFixed(1)}%`,
+                };
+              })}
+              totalMassKg={Math.round(Object.values(optResult.chargeSheetT).reduce((a, b) => a + b, 0) * 1000)}
+            />
           </div>
         </div>
 
@@ -1147,6 +1159,23 @@ export default function OptimizerPage() {
           ))}
         </div>
       </div>
+
+      {/* FLOATING COCKPIT TOOLBAR (WATERMELON FLOATING-DISCLOSURE ADAPTED) */}
+      <FloatingCockpitToolbar
+        onSelectPreset={(preset) => {
+          if (preset === "baseline") {
+            setSelectedGradeId("J304");
+            setAlpha(0.0);
+          } else if (preset === "jajpur_optimum") {
+            setFacilityId("jajpur");
+            setAlpha(0.5);
+          } else if (preset === "max_scrap") {
+            setAlpha(1.0);
+          } else if (preset === "cbam_export") {
+            window.alert(`HiGHS Pareto Frontier Audit Dossier for ${currentGrade.id} generated!\nOptimal Charge Cost: $${optResult.chargeCostUsdPerT.toFixed(2)}/t\nOptimal Total Carbon: ${optResult.totalCo2TPerT.toFixed(3)} tCO2/t`);
+          }
+        }}
+      />
     </div>
   );
 }

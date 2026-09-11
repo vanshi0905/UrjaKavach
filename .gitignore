@@ -53,4 +53,8 @@ deploy_to_vercel.bat
 # TypeScript build info cache
 *.tsbuildinfo
 
+# Vercel deployment metadata
+.vercel/
+frontend/.vercel/
+
 
