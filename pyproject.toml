@@ -1,1 +1,2 @@
-[tool.vercel]`r`nentrypoint = "jsl_carbon_engine.api:app"
+[tool.vercel]
+entrypoint = "jsl_carbon_engine.api:app"
