@@ -132,12 +132,12 @@ export function CinematicBackground({
 
   return (
     <div className={cn("relative w-full overflow-hidden bg-obsidian-950", className)}>
-      {/* 1. Base Cinematic Furnace Photograph with Vibrant Industrial Glow */}
+      {/* 1. Base Cinematic Furnace Photograph with Seamless Ken Burns Pan/Zoom */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 will-change-transform scale-105 pointer-events-none"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 will-change-transform animate-ken-burns scale-105 pointer-events-none"
         style={{
           backgroundImage: "url('/images/furnace-bg.jpg')",
-          filter: "brightness(0.85) contrast(1.18) saturate(1.3)",
+          filter: "brightness(0.65) contrast(1.15) saturate(1.2)",
         }}
       />
 
@@ -153,7 +153,7 @@ export function CinematicBackground({
           onLoadedData={() => setVideoLoaded(true)}
           className={cn(
             "absolute inset-0 h-full w-full object-cover pointer-events-none mix-blend-screen transition-opacity duration-700",
-            videoLoaded ? "opacity-85" : "opacity-65"
+            videoLoaded ? "opacity-60" : "opacity-40"
           )}
           poster="/images/furnace-bg.jpg"
         >
@@ -168,18 +168,18 @@ export function CinematicBackground({
         className="absolute inset-0 h-full w-full pointer-events-none z-[2]"
       />
 
-      {/* 4. Deep Thermal Vignette & Text-Readability Masks (Tuned so furnace glow & sparks are vividly visible) */}
+      {/* 4. Deep Thermal Vignette & Text-Readability Masks */}
+      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/80 via-obsidian-950/50 to-obsidian-950 pointer-events-none z-[3]" />
       <div
         className="absolute inset-0 pointer-events-none z-[3]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 38%, rgba(5, 7, 9, 0.12) 0%, rgba(5, 7, 9, 0.40) 60%, rgba(5, 7, 9, 0.88) 100%)",
+            "radial-gradient(ellipse at 50% 30%, rgba(5, 7, 9, 0.45) 0%, rgba(5, 7, 9, 0.75) 60%, #050709 100%)",
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/40 via-transparent to-obsidian-950/90 pointer-events-none z-[3]" />
 
       {/* Subtle bottom molten orange horizon line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-thermal-500/50 to-transparent pointer-events-none z-[4]" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-thermal-500/40 to-transparent pointer-events-none z-[4]" />
 
       {/* 5. Foreground Content */}
       <div className="relative z-10 w-full">

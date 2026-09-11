@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { IntegrationsStack } from "@/components/watermelon/integrations-stack";
 import { CinematicBackground } from "@/components/ui/cinematic-background";
-import { LogoShowcase } from "@/components/brand/LogoShowcase";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"baseline" | "optimized">("optimized");
@@ -40,14 +39,12 @@ export default function HomePage() {
             </div>
 
             {/* Headline */}
-            <div className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight font-heading">
-                Urja<span className="bg-gradient-to-r from-thermal-400 via-orange-500 to-amber-300 bg-clip-text text-transparent">Kavach</span>
-              </h1>
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-steel-200 tracking-tight">
-                The Clean Stainless Steel Decarbonization &amp; Energy Armor
-              </p>
-            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight font-heading">
+              The Stainless Steel{" "}
+              <span className="bg-gradient-to-r from-thermal-400 via-orange-500 to-amber-300 bg-clip-text text-transparent">
+                Trilemma
+              </span>
+            </h1>
 
             {/* Subtitle */}
             <p className="text-base sm:text-lg text-steel-300 max-w-3xl leading-relaxed">
@@ -424,11 +421,6 @@ export default function HomePage() {
       {/* BEAT 4: AUDITED INDUSTRIAL TECH STACK                                     */}
       {/* ========================================================================= */}
       <IntegrationsStack />
-
-      {/* ========================================================================= */}
-      {/* BEAT 5: BRAND MARKS & VISUAL IDENTITY                                     */}
-      {/* ========================================================================= */}
-      <LogoShowcase />
 
       {/* ========================================================================= */}
       {/* CLOSING LAUNCHPAD: EVALUATOR COCKPIT NAVIGATION                           */}

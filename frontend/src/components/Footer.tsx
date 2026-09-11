@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ShieldCheck, Flame, Scale, Globe } from "lucide-react";
-import { UrjaKavachLogo } from "@/components/brand/UrjaKavachLogo";
 
 export function Footer() {
   return (
@@ -9,9 +8,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-steel-800/60">
           {/* Col 1: About */}
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-3">
-              <UrjaKavachLogo variant="compact" iconSize={32} />
-              <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-mono font-semibold text-emerald-400 border border-emerald-500/30">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-white text-base tracking-wide">
+                URJAKAVACH DECARBONIZATION COCKPIT
+              </span>
+              <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/30">
                 PS-3 SOLUTION
               </span>
             </div>
