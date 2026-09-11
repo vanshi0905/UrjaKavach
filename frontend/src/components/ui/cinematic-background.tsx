@@ -29,21 +29,65 @@ export function CinematicBackground({
 }: CinematicBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-      video.defaultMuted = true;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          // Autoplay fallback
-          console.log("Video waiting for user interaction or low power mode:", err);
-        });
+    if (!video) return;
+
+    // Enforce properties directly on DOM element to satisfy all browser autoplay policies
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const startPlayback = async () => {
+      try {
+        if (video.paused) {
+          await video.play();
+        }
+        setIsPlaying(true);
+      } catch (err) {
+        // Autoplay may be deferred until user interacts with the page
+        console.debug("Video autoplay awaiting interaction:", err);
       }
-    }
+    };
+
+    // Attempt immediate playback
+    startPlayback();
+
+    // Event listeners to start as soon as data arrives or document becomes active
+    const onCanPlay = () => startPlayback();
+    const onLoadedData = () => startPlayback();
+    const onPlaying = () => setIsPlaying(true);
+    const onTimeUpdate = () => {
+      if (video.currentTime > 0) setIsPlaying(true);
+    };
+
+    video.addEventListener("canplay", onCanPlay);
+    video.addEventListener("loadeddata", onLoadedData);
+    video.addEventListener("playing", onPlaying);
+    video.addEventListener("timeupdate", onTimeUpdate);
+
+    // Fallback: resume playback on first user gesture or tab focus
+    const handleUserGesture = () => {
+      startPlayback();
+    };
+
+    window.addEventListener("pointerdown", handleUserGesture, { once: true, passive: true });
+    window.addEventListener("touchstart", handleUserGesture, { once: true, passive: true });
+    window.addEventListener("scroll", handleUserGesture, { once: true, passive: true });
+    window.addEventListener("focus", startPlayback);
+
+    return () => {
+      video.removeEventListener("canplay", onCanPlay);
+      video.removeEventListener("loadeddata", onLoadedData);
+      video.removeEventListener("playing", onPlaying);
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      window.removeEventListener("pointerdown", handleUserGesture);
+      window.removeEventListener("touchstart", handleUserGesture);
+      window.removeEventListener("scroll", handleUserGesture);
+      window.removeEventListener("focus", startPlayback);
+    };
   }, []);
 
   // Floating continuous embers on canvas
@@ -137,11 +181,14 @@ export function CinematicBackground({
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 will-change-transform animate-ken-burns scale-105 pointer-events-none"
         style={{
           backgroundImage: "url('/images/furnace-bg.jpg')",
-          filter: "brightness(0.65) contrast(1.15) saturate(1.2)",
+          filter: "brightness(0.48) contrast(1.18) saturate(1.15)",
         }}
       />
 
-      {/* 2. Seamless Looping Industrial Sparks & Fire Video Layer */}
+      {/* 2. Base Darkening Gradient to Ensure Background Depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/75 via-obsidian-950/45 to-obsidian-950 pointer-events-none" />
+
+      {/* 3. Seamless Looping Industrial Sparks & Fire Video Layer */}
       {showVideo && (
         <video
           ref={videoRef}
@@ -150,38 +197,40 @@ export function CinematicBackground({
           muted
           playsInline
           preload="auto"
-          onLoadedData={() => setVideoLoaded(true)}
+          aria-hidden="true"
           className={cn(
-            "absolute inset-0 h-full w-full object-cover pointer-events-none mix-blend-screen transition-opacity duration-700",
-            videoLoaded ? "opacity-60" : "opacity-40"
+            "absolute inset-0 h-full w-full object-cover pointer-events-none mix-blend-screen transition-opacity duration-1000",
+            isPlaying ? "opacity-80 md:opacity-90" : "opacity-0"
           )}
-          poster="/images/furnace-bg.jpg"
+          style={{
+            filter: "contrast(1.15) brightness(1.15)",
+          }}
         >
+          <source src="/videos/sparks-loop.mp4" type="video/mp4" />
+          <source src="/videos/sparks-loop.webm" type="video/webm" />
           <source src="/videos/sparks.mp4" type="video/mp4" />
-          <source src="/videos/sparks.webm" type="video/webm" />
         </video>
       )}
 
-      {/* 3. Infinite Seamless Floating Embers Canvas */}
+      {/* 4. Infinite Seamless Floating Embers Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 h-full w-full pointer-events-none z-[2]"
       />
 
-      {/* 4. Deep Thermal Vignette & Text-Readability Masks */}
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/80 via-obsidian-950/50 to-obsidian-950 pointer-events-none z-[3]" />
+      {/* 5. Deep Thermal Vignette & Text-Readability Mask */}
       <div
         className="absolute inset-0 pointer-events-none z-[3]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 30%, rgba(5, 7, 9, 0.45) 0%, rgba(5, 7, 9, 0.75) 60%, #050709 100%)",
+            "radial-gradient(ellipse at 50% 35%, rgba(5, 7, 9, 0.25) 0%, rgba(5, 7, 9, 0.65) 75%, #050709 100%)",
         }}
       />
 
       {/* Subtle bottom molten orange horizon line */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-thermal-500/40 to-transparent pointer-events-none z-[4]" />
 
-      {/* 5. Foreground Content */}
+      {/* 6. Foreground Content */}
       <div className="relative z-10 w-full">
         {children}
       </div>
