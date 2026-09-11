@@ -28,7 +28,7 @@
 - [6 Repository Architecture](#6-repository-architecture)
 - [7 Verification and Test Suite](#7-verification-and-test-suite)
 - [8 Troubleshooting and Physical Boundary Limits](#8-troubleshooting-and-physical-boundary-limits)
-- [9 See Also](#9-see-also)
+- [9 See also](#9-see-also)
 
 ---
 
@@ -247,10 +247,10 @@ UrjaKavach/
 ├── frontend/                          # Next.js/React executive dashboard
 ├── tests/                             # 376 unit, integration, and voice tests
 │
-├── presentation/                      # Presentation suite
-│   ├── PITCH_DECK.md                  # 6-Slide Judge-Ready Master Pitch Deck
-│   ├── SPEAKER_NOTES.md               # 3-Minute conversational pitch script
-│   └── templates/                     # 4K 16:9 Clean Slide Master Backgrounds
+├── presentation/                      # Technical presentation materials and templates
+│   ├── PITCH_DECK.md                  # Technical architecture presentation outline
+│   ├── SPEAKER_NOTES.md               # Spoken technical walkthrough notes
+│   └── templates/                     # Master slide backgrounds and visual templates
 │
 ├── docs/                              # Structured technical specifications
 │   ├── methodology/                   # Mathematical proofs and assumptions
@@ -315,11 +315,14 @@ python -m pytest tests/test_financials.py -v
 
 ---
 
-## 9 See Also
+## 9 See also
 
-- **Master Pitch Deck**: [`presentation/PITCH_DECK.md`](presentation/PITCH_DECK.md)
-- **3-Minute Spoken Script**: [`presentation/SPEAKER_NOTES.md`](presentation/SPEAKER_NOTES.md)
-- **Slide Master Backgrounds**: [`presentation/templates/slide_master_bg.jpg`](presentation/templates/slide_master_bg.jpg)
-- **Mathematical Methodology**: [`docs/methodology/FORMULAS_AND_METHODOLOGY.md`](docs/methodology/FORMULAS_AND_METHODOLOGY.md)
-- **Assumptions and Limitations**: [`docs/methodology/ASSUMPTIONS_AND_LIMITATIONS.md`](docs/methodology/ASSUMPTIONS_AND_LIMITATIONS.md)
-- **Official JSL Datasheets**: [`datasheets/`](datasheets/)
+* [Mathematical Methodology and Stoichiometric Balance](docs/methodology/FORMULAS_AND_METHODOLOGY.md) - Complete thermodynamic, enthalpy, and chemical derivations
+* [Assumptions, Boundaries, and Limitations](docs/methodology/ASSUMPTIONS_AND_LIMITATIONS.md) - Metallurgical boundaries and scope allocations
+* [Validation and Technical Feasibility Report](docs/methodology/VALIDATION_AND_FEASIBILITY.md) - Empirical calibration against JSL plant operating data
+* [System Architecture and Backend Plan](docs/specifications/backend_architecture_plan.md) - Decoupled three-layer computational pipeline design
+* [Official JSL Material Datasheets](datasheets/) - Certified elemental tolerances for 200, 300, 400, and Duplex series
+* [Regulation (EU) 2023/956](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32023R0956) - European Union Carbon Border Adjustment Mechanism (CBAM)
+* [Bureau of Energy Efficiency (BEE)](https://beeindia.gov.in/) - Carbon Credit Trading Scheme (CCTS) compliance grounding
+* [ISO 19694-6:2023](https://www.iso.org/standard/79010.html) - Stationary source emissions: Ferroalloys and specialty stainless steel
+* [SciPy HiGHS Solver Documentation](https://docs.scipy.org/doc/scipy/reference/optimize.linprog-highs.html) - Simplex and interior-point linear programming reference
