@@ -18,6 +18,7 @@ import {
   Sliders,
   AlertTriangle,
 } from "lucide-react";
+import { JSLLogo } from "@/components/brand/JSLLogo";
 import { IntegrationsStack } from "@/components/watermelon/integrations-stack";
 import { CinematicBackground } from "@/components/ui/cinematic-background";
 
@@ -32,10 +33,19 @@ export default function HomePage() {
       <CinematicBackground className="pt-8 pb-10 md:pt-14 md:pb-14 border-b border-steel-800/80">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center space-y-6 max-w-4xl mx-auto">
-            {/* UrjaKavach Platform Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-thermal-500/40 bg-thermal-500/10 px-4 py-1.5 text-xs font-semibold text-thermal-300 backdrop-blur-md animate-pulse">
-              <Flame className="h-3.5 w-3.5 text-thermal-400" />
-              <span>URJAKAVACH • ADVANCED CLEAN STEEL DECARBONIZATION COCKPIT</span>
+            {/* UrjaKavach & JSL Deployment Twin Badge */}
+            <div className="inline-flex flex-wrap items-center justify-center gap-2.5 rounded-full border border-thermal-500/40 bg-obsidian-950/80 px-4 py-1.5 text-xs font-semibold backdrop-blur-md shadow-lg">
+              <span className="flex items-center gap-1.5 text-thermal-300">
+                <Flame className="h-3.5 w-3.5 text-thermal-400" />
+                <span>URJAKAVACH</span>
+              </span>
+              <span className="h-3 w-px bg-steel-700 hidden sm:inline-block" />
+              <JSLLogo variant="mark" size={18} />
+              <span className="text-steel-200 font-medium hidden sm:inline-block">JINDAL STAINLESS TWIN</span>
+              <span className="h-3 w-px bg-steel-700 hidden sm:inline-block" />
+              <span className="text-[10px] font-mono text-cyanPulse-400">
+                JAJPUR • HISAR • RAIGARH
+              </span>
             </div>
 
             {/* Headline */}

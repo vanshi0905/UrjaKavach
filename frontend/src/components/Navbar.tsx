@@ -14,6 +14,8 @@ import {
   Users,
 } from "lucide-react";
 
+import { JSLLogo } from "@/components/brand/JSLLogo";
+
 export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,27 +51,34 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isActive
-                    ? "bg-steel-800/80 text-thermal-400 border border-thermal-500/40 shadow-sm"
-                    : "text-steel-300 hover:text-white hover:bg-steel-800/40"
-                }`}
-              >
-                <Icon className={`h-4 w-4 ${isActive ? "text-thermal-400" : "text-steel-400"}`} />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Desktop Navigation Links & JSL Co-Badge */}
+        <div className="hidden md:flex items-center gap-1">
+          <nav className="flex items-center gap-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
+                    isActive
+                      ? "bg-steel-800/80 text-thermal-400 border border-thermal-500/40 shadow-sm"
+                      : "text-steel-300 hover:text-white hover:bg-steel-800/40"
+                  }`}
+                >
+                  <Icon className={`h-4 w-4 ${isActive ? "text-thermal-400" : "text-steel-400"}`} />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* JSL Enterprise Co-Badge */}
+          <div className="hidden lg:flex items-center pl-3 ml-2 border-l border-steel-800/80">
+            <JSLLogo variant="badge" size={24} showSubtitle={false} />
+          </div>
+        </div>
 
         {/* Mobile menu toggle */}
         <button
@@ -83,7 +92,7 @@ export function Navbar() {
 
       {/* Mobile dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-steel-800 bg-obsidian-900/95 px-4 pt-2 pb-4 space-y-1">
+        <div className="md:hidden border-b border-steel-800 bg-obsidian-900/95 px-4 pt-2 pb-4 space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -103,8 +112,8 @@ export function Navbar() {
               </Link>
             );
           })}
-          <div className="pt-2 flex items-center justify-between border-t border-steel-800 text-xs text-steel-400">
-            <span>Serverless 0ms Latency</span>
+          <div className="pt-2.5 flex items-center justify-between border-t border-steel-800 text-xs text-steel-400">
+            <JSLLogo variant="badge" size={20} showSubtitle={false} />
             <span className="text-emerald-400 font-mono">● LIVE</span>
           </div>
         </div>

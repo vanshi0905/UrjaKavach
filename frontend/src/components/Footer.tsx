@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck, Flame, Scale, Globe } from "lucide-react";
+import { JSLLogo } from "@/components/brand/JSLLogo";
 
 export function Footer() {
   return (
@@ -8,17 +9,18 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-steel-800/60">
           {/* Col 1: About */}
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2.5">
               <span className="font-bold text-white text-base tracking-wide">
                 URJAKAVACH DECARBONIZATION COCKPIT
               </span>
               <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/30">
                 PS-3 SOLUTION
               </span>
+              <JSLLogo variant="badge" size={20} showSubtitle={false} />
             </div>
             <p className="text-xs text-steel-400 leading-relaxed max-w-lg">
               <strong className="text-white">UrjaKavach</strong> is a peer-reviewed pyrometallurgical carbon and energy intelligence platform engineered for
-              3+ MTPA stainless steel melt capacity across Jajpur &amp; Hisar manufacturing complexes. Integrates closed-loop
+              Jindal Stainless Limited&apos;s 3+ MTPA melt capacity across Jajpur &amp; Hisar manufacturing complexes. Integrates closed-loop
               stoichiometric mass balance, dynamic EAF enthalpy balances, EU CBAM definitive 2026/2034 liabilities,
               and India CCTS BEE June 2026 compliance.
             </p>
