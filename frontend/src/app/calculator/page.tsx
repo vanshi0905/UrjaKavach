@@ -58,7 +58,12 @@ import { SwitchMode } from "@/components/watermelon/switch-mode";
 
 export default function CalculatorPage() {
   // State for all cockpit inputs
+  const [isMounted, setIsMounted] = useState(false);
   const [selectedGradeId, setSelectedGradeId] = useState<string>("J304");
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const [familyFilter, setFamilyFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [facilityId, setFacilityId] = useState<string>("jajpur");
@@ -812,40 +817,46 @@ export default function CalculatorPage() {
               </div>
             </div>
 
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={waterfallData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                  <XAxis
-                    dataKey="name"
-                    stroke="#64748b"
-                    fontSize={10}
-                    tickLine={false}
-                    interval={0}
-                    angle={-25}
-                    textAnchor="end"
-                  />
-                  <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload;
-                        return (
-                          <div className="rounded-lg bg-obsidian-950 border border-steel-700 p-2 shadow-xl text-xs">
-                            <span className="font-semibold text-white block">{data.name}</span>
-                            <span className="font-mono text-thermal-400">{Number(data.value).toFixed(3)} tCO2 / t</span>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                    {waterfallData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="h-64 w-full min-h-[256px]">
+              {isMounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={waterfallData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                    <XAxis
+                      dataKey="name"
+                      stroke="#64748b"
+                      fontSize={10}
+                      tickLine={false}
+                      interval={0}
+                      angle={-25}
+                      textAnchor="end"
+                    />
+                    <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="rounded-lg bg-obsidian-950 border border-steel-700 p-2 shadow-xl text-xs">
+                              <span className="font-semibold text-white block">{data.name}</span>
+                              <span className="font-mono text-thermal-400">{Number(data.value).toFixed(3)} tCO2 / t</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                      {waterfallData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-steel-500 font-mono text-xs">
+                  Loading Process Emissions Waterfall...
+                </div>
+              )}
             </div>
           </div>
 
@@ -883,43 +894,49 @@ export default function CalculatorPage() {
               </span>
             </div>
 
-            <div className="h-48 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={benchmarkData}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
-                >
-                  <XAxis type="number" stroke="#64748b" fontSize={11} tickLine={false} />
-                  <YAxis
-                    type="category"
-                    dataKey="name"
-                    stroke="#cbd5e1"
-                    fontSize={11}
-                    tickLine={false}
-                    width={110}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload;
-                        return (
-                          <div className="rounded-lg bg-obsidian-950 border border-steel-700 p-2 shadow-xl text-xs">
-                            <span className="font-semibold text-white block">{data.name}</span>
-                            <span className="font-mono text-cyanPulse-400">{Number(data.value).toFixed(3)} tCO2 / t</span>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                    {benchmarkData.map((entry, index) => (
-                      <Cell key={`bm-cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="h-48 w-full min-h-[192px]">
+              {isMounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={benchmarkData}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                  >
+                    <XAxis type="number" stroke="#64748b" fontSize={11} tickLine={false} />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      stroke="#cbd5e1"
+                      fontSize={11}
+                      tickLine={false}
+                      width={110}
+                    />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="rounded-lg bg-obsidian-950 border border-steel-700 p-2 shadow-xl text-xs">
+                              <span className="font-semibold text-white block">{data.name}</span>
+                              <span className="font-mono text-cyanPulse-400">{Number(data.value).toFixed(3)} tCO2 / t</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                      {benchmarkData.map((entry, index) => (
+                        <Cell key={`bm-cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-steel-500 font-mono text-xs">
+                  Loading Statutory Benchmark Comparison...
+                </div>
+              )}
             </div>
           </div>
 

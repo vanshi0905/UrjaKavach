@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Bar,
   BarChart,
@@ -130,20 +130,26 @@ export function EmissionsBreakdownWidget({
   onActionClick,
   className,
 }: EmissionsBreakdownWidgetProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div
       className={cn(
-        "rounded-2xl border border-steel-800 bg-obsidian-900/90 p-5 shadow-xl backdrop-blur-md flex flex-col justify-between",
+        "rounded-2xl border border-steel-800 bg-obsidian-900/90 p-5 shadow-xl backdrop-blur-md flex flex-col justify-between overflow-hidden",
         className
       )}
     >
-      <div className="flex items-start justify-between gap-4 mb-4">
-        <div>
-          <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-sm font-semibold tracking-wide text-white font-sans uppercase">
               {title}
             </h3>
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 shrink-0">
               <ShieldCheck className="w-3 h-3" />
               GHG Protocol Verified
             </span>
@@ -154,7 +160,7 @@ export function EmissionsBreakdownWidget({
         {onActionClick && (
           <button
             onClick={onActionClick}
-            className="flex items-center gap-1 rounded-lg border border-steel-700 bg-obsidian-800 px-2.5 py-1.5 text-xs font-semibold text-steel-300 hover:text-white hover:border-thermal-500 transition-colors shrink-0"
+            className="flex items-center gap-1 rounded-lg border border-steel-700 bg-obsidian-800 px-2.5 py-1.5 text-xs font-semibold text-steel-300 hover:text-white hover:border-thermal-500 transition-colors shrink-0 self-start sm:self-auto"
           >
             <span>{actionLabel}</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -162,42 +168,48 @@ export function EmissionsBreakdownWidget({
         )}
       </div>
 
-      <div className="h-60 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} barSize={28} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid vertical={false} stroke="#1e293b" strokeDasharray="3 3" />
-            <XAxis
-              dataKey="scenario"
-              axisLine={{ stroke: "#334155" }}
-              tickLine={false}
-              tick={{
-                fill: "#94a3b8",
-                fontSize: 11,
-                fontWeight: 500,
-              }}
-            />
-            <YAxis
-              axisLine={{ stroke: "#334155" }}
-              tickLine={false}
-              tick={{
-                fill: "#94a3b8",
-                fontSize: 10,
-              }}
-              unit=" t"
-            />
-            <Tooltip content={<CustomTooltip />} />
-            {channels.map((channel) => (
-              <Bar
-                key={channel.key}
-                dataKey={channel.key}
-                name={channel.label}
-                stackId="emissions"
-                fill={channel.color}
-                radius={[0, 0, 0, 0]}
+      <div className="h-60 w-full min-h-[240px]">
+        {isMounted ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data} barSize={28} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+              <CartesianGrid vertical={false} stroke="#1e293b" strokeDasharray="3 3" />
+              <XAxis
+                dataKey="scenario"
+                axisLine={{ stroke: "#334155" }}
+                tickLine={false}
+                tick={{
+                  fill: "#94a3b8",
+                  fontSize: 11,
+                  fontWeight: 500,
+                }}
               />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
+              <YAxis
+                axisLine={{ stroke: "#334155" }}
+                tickLine={false}
+                tick={{
+                  fill: "#94a3b8",
+                  fontSize: 10,
+                }}
+                unit=" t"
+              />
+              <Tooltip content={<CustomTooltip />} />
+              {channels.map((channel) => (
+                <Bar
+                  key={channel.key}
+                  dataKey={channel.key}
+                  name={channel.label}
+                  stackId="emissions"
+                  fill={channel.color}
+                  radius={[0, 0, 0, 0]}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="h-full w-full flex items-center justify-center text-steel-500 font-mono text-xs">
+            Loading Emissions Breakdown...
+          </div>
+        )}
       </div>
 
       <div className="mt-4 pt-3 border-t border-steel-800/80 grid grid-cols-2 sm:grid-cols-4 gap-2">

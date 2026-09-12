@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -78,6 +78,12 @@ export function ChargeMixDonutWidget({
   totalMassKg = 1000,
   className,
 }: ChargeMixDonutWidgetProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const chartData = useMemo(() => {
     return data.map((item) => ({
       ...item,
@@ -88,7 +94,7 @@ export function ChargeMixDonutWidget({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-steel-800 bg-obsidian-900/90 p-5 shadow-xl backdrop-blur-md flex flex-col justify-between",
+        "rounded-2xl border border-steel-800 bg-obsidian-900/90 p-5 shadow-xl backdrop-blur-md flex flex-col justify-between overflow-hidden",
         className
       )}
     >
@@ -108,20 +114,21 @@ export function ChargeMixDonutWidget({
       </div>
 
       <div className="flex flex-col md:flex-row items-center gap-6 my-auto">
-        <div className="relative h-44 w-44 shrink-0 mx-auto">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx="50%"
-                cy="50%"
-                innerRadius="68%"
-                outerRadius="96%"
-                paddingAngle={4}
-                dataKey="numericValue"
-                stroke="none"
-                cornerRadius={5}
-              >
+        <div className="relative h-44 w-44 shrink-0 mx-auto min-h-[176px]">
+          {isMounted ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius="68%"
+                  outerRadius="96%"
+                  paddingAngle={4}
+                  dataKey="numericValue"
+                  stroke="none"
+                  cornerRadius={5}
+                >
                 {chartData.map((entry) => (
                   <Cell
                     key={`cell-${entry.id}`}
@@ -156,6 +163,11 @@ export function ChargeMixDonutWidget({
               />
             </PieChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="h-full w-full flex items-center justify-center text-steel-500 font-mono text-xs">
+            Loading Burden...
+          </div>
+        )}
 
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
             <span className="text-[10px] uppercase tracking-wider text-steel-400 font-mono">

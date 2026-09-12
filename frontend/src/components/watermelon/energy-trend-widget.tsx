@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AreaChart,
   Area,
@@ -86,36 +86,44 @@ export function EnergyTrendWidget({
   className,
 }: EnergyOverviewWidgetProps) {
   const [activeRange, setActiveRange] = useState<EnergyCampaignRange>(defaultRange);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const data = campaignDatasets[activeRange];
 
   return (
     <div
       className={cn(
-        "rounded-2xl border border-steel-800 bg-obsidian-900/90 p-5 shadow-xl backdrop-blur-md flex flex-col justify-between",
+        "rounded-2xl border border-steel-800 bg-obsidian-900/90 p-5 shadow-xl backdrop-blur-md flex flex-col justify-between overflow-hidden",
         className
       )}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-sm font-semibold tracking-wide text-white font-sans uppercase">
               {title}
             </h3>
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 text-[10px] font-mono font-semibold text-amber-400">
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 text-[10px] font-mono font-semibold text-amber-400 shrink-0">
               <Zap className="w-3 h-3" />
               Thermal Twin
             </span>
           </div>
-          <p className="text-xs text-steel-400 mt-1 font-sans">{subtitle}</p>
+          <p className="text-xs text-steel-400 mt-1 font-sans line-clamp-2" title={subtitle}>
+            {subtitle}
+          </p>
         </div>
 
-        <div className="flex items-center bg-obsidian-950 p-1 rounded-xl border border-steel-800 shrink-0">
+        <div className="flex items-center bg-obsidian-950 p-1 rounded-xl border border-steel-800 shrink-0 self-start sm:self-auto">
           {(["7h", "14h", "30d"] as EnergyCampaignRange[]).map((range) => (
             <button
               key={range}
               onClick={() => setActiveRange(range)}
               className={cn(
-                "px-2.5 py-1 text-xs font-mono font-semibold rounded-lg transition-all",
+                "px-2 py-1 text-[11px] font-mono font-semibold rounded-lg transition-all whitespace-nowrap",
                 activeRange === range
                   ? "bg-steel-800 text-white shadow-sm"
                   : "text-steel-400 hover:text-white"
@@ -137,40 +145,46 @@ export function EnergyTrendWidget({
         </span>
       </div>
 
-      <div className="mt-4 h-36 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-            <defs>
-              <linearGradient id="energyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.35} />
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
-              </linearGradient>
-            </defs>
-            <XAxis
-              dataKey="label"
-              axisLine={{ stroke: "#334155" }}
-              tickLine={false}
-              tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 500 }}
-            />
-            <YAxis
-              domain={[320, 480]}
-              axisLine={{ stroke: "#334155" }}
-              tickLine={false}
-              tick={{ fill: "#94a3b8", fontSize: 9 }}
-              unit="k"
-            />
-            <Tooltip content={<EnergyTooltip />} />
-            <Area
-              type="monotone"
-              dataKey="sec"
-              stroke="#f59e0b"
-              strokeWidth={2.5}
-              fill="url(#energyGrad)"
-              dot={{ fill: "#f59e0b", r: 3 }}
-              activeDot={{ fill: "#f59e0b", stroke: "#ffffff", strokeWidth: 2, r: 5 }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      <div className="mt-4 h-36 w-full min-h-[144px]">
+        {isMounted ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+              <defs>
+                <linearGradient id="energyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
+                </linearGradient>
+              </defs>
+              <XAxis
+                dataKey="label"
+                axisLine={{ stroke: "#334155" }}
+                tickLine={false}
+                tick={{ fill: "#94a3b8", fontSize: 10, fontWeight: 500 }}
+              />
+              <YAxis
+                domain={[320, 480]}
+                axisLine={{ stroke: "#334155" }}
+                tickLine={false}
+                tick={{ fill: "#94a3b8", fontSize: 9 }}
+                unit="k"
+              />
+              <Tooltip content={<EnergyTooltip />} />
+              <Area
+                type="monotone"
+                dataKey="sec"
+                stroke="#f59e0b"
+                strokeWidth={2.5}
+                fill="url(#energyGrad)"
+                dot={{ fill: "#f59e0b", r: 3 }}
+                activeDot={{ fill: "#f59e0b", stroke: "#ffffff", strokeWidth: 2, r: 5 }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="h-full w-full flex items-center justify-center bg-obsidian-950/40 rounded-lg text-steel-500 font-mono text-xs">
+            Loading Thermal Profile...
+          </div>
+        )}
       </div>
 
       <div className="mt-4 pt-3 border-t border-steel-800/80 grid grid-cols-3 gap-2 text-left">
