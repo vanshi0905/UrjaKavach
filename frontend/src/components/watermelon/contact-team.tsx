@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Mail, User, GraduationCap, Cpu, Terminal, ArrowRight, ShieldCheck, Code2, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ export interface TeamMember {
   accentBorder: string;
   avatarBg: string;
   iconColor: string;
+  photo?: string;
 }
 
 const TEAM_MEMBERS: TeamMember[] = [
@@ -33,6 +35,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     accentBorder: "border-thermal-500/40 shadow-thermal-500/10 group-hover:border-thermal-400",
     avatarBg: "bg-thermal-500/10 text-thermal-400 border-thermal-500/30",
     iconColor: "text-thermal-400",
+    photo: "/team/team-vanshika.jpg",
   },
   {
     id: "member-2",
@@ -46,6 +49,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     accentBorder: "border-cyan-500/40 shadow-cyan-500/10 group-hover:border-cyan-400",
     avatarBg: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
     iconColor: "text-cyan-400",
+    photo: "/team/team-himanshi.jpg",
   },
   {
     id: "member-3",
@@ -59,6 +63,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     accentBorder: "border-emerald-500/40 shadow-emerald-500/10 group-hover:border-emerald-400",
     avatarBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
     iconColor: "text-emerald-400",
+    photo: "/team/team-eshu.jpg",
   },
 ];
 
@@ -105,7 +110,7 @@ export function ContactTeam({ className }: { className?: string }) {
               )}
               title="Click to copy contact email"
             >
-              {/* Clean Human DP Icon */}
+              {/* Team Member Avatar Icon */}
               <div
                 className={cn(
                   "relative mb-5 h-20 w-20 sm:h-24 sm:w-24 rounded-full flex items-center justify-center border transition-all duration-300 group-hover:scale-105 shadow-xl",

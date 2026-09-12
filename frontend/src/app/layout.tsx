@@ -1,9 +1,28 @@
 import type { Metadata } from "next";
+import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "katex/dist/katex.min.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AssistantDrawer } from "@/components/agent/AssistantDrawer";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "UrjaKavach | Stainless Steel Carbon & Energy Decarbonization Platform",
@@ -17,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${inter.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen bg-obsidian-950 text-steel-100 flex flex-col antialiased selection:bg-thermal-500/30 selection:text-thermal-300 font-sans">
         <Navbar />
         <main className="flex-1 w-full">{children}</main>

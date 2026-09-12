@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { JSLLogo } from "@/components/brand/JSLLogo";
 import { IntegrationsStack } from "@/components/watermelon/integrations-stack";
+import { BentoGrid } from "@/components/watermelon/bento-grid";
 import { CinematicBackground } from "@/components/ui/cinematic-background";
 
 export default function HomePage() {
@@ -219,6 +220,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ========================================================================= */}
+      {/* BEAT 2.5: TRAMP ELEMENTS & PLATFORM CAPABILITIES BENTO GRID               */}
+      {/* ========================================================================= */}
+      <BentoGrid />
 
       {/* ========================================================================= */}
       {/* BEAT 3: INTERACTIVE PROOF OF VALUE (FLAGSHIP J304 HEAT)                   */}

@@ -91,7 +91,7 @@ export default function MethodologyPage() {
             </div>
             <p className="text-xs text-steel-300 mt-1.5 max-w-3xl leading-relaxed">
               Interactive full-duplex voice agent and conversational intelligence assistant grounded in first-principles thermodynamics,
-              EU CBAM Regulation 2023/956, BEE CCTS benchmarks, and Swerim RAWMATMIX® linear programming duality.
+              EU CBAM Regulation 2023/956, BEE CCTS benchmarks, and Swerim RAWMATMIXÂ® linear programming duality.
               Select any one-click prompt below for instant technical deep-dives via chat or neural voice briefing.
             </p>
           </div>
@@ -157,7 +157,7 @@ export default function MethodologyPage() {
               </h2>
             </div>
             <p className="text-xs text-steel-400 mt-1 max-w-3xl leading-relaxed">
-              Rigorous empirical validation against Swerim RAWMATMIX® LP and Outokumpu Tornio Works 18/8 stainless EAF-AOD melting campaign data published at METEC InSteelCon 2011. Validates cost, scrap ceiling, phosphorus non-removal, and pyrometallurgical electrical energy baselines within 0.25% industrial variance.
+              Rigorous empirical validation against Swerim RAWMATMIXÂ® LP and Outokumpu Tornio Works 18/8 stainless EAF-AOD melting campaign data published at METEC InSteelCon 2011. Validates cost, scrap ceiling, phosphorus non-removal, and pyrometallurgical electrical energy baselines within 0.25% industrial variance.
             </p>
           </div>
 
@@ -182,9 +182,9 @@ export default function MethodologyPage() {
             <tbody className="divide-y divide-steel-800/60 font-mono text-steel-300">
               <tr className="hover:bg-steel-900/30 transition-colors">
                 <td className="py-2.5 px-4 font-sans font-semibold text-white">Total Liquid Steel Direct Cost</td>
-                <td className="py-2.5 px-4 text-right text-steel-200">€3,306.00 / t</td>
-                <td className="py-2.5 px-4 text-right font-bold text-emerald-400">€3,298.24 / t</td>
-                <td className="py-2.5 px-4 text-right font-bold text-emerald-400">-0.23% (-€7.76/t)</td>
+                <td className="py-2.5 px-4 text-right text-steel-200">â‚¬3,306.00 / t</td>
+                <td className="py-2.5 px-4 text-right font-bold text-emerald-400">â‚¬3,298.24 / t</td>
+                <td className="py-2.5 px-4 text-right font-bold text-emerald-400">-0.23% (-â‚¬7.76/t)</td>
                 <td className="py-2.5 px-4 font-sans text-steel-400 text-[11px]">Industrial parity within 0.25% margin</td>
               </tr>
               <tr className="hover:bg-steel-900/30 transition-colors">
@@ -195,11 +195,11 @@ export default function MethodologyPage() {
                 <td className="py-2.5 px-4 font-sans text-steel-400 text-[11px]">Scrap ceiling clamped by tramp limits</td>
               </tr>
               <tr className="hover:bg-steel-900/30 transition-colors">
-                <td className="py-2.5 px-4 font-sans font-semibold text-white">Phosphorus Partitioning (η_P)</td>
+                <td className="py-2.5 px-4 font-sans font-semibold text-white">Phosphorus Partitioning (Î·_P)</td>
                 <td className="py-2.5 px-4 text-right text-steel-200">0.99 (Non-removal)</td>
                 <td className="py-2.5 px-4 text-right font-bold text-white">0.99 (Non-removal)</td>
                 <td className="py-2.5 px-4 text-right text-steel-400 font-bold">0.00%</td>
-                <td className="py-2.5 px-4 font-sans text-steel-400 text-[11px]">ΔG°(Cr2O3) &lt;&lt; ΔG°(P2O5) Wei et al. 2018</td>
+                <td className="py-2.5 px-4 font-sans text-steel-400 text-[11px]">Î”GÂ°(Cr2O3) &lt;&lt; Î”GÂ°(P2O5) Wei et al. 2018</td>
               </tr>
               <tr className="hover:bg-steel-900/30 transition-colors">
                 <td className="py-2.5 px-4 font-sans font-semibold text-white">Specific Electrical Consumption (Scrap)</td>
@@ -227,305 +227,74 @@ export default function MethodologyPage() {
         </div>
       </div>
 
-      {/* SECTION 3: OPEN-BOX MATHEMATICAL FORMULATIONS */}
-      <div id="thermochemical-formulas" className="glass-panel rounded-2xl p-6 border border-steel-800 space-y-6 scroll-mt-20">
+      {/* SECTION 3: FORMULA QUICK REFERENCE SUMMARY */}
+      <div id="thermochemical-formulas" className="glass-panel rounded-2xl p-6 border border-steel-800 space-y-4 scroll-mt-20">
         <div>
           <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
             <Scale className="h-4 w-4 text-cyanPulse-400" />
-            <span>Open-Box Pyrometallurgical Formulations</span>
+            <span>Formula Quick Reference â€” 6 Core Pyrometallurgical Engines</span>
           </h2>
           <p className="text-xs text-steel-400 mt-0.5">
-            Full transparency into all pyrometallurgical thermodynamic and legal financial equations.
+            All equations are fully rendered with derivations in the AI Voice Cockpit section above. This table provides a rapid engineering reference.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
-          {/* Formula 1: Iron Crediting */}
-          <div className="rounded-xl bg-obsidian-950 p-4 border border-steel-800 space-y-2.5 flex flex-col justify-between">
-            <div className="space-y-2">
-              <span className="font-bold text-thermal-400 block text-xs">
-                1. Stoichiometric Iron Crediting (Eliminating Double-Counting)
-              </span>
-              <MathFormula
-                latex="\mathrm{Fe}_{\mathrm{virgin}} = \max\left(0,\, w_{\mathrm{Fe}}(1 - s) - \sum_{k \in \mathrm{alloys}} \mathrm{Fe}_{k}\right)"
-                equationNumber={1}
-              />
-              <p className="text-steel-400 text-[11px] leading-relaxed">
-                Standard calculators count the entire virgin iron charge as DRI while separately adding ferrochrome.
-                Because standard HC FeCr contains ~40% Fe and Indonesian NPI contains ~81.5% Fe, failing to credit
-                alloy iron inflates virgin DRI demand by up to 220 kg/t, exaggerating emissions by 0.57 tCO2/t.
-              </p>
-            </div>
-            <div className="pt-2 border-t border-steel-800/80 flex items-center justify-between gap-2">
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain stoichiometric iron crediting and why failing to credit ferroalloy iron exaggerates emissions",
-                    target: "total_co2_t",
-                    tab: "chat",
-                    mode: "chat",
-                  })
-                }
-                className="text-[11px] text-steel-400 hover:text-white flex items-center gap-1"
-              >
-                <MessageSquare className="w-3 h-3 text-cyanPulse-400" />
-                <span>Ask AI Chat</span>
-              </button>
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain stoichiometric iron crediting in stainless steel",
-                    target: "total_co2_t",
-                    tab: "voice",
-                    mode: "voice",
-                  })
-                }
-                className="text-[11px] text-thermal-400 hover:text-thermal-300 flex items-center gap-1"
-              >
-                <Volume2 className="w-3 h-3" />
-                <span>Voice Explain</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Formula 2: Dynamic SEC */}
-          <div className="rounded-xl bg-obsidian-950 p-4 border border-steel-800 space-y-2.5 flex flex-col justify-between">
-            <div className="space-y-2">
-              <span className="font-bold text-cyanPulse-400 block text-xs">
-                2. Dynamic EAF Specific Electrical Consumption (Enthalpy)
-              </span>
-              <MathFormula
-                latex="\mathrm{SEC}_{\mathrm{EAF}} = \frac{Q_{\mathrm{scrap}} + Q_{\mathrm{DRI}} + Q_{\mathrm{alloys}} - Q_{\mathrm{hotSAF}}}{\eta_{\mathrm{thermal}}} + E_{\mathrm{aux}}"
-                equationNumber={2}
-              />
-              <p className="text-steel-400 text-[11px] leading-relaxed">
-                Models individual thermodynamic melting and reduction enthalpies: stainless scrap melting (285.6 kWh_th),
-                endothermic FeO reduction in coal DRI (+159.2 kJ/mol), gangue slag melting, and sensible heat savings
-                from Jajpur molten FeCr charging (~200 kWh/t).
-              </p>
-            </div>
-            <div className="pt-2 border-t border-steel-800/80 flex items-center justify-between gap-2">
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain dynamic EAF SEC enthalpy balance and sensible heat credit from molten FeCr",
-                    target: "eaf_sec_kwh",
-                    tab: "chat",
-                    mode: "chat",
-                  })
-                }
-                className="text-[11px] text-steel-400 hover:text-white flex items-center gap-1"
-              >
-                <MessageSquare className="w-3 h-3 text-cyanPulse-400" />
-                <span>Ask AI Chat</span>
-              </button>
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain dynamic EAF SEC and sensible heat savings",
-                    target: "eaf_sec_kwh",
-                    tab: "voice",
-                    mode: "voice",
-                  })
-                }
-                className="text-[11px] text-thermal-400 hover:text-thermal-300 flex items-center gap-1"
-              >
-                <Volume2 className="w-3 h-3" />
-                <span>Voice Explain</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Formula 3: EU CBAM SEFA */}
-          <div className="rounded-xl bg-obsidian-950 p-4 border border-steel-800 space-y-2.5 flex flex-col justify-between">
-            <div className="space-y-2">
-              <span className="font-bold text-amber-400 block text-xs">
-                3. EU CBAM Specific Embedded Free Allocation (SEFA 2026)
-              </span>
-              <MathFormula
-                latex="\mathrm{Tariff}_{2026} = \max\Big(0,\, \big[\mathrm{SEE} - (\mathrm{BM}_{\mathrm{scrap}} \cdot 0.975 \cdot \mathrm{CSCF})\big] \cdot €80 \cdot 0.025 - \mathrm{Art}_9\Big)"
-                equationNumber={3}
-              />
-              <p className="text-steel-400 text-[11px] leading-relaxed">
-                Under EU Regulation 2023/956, steel SEE includes Scope 1 + Scope 3 (Scope 2 is strictly excluded).
-                In 2026, free allocation is 97.5% with Cross-Sectoral Correction Factor (CSCF = 0.87), phasing out
-                to zero by 2034.
-              </p>
-            </div>
-            <div className="pt-2 border-t border-steel-800/80 flex items-center justify-between gap-2">
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain EU CBAM SEFA 2026 allocation rules and Article 9 credit deductions",
-                    target: "cbam_tariff_eur",
-                    tab: "chat",
-                    mode: "chat",
-                  })
-                }
-                className="text-[11px] text-steel-400 hover:text-white flex items-center gap-1"
-              >
-                <MessageSquare className="w-3 h-3 text-cyanPulse-400" />
-                <span>Ask AI Chat</span>
-              </button>
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain EU CBAM SEFA calculation and Article 9 deductions",
-                    target: "cbam_tariff_eur",
-                    tab: "voice",
-                    mode: "voice",
-                  })
-                }
-                className="text-[11px] text-thermal-400 hover:text-thermal-300 flex items-center gap-1"
-              >
-                <Volume2 className="w-3 h-3" />
-                <span>Voice Explain</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Formula 4: India CCTS BEE */}
-          <div className="rounded-xl bg-obsidian-950 p-4 border border-steel-800 space-y-2.5 flex flex-col justify-between">
-            <div className="space-y-2">
-              <span className="font-bold text-emerald-400 block text-xs">
-                4. India Carbon Credit Trading Scheme (BEE June 2026)
-              </span>
-              <MathFormula
-                latex="\mathrm{CCTS}_{\Delta} = \mathrm{Target}_{\mathrm{BEE}}\,(0.8222) - [\mathrm{Scope}_1 + \mathrm{Scope}_{2,\mathrm{net}}]"
-                equationNumber={4}
-              />
-              <p className="text-steel-400 text-[11px] leading-relaxed">
-                Monitors specific emissions intensity per tonne crude steel against installation targets.
-                Beating the target generates tradeable Carbon Credit Certificates (CCCs) valued at ₹1,500/t.
-              </p>
-            </div>
-            <div className="pt-2 border-t border-steel-800/80 flex items-center justify-between gap-2">
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain India BEE CCTS intensity target of 0.8222 tCO2/t and CCC monetization",
-                    target: "ccts_value_inr",
-                    tab: "chat",
-                    mode: "chat",
-                  })
-                }
-                className="text-[11px] text-steel-400 hover:text-white flex items-center gap-1"
-              >
-                <MessageSquare className="w-3 h-3 text-cyanPulse-400" />
-                <span>Ask AI Chat</span>
-              </button>
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain India BEE CCTS scheme and carbon certificates",
-                    target: "ccts_value_inr",
-                    tab: "voice",
-                    mode: "voice",
-                  })
-                }
-                className="text-[11px] text-thermal-400 hover:text-thermal-300 flex items-center gap-1"
-              >
-                <Volume2 className="w-3 h-3" />
-                <span>Voice Explain</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Formula 5: LP Dual Shadow Prices & Value-in-Use */}
-          <div className="rounded-xl bg-obsidian-950 p-4 border border-steel-800 space-y-2.5 flex flex-col justify-between">
-            <div className="space-y-2">
-              <span className="font-bold text-cyanPulse-400 block text-xs">
-                5. Swerim RAWMATMIX® Dual Shadow Pricing & Value-in-Use (ViU)
-              </span>
-              <MathFormula
-                latex="\pi_t = \frac{\partial \mathrm{Cost}}{\partial \mathrm{limit}_t}, \quad r_j = c_j - \mathbf{A}^T \boldsymbol{\pi}, \quad \mathrm{ViU}_j = c_{\mathrm{purchase},j} - r_j"
-                equationNumber={5}
-              />
-              <p className="text-steel-400 text-[11px] leading-relaxed">
-                Extracts decoupled LP dual shadow prices ($/0.01% tramp) for binding metallurgical caps (Cu, Sn, P, S).
-                Calculates reduced costs (r_j) to determine the exact procurement discount required for non-selected feeds
-                to reach economic parity and enter the charge mix.
-              </p>
-            </div>
-            <div className="pt-2 border-t border-steel-800/80 flex items-center justify-between gap-2">
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain Swerim RAWMATMIX LP dual shadow pricing and scrap Value-in-Use",
-                    target: "total_co2_t",
-                    tab: "chat",
-                    mode: "chat",
-                  })
-                }
-                className="text-[11px] text-steel-400 hover:text-white flex items-center gap-1"
-              >
-                <MessageSquare className="w-3 h-3 text-cyanPulse-400" />
-                <span>Ask AI Chat</span>
-              </button>
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain LP dual shadow pricing and reduced cost for scrap procurement",
-                    target: "total_co2_t",
-                    tab: "voice",
-                    mode: "voice",
-                  })
-                }
-                className="text-[11px] text-thermal-400 hover:text-thermal-300 flex items-center gap-1"
-              >
-                <Volume2 className="w-3 h-3" />
-                <span>Voice Explain</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Formula 6: Phosphorus Thermochemistry */}
-          <div className="rounded-xl bg-obsidian-950 p-4 border border-steel-800 space-y-2.5 flex flex-col justify-between">
-            <div className="space-y-2">
-              <span className="font-bold text-thermal-400 block text-xs">
-                6. High-Cr Phosphorus Non-Removal Thermochemistry (η_P = 0.99)
-              </span>
-              <MathFormula
-                latex="\Delta G^\circ(\mathrm{Cr}_2\mathrm{O}_3) \ll \Delta G^\circ(\mathrm{P}_2\mathrm{O}_5) \implies \eta_{\mathrm{P}} = 0.99, \quad [\mathrm{P}]_{\mathrm{bath}} = \sum_{j} x_j \cdot C_{\mathrm{P},j} \cdot \eta_{\mathrm{P}} \le 0.040\%"
-                equationNumber={6}
-              />
-              <p className="text-steel-400 text-[11px] leading-relaxed">
-                Under stainless refining conditions (18% Cr), chromium oxidizes at vastly lower chemical potential than
-                phosphorus. Dephosphorization without severe chromium loss is thermodynamically impossible (Wei et al. 2018, Selin 1987).
-                Process recovery η_P = 0.99 enforces strict scrap phosphorus containment.
-              </p>
-            </div>
-            <div className="pt-2 border-t border-steel-800/80 flex items-center justify-between gap-2">
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain high-Cr phosphorus non-removal thermochemistry (eta_P = 0.99)",
-                    target: "total_co2_t",
-                    tab: "chat",
-                    mode: "chat",
-                  })
-                }
-                className="text-[11px] text-steel-400 hover:text-white flex items-center gap-1"
-              >
-                <MessageSquare className="w-3 h-3 text-cyanPulse-400" />
-                <span>Ask AI Chat</span>
-              </button>
-              <button
-                onClick={() =>
-                  triggerAssistant({
-                    query: "Explain high-Cr phosphorus non-removal and Ellingham free energy",
-                    target: "total_co2_t",
-                    tab: "voice",
-                    mode: "voice",
-                  })
-                }
-                className="text-[11px] text-thermal-400 hover:text-thermal-300 flex items-center gap-1"
-              >
-                <Volume2 className="w-3 h-3" />
-                <span>Voice Explain</span>
-              </button>
-            </div>
-          </div>
+        <div className="overflow-x-auto rounded-xl border border-steel-800 bg-steel-950/60 shadow-inner">
+          <table className="w-full text-xs text-left">
+            <thead className="text-[10px] uppercase text-steel-400 border-b border-steel-800 bg-obsidian-950">
+              <tr>
+                <th className="py-3 px-4 font-bold">#</th>
+                <th className="py-3 px-4 font-bold">Engine / Formula Name</th>
+                <th className="py-3 px-4 font-bold text-thermal-400">Physical Domain</th>
+                <th className="py-3 px-4 font-bold">Key Output</th>
+                <th className="py-3 px-4 font-bold">Citation</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-steel-800/60 font-mono text-steel-300">
+              <tr className="hover:bg-steel-900/30 transition-colors">
+                <td className="py-2.5 px-4 font-bold text-thermal-400">1</td>
+                <td className="py-2.5 px-4 font-sans font-semibold text-white">Stoichiometric Iron Crediting</td>
+                <td className="py-2.5 px-4 text-thermal-300">Mass Balance</td>
+                <td className="py-2.5 px-4">Fe_virgin, avoids 0.57 tCOâ‚‚/t overcount</td>
+                <td className="py-2.5 px-4 text-steel-400 font-sans text-[11px]">Swerim RAWMATMIXÂ® 2019</td>
+              </tr>
+              <tr className="hover:bg-steel-900/30 transition-colors">
+                <td className="py-2.5 px-4 font-bold text-cyanPulse-400">2</td>
+                <td className="py-2.5 px-4 font-sans font-semibold text-white">Dynamic EAF SEC Enthalpy</td>
+                <td className="py-2.5 px-4 text-cyanPulse-300">Thermal Energy</td>
+                <td className="py-2.5 px-4">SEC_EAF kWh/t (incl. hot FeCr credit)</td>
+                <td className="py-2.5 px-4 text-steel-400 font-sans text-[11px]">Outokumpu METEC 2011</td>
+              </tr>
+              <tr className="hover:bg-steel-900/30 transition-colors">
+                <td className="py-2.5 px-4 font-bold text-amber-400">3</td>
+                <td className="py-2.5 px-4 font-sans font-semibold text-white">EU CBAM SEFA 2026/2034</td>
+                <td className="py-2.5 px-4 text-amber-300">Carbon Tariff</td>
+                <td className="py-2.5 px-4">Border tariff â‚¬/t with Article 9 deduction</td>
+                <td className="py-2.5 px-4 text-steel-400 font-sans text-[11px]">EU Reg 2023/956</td>
+              </tr>
+              <tr className="hover:bg-steel-900/30 transition-colors">
+                <td className="py-2.5 px-4 font-bold text-emerald-400">4</td>
+                <td className="py-2.5 px-4 font-sans font-semibold text-white">India BEE CCTS Intensity</td>
+                <td className="py-2.5 px-4 text-emerald-300">Regulatory</td>
+                <td className="py-2.5 px-4">CCC surplus vs 0.8222 tCOâ‚‚/t benchmark</td>
+                <td className="py-2.5 px-4 text-steel-400 font-sans text-[11px]">BEE June 2026 Notification</td>
+              </tr>
+              <tr className="hover:bg-steel-900/30 transition-colors">
+                <td className="py-2.5 px-4 font-bold text-cyanPulse-400">5</td>
+                <td className="py-2.5 px-4 font-sans font-semibold text-white">LP Dual Shadow Pricing (ViU)</td>
+                <td className="py-2.5 px-4 text-cyanPulse-300">Operations Research</td>
+                <td className="py-2.5 px-4">Shadow price Ï€_t, reduced cost r_j, ViU_j</td>
+                <td className="py-2.5 px-4 text-steel-400 font-sans text-[11px]">Swerim RAWMATMIXÂ® LP</td>
+              </tr>
+              <tr className="hover:bg-steel-900/30 transition-colors">
+                <td className="py-2.5 px-4 font-bold text-thermal-400">6</td>
+                <td className="py-2.5 px-4 font-sans font-semibold text-white">High-Cr P Non-Removal (Î·_P)</td>
+                <td className="py-2.5 px-4 text-thermal-300">Thermochemistry</td>
+                <td className="py-2.5 px-4">Î·_P = 0.99, bath [P] â‰¤ 0.040%</td>
+                <td className="py-2.5 px-4 text-steel-400 font-sans text-[11px]">Wei et al. 2018 / Selin 1987</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

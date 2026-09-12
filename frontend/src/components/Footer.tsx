@@ -39,7 +39,7 @@ export function Footer() {
             <ul className="space-y-1.5 text-xs">
               <li>
                 <Link href="/" className="hover:text-thermal-400 transition-colors">
-                  Overview & Trilemma
+                  Overview &amp; Trilemma
                 </Link>
               </li>
               <li>
@@ -49,12 +49,17 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/optimizer" className="hover:text-thermal-400 transition-colors">
-                  Pareto Optimizer & Monte Carlo
+                  Pareto Optimizer &amp; Monte Carlo
                 </Link>
               </li>
               <li>
                 <Link href="/methodology" className="hover:text-thermal-400 transition-colors">
-                  Audit & Evidence Dossier
+                  Audit &amp; Evidence Dossier
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-thermal-400 transition-colors">
+                  Team Hind &amp; Contact
                 </Link>
               </li>
               <li>
