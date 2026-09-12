@@ -294,8 +294,8 @@ function answerClientConversationalQueryInner(
       const co2Data = shapReport.targets.total_co2_t;
       return {
         target: "total_co2_t",
-        targetName: "Copilot Status",
-        title: "JSL Metallurgical Copilot Status",
+        targetName: "UrjaSaathi Status",
+        title: "UrjaSaathi AI Status",
         topic: "pleasantry",
         summary: "I am operating at peak thermal and computational efficiency! Ready to assist your melt-shop calculations.",
         metaphor: "All digital process loops and first-principles solvers are operating within nominal boundaries.",
@@ -311,8 +311,8 @@ function answerClientConversationalQueryInner(
       const co2Data = shapReport.targets.total_co2_t;
       return {
         target: "total_co2_t",
-        targetName: "Copilot Acknowledgement",
-        title: "JSL Copilot",
+        targetName: "UrjaSaathi Acknowledgement",
+        title: "UrjaSaathi AI",
         topic: "acknowledgement",
         summary: "You are welcome! Ready to assist with further metallurgical calculations.",
         metaphor: "Always here to assist with pyrometallurgical kinetics and compliance models.",
@@ -335,7 +335,7 @@ function answerClientConversationalQueryInner(
         metaphor: "Standing by for your next operational heat campaign.",
         metrics: `Active Session: Grade ${grade.name} (${grade.id}).`,
         action: "Return anytime for charge optimization or compliance calculations.",
-        fullText: `Goodbye! 👋 Have a safe, productive, and energy-efficient melt-shop shift.\n\nFeel free to open the copilot anytime you need first-principles pyrometallurgical guidance or Pareto charge optimization.`,
+        fullText: `Goodbye! 👋 Have a safe, productive, and energy-efficient melt-shop shift.\n\nFeel free to open UrjaSaathi AI anytime you need first-principles pyrometallurgical guidance or Pareto charge optimization.`,
         shap: co2Data,
         isConversational: true,
       };
@@ -346,7 +346,7 @@ function answerClientConversationalQueryInner(
       return {
         target: "total_co2_t",
         targetName: "Acknowledged",
-        title: "JSL Copilot",
+        title: "UrjaSaathi AI",
         topic: "acknowledgement",
         summary: "Understood! Ready for your next command.",
         metaphor: "Input registered. Standing by for next command.",
@@ -362,21 +362,21 @@ function answerClientConversationalQueryInner(
       const co2Data = shapReport.targets.total_co2_t;
       return {
         target: "total_co2_t",
-        targetName: "About JSL Copilot",
-        title: "About Jindal Stainless (JSL) & AI Engine",
+        targetName: "About UrjaSaathi AI",
+        title: "About UrjaSaathi AI & UrjaKavach",
         topic: "about",
-        summary: "Autonomous pyrometallurgical copilot developed for Jindal Stainless Limited (Jajpur, Hisar, and Raigarh Hub).",
+        summary: "UrjaSaathi AI — “Aapka 24/7 Shift Companion & Melt Advisor” developed for UrjaKavach.",
         metaphor: "A digital twin metallurgical technologist coupling thermochemistry with optimization.",
         metrics: "Facility Network: Jajpur (3.0 MTPA) • Hisar (1.2 MTPA) • Raigarh Hub (Chhattisgarh) • 43 JSL Steel Grades.",
-        action: "Ask any question about JSL operations or optimize a heat charge.",
-        fullText: `### 🏭 Jindal Stainless Limited (JSL) AI Copilot\n\nI am an autonomous pyrometallurgical and decarbonization intelligence engine purpose-built for **Jindal Stainless Limited (JSL)** — India's largest stainless steel manufacturer.\n\n- **Jajpur Integrated Hub (Odisha)**: 3.0 MTPA capacity, captive Submerged Arc Furnaces (SAF) with direct molten FeCr hot transfer (-113 kWh/t thermal credit), and captive coal CPP.\n- **Hisar Precision Hub (Haryana)**: 1.2 MTPA precision long & flat specialty products powered via Northern regional grid and green hydrogen.\n- **Raigarh Hub (Chhattisgarh)**: Strategic Gas-DRI raw material sourcing corridor (-0.68 tCO₂/t) and Jindal Stainless Steelway (JSSL) distribution processing center.\n\nI combine first-principles pyrometallurgy, 64-coalition Permutation Shapley explainable AI, and linear programming (LP / HiGHS) to solve least-cost and least-carbon heat charges in real time.`,
+        action: "Ask any question about UrjaKavach operations or optimize a heat charge.",
+        fullText: `### 🛡️ UrjaSaathi AI\n*“Aapka 24/7 Shift Companion & Melt Advisor”*\n\nI am your autonomous pyrometallurgical and decarbonization intelligence companion purpose-built for **UrjaKavach** — deployed across India's premier stainless steel manufacturing network.\n\n- **Jajpur Integrated Hub (Odisha)**: 3.0 MTPA capacity, captive Submerged Arc Furnaces (SAF) with direct molten FeCr hot transfer (-113 kWh/t thermal credit), and captive coal CPP.\n- **Hisar Precision Hub (Haryana)**: 1.2 MTPA precision long & flat specialty products powered via Northern regional grid and green hydrogen.\n- **Raigarh Hub (Chhattisgarh)**: Strategic Gas-DRI raw material sourcing corridor (-0.68 tCO₂/t) and distribution processing centers.\n\nI combine first-principles pyrometallurgy, 64-coalition Permutation Shapley explainable AI, and linear programming (LP / HiGHS) to solve least-cost and least-carbon heat charges in real time.`,
         shap: co2Data,
         isConversational: true,
       };
     }
 
     // 2. Greetings & Salutations (e.g. "hi", "hello", "hi or hello", "good morning")
-    const greetingPattern = /^(hi|hello|hey|namaste|good\s+(morning|afternoon|evening|day)|sup|yo|start|hola|greetings)(\b|[\s!?.,]|$)|(\b(hi\s+(or|and)\s+hello|hello\s+(or|and)\s+hi|hi\s+there|hello\s+there|hey\s+there|hi\s+copilot|hello\s+copilot)\b)/i;
+    const greetingPattern = /^(hi|hello|hey|namaste|good\s+(morning|afternoon|evening|day)|sup|yo|start|hola|greetings)(\b|[\s!?.,]|$)|(\b(hi\s+(or|and)\s+hello|hello\s+(or|and)\s+hi|hi\s+there|hello\s+there|hey\s+there|hi\s+copilot|hello\s+copilot|hi\s+saathi|hello\s+saathi|hi\s+urjasaathi|hello\s+urjasaathi)\b)/i;
     if (greetingPattern.test(qLower)) {
       const co2Data = shapReport.targets.total_co2_t;
       const currentCo2 = co2Data.userValue;
@@ -384,14 +384,14 @@ function answerClientConversationalQueryInner(
 
       return {
         target: "total_co2_t",
-        targetName: "Metallurgical Copilot",
-        title: "JSL Chief Metallurgical Copilot",
+        targetName: "UrjaSaathi AI",
+        title: "UrjaSaathi AI",
         topic: "greeting",
-        summary: "Hello! I am your JSL Metallurgical and Decarbonization Copilot. How can I assist your melt-shop operations today?",
-        metaphor: "I operate as your digital process co-pilot, coupling first-principles pyrometallurgy with continuous linear programming optimization.",
+        summary: "Namaste! I am UrjaSaathi AI — Aapka 24/7 Shift Companion & Melt Advisor. How can I assist your operations today?",
+        metaphor: "I operate as your digital process companion, coupling first-principles pyrometallurgy with continuous linear programming optimization.",
         metrics: `Active Cockpit State: Grade ${grade.name} (${grade.id}) • Scrap: ${currentScrap}% • Carbon: ${currentCo2.toFixed(2)} tCO2/t.`,
         action: "Select a suggested metallurgical query or prompt me to optimize your melt-shop operating parameters.",
-        fullText: `Hello! 👋 I am your **JSL Chief Metallurgical AI Copilot & Melt-Shop Decision Engine**.\n\nI am actively monitoring our **${facility}** operations for **${grade.name} (${grade.id})** (currently set to ${currentScrap}% scrap with ~${currentCo2.toFixed(2)} tCO₂/t footprint).\n\n### 🛠️ Common tasks I can assist you with:\n- 🎯 **Charge Optimization**: *'Optimize charge mix for ${grade.id} to minimize cost'* or *'Minimize carbon footprint'*\n- ⚡ **EAF Enthalpy & Power**: *'How does molten FeCr hot charging save ~113 kWh/t at Jajpur?'*\n- ⚖️ **Trade & Regulations**: *'What is our EU CBAM tariff exposure for Europe in 2026?'* or *'How does India CCTS generate EBITDA?'*\n- 🧪 **Slag Kinetics**: *'Calculate FeSi 75 reduction and lime flux for basicity 1.90'*\n- 🔬 **Grade Specifications**: *'What is the nominal chemistry and scrap cap for J4 or J316L?'*\n\nYou can also use voice mode in the **Voice Agent** tab for hands-free operations. How can I assist you right now?`,
+        fullText: `Namaste! 👋 I am **UrjaSaathi AI** — *Aapka 24/7 Shift Companion & Melt Advisor* for **UrjaKavach**.\n\nI am actively monitoring our **${facility}** operations for **${grade.name} (${grade.id})** (currently set to ${currentScrap}% scrap with ~${currentCo2.toFixed(2)} tCO₂/t footprint).\n\n### 🛠️ Common tasks I can assist you with:\n- 🎯 **Charge Optimization**: *'Optimize charge mix for ${grade.id} to minimize cost'* or *'Minimize carbon footprint'*\n- ⚡ **EAF Enthalpy & Power**: *'How does molten FeCr hot charging save ~113 kWh/t at Jajpur?'*\n- ⚖️ **Trade & Regulations**: *'What is our EU CBAM tariff exposure for Europe in 2026?'* or *'How does India CCTS generate EBITDA?'*\n- 🧪 **Slag Kinetics**: *'Calculate FeSi 75 reduction and lime flux for basicity 1.90'*\n- 🔬 **Grade Specifications**: *'What is the nominal chemistry and scrap cap for J4 or J316L?'*\n\nYou can also use voice mode in the **Interactive Voice Agent** tab for hands-free operations. How can I assist you right now?`,
         shap: co2Data,
         isConversational: true,
       };
@@ -403,14 +403,14 @@ function answerClientConversationalQueryInner(
       const co2Data = shapReport.targets.total_co2_t;
       return {
         target: "total_co2_t",
-        targetName: "Engine Capabilities",
-        title: "JSL Copilot Capabilities & Feature Guide",
+        targetName: "UrjaSaathi Capabilities",
+        title: "UrjaSaathi Capabilities & Feature Guide",
         topic: "help",
         summary: "I can optimize your EAF charge mix, calculate EAF electrical consumption, audit tramp elements, compute EU CBAM tariffs, and simulate India CCTS carbon credit trading.",
-        metaphor: "Think of this engine as an autonomous metallurgical chief technologist, calculating physical equilibria and cost frontiers in milliseconds.",
+        metaphor: "Think of UrjaSaathi as an autonomous metallurgical companion, calculating physical equilibria and cost frontiers in milliseconds.",
         metrics: "Engine Specifications: 43 JSL Grades • 8 Deterministic Tools • 64-Coalition Permutation Shapley • 100% Free Open-Source Stack.",
         action: "Test any module in the cockpit or ask me specific metallurgical questions.",
-        fullText: `### 🚀 Capabilities of the JSL Carbon & Energy Engine\n\nI provide industrial-grade pyrometallurgical calculations, continuous optimization, and compliance models:\n\n1. **Continuous Charge Optimization (LP / HiGHS)**\n   - Solves multi-objective (cost vs carbon) Pareto charge sheets across 43 JSL commercial grades.\n   - Enforces strict tramp ceilings ([Cu], [Sn], [P], [S]) and circular scrap caps.\n   - Extracts dual shadow prices (π_t) and break-even scrap Value-in-Use (ViU_j).\n\n2. **Dynamic EAF SEC & Molten FeCr Thermodynamics**\n   - Calculates first-principles enthalpy balances for scrap (~420 kWh/t), coal DRI (~680 kWh/t), and gas DRI (~560 kWh/t).\n   - Computes direct sensible heat credits (-86.0 to -113.0 kWh/t) from Jajpur captive SAF molten FeCr ladle charging.\n\n3. **Trade Economics & Compliance Accounting**\n   - **EU CBAM (Regulation 2023/956)**: Specific high-alloy benchmark (0.284 tCO₂/t), scrap circularity adjustment, strict Scope 2 exclusion, and Article 9 deductions.\n   - **India BEE CCTS**: Scope 1 + net grid Scope 2 intensity, plant-specific baselines, compounding reduction trajectories, and CCC certificate EBITDA.\n\n4. **AOD Slag Kinetics & Basic Fluxing**\n   - Stoichiometric FeSi 75 reduction of oxidized Cr₂O₃ and quicklime flux demand for target binary basicity B₂ = 1.90.\n\n5. **Explainable AI (Shapley Permutations)**\n   - Exact 64-coalition Permutation Shapley attributions with 100% mathematical additive closure.\n\n6. **Free Neural Voice Copilot**\n   - Real-time spoken dialogue with Indian English voice personas (\`en-IN-PrabhatNeural\`, \`en-IN-NeerjaNeural\`), sub-15ms barge-in interruption, and mathematical spoken normalizer.\n\n💡 **Common queries you can ask me:**\n- *'How does molten FeCr hot charging save electricity?'*\n- *'Optimize J304 at Jajpur for least cost'* \n- *'What are the tramp copper limits for grade J430?'*\n- *'What is our EU CBAM liability in 2026?'*`,
+        fullText: `### 🚀 Capabilities of UrjaSaathi AI\n*“Aapka 24/7 Shift Companion & Melt Advisor”*\n\nI provide industrial-grade pyrometallurgical calculations, continuous optimization, and compliance models for **UrjaKavach**:\n\n1. **Continuous Charge Optimization (LP / HiGHS)**\n   - Solves multi-objective (cost vs carbon) Pareto charge sheets across 43 commercial steel grades.\n   - Enforces strict tramp ceilings ([Cu], [Sn], [P], [S]) and circular scrap caps.\n   - Extracts dual shadow prices (π_t) and break-even scrap Value-in-Use (ViU_j).\n\n2. **Dynamic EAF SEC & Molten FeCr Thermodynamics**\n   - Calculates first-principles enthalpy balances for scrap (~420 kWh/t), coal DRI (~680 kWh/t), and gas DRI (~560 kWh/t).\n   - Computes direct sensible heat credits (-86.0 to -113.0 kWh/t) from Jajpur captive SAF molten FeCr ladle charging.\n\n3. **Trade Economics & Compliance Accounting**\n   - **EU CBAM (Regulation 2023/956)**: Specific high-alloy benchmark (0.284 tCO₂/t), scrap circularity adjustment, strict Scope 2 exclusion, and Article 9 deductions.\n   - **India BEE CCTS**: Scope 1 + net grid Scope 2 intensity, plant-specific baselines, compounding reduction trajectories, and CCC certificate EBITDA.\n\n4. **AOD Slag Kinetics & Basic Fluxing**\n   - Stoichiometric FeSi 75 reduction of oxidized Cr₂O₃ and quicklime flux demand for target binary basicity B₂ = 1.90.\n\n5. **Explainable AI (Shapley Permutations)**\n   - Exact 64-coalition Permutation Shapley attributions with 100% mathematical additive closure.\n\n6. **Free Neural Voice Companion (UrjaSaathi)**\n   - Real-time spoken dialogue with Indian English voice personas (\`en-IN-PrabhatNeural\`, \`en-IN-NeerjaNeural\`), sub-15ms barge-in interruption, and mathematical spoken normalizer.\n\n💡 **Common queries you can ask me:**\n- *'How does molten FeCr hot charging save electricity?'*\n- *'Optimize J304 at Jajpur for least cost'* \n- *'What are the tramp copper limits for grade J430?'*\n- *'What is our EU CBAM liability in 2026?'*`,
         shap: co2Data,
         isConversational: true,
       };

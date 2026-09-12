@@ -486,13 +486,13 @@ export function AssistantDrawer() {
         <button
           onClick={() => setIsOpen(true)}
           className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-thermal-600 via-thermal-500 to-amber-500 text-white font-semibold text-xs shadow-2xl shadow-thermal-500/40 hover:scale-105 active:scale-95 transition-all border border-thermal-400/50 group"
-          title="Open UrjaKavach AI Metallurgical Assistant & Voice Agent"
+          title="Open UrjaSaathi AI — Aapka 24/7 Shift Companion & Melt Advisor"
         >
           <div className="relative">
             <Sparkles className="w-4 h-4 text-white animate-spin" />
             <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyanPulse-400 animate-ping"></span>
           </div>
-          <span className="tracking-wide">SCADA AI Copilot</span>
+          <span className="tracking-wide font-medium">UrjaSaathi AI</span>
         </button>
       )}
 
@@ -512,7 +512,7 @@ export function AssistantDrawer() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-bold text-white tracking-wide">
-                      UrjaKavach Process AI Copilot & Voice Agent
+                      UrjaSaathi AI
                     </h3>
                     <span
                       className={`text-[9px] font-mono px-2 py-0.5 rounded-full border ${
@@ -524,8 +524,8 @@ export function AssistantDrawer() {
                       {isBackendConnected ? "Mode 1: Neural WebSocket" : "Mode 2: Serverless Edge"}
                     </span>
                   </div>
-                  <p className="text-[11px] text-steel-400">
-                    Exact Multi-Target SHAP & ELI-Engineer Pedagogical Explanations
+                  <p className="text-[11px] text-steel-400 italic">
+                    “Aapka 24/7 Shift Companion & Melt Advisor”
                   </p>
                 </div>
               </div>
@@ -551,7 +551,7 @@ export function AssistantDrawer() {
                 }`}
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>SCADA Text Chat & SHAP</span>
+                <span>UrjaSaathi Chat & SHAP</span>
               </button>
               <button
                 onClick={() => setActiveTab("voice")}
@@ -577,7 +577,7 @@ export function AssistantDrawer() {
                         <Sparkles className="w-8 h-8" />
                       </div>
                       <div className="max-w-md space-y-1">
-                        <h4 className="text-sm font-bold text-white">Ask Anything About Metallurgy & Carbon</h4>
+                        <h4 className="text-sm font-bold text-white">Ask UrjaSaathi: Metallurgy, Energy & Carbon</h4>
                         <p className="text-xs text-steel-400 leading-relaxed">
                           Grounded in exact Permutation Shapley attributions, thermodynamics, and physical mass balance.
                         </p>
@@ -623,7 +623,7 @@ export function AssistantDrawer() {
                         >
                           <div className="flex items-center justify-between text-[10px] text-steel-400 border-b border-steel-800/40 pb-1">
                             <span className="font-semibold text-white">
-                              {m.sender === "user" ? "Melt Shop Operator" : m.explanation?.title || "UrjaKavach Copilot"}
+                              {m.sender === "user" ? "Melt Shop Operator" : m.explanation?.title || "UrjaSaathi AI"}
                             </span>
                             <span>{m.timestamp}</span>
                           </div>
