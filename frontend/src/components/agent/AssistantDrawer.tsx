@@ -30,6 +30,7 @@ import {
   User,
   Volume2,
   VolumeX,
+  CheckCircle2,
 } from "lucide-react";
 
 interface ChatMessage {
@@ -219,6 +220,8 @@ export function AssistantDrawer() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [appliedPresets, setAppliedPresets] = useState<Record<string, boolean>>({});
+  const [appliedToast, setAppliedToast] = useState<string | null>(null);
 
   // Voice Agent State
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
@@ -334,12 +337,19 @@ export function AssistantDrawer() {
     }
   }, [messages, activeTab]);
 
-  const handleApplyCockpitPreset = (preset: Partial<CalculatorInputs>) => {
+  const handleApplyCockpitPreset = (preset: Partial<CalculatorInputs>, messageId?: string) => {
     dispatchApplyCockpitParams(preset);
     setInputs((prev) => ({ ...prev, ...preset }));
     if (voiceAgentRef.current) {
       voiceAgentRef.current.updateInputs({ ...inputs, ...preset });
     }
+    if (messageId) {
+      setAppliedPresets((prev) => ({ ...prev, [messageId]: true }));
+    }
+    setAppliedToast("Changes Applied — Cockpit sliders updated to recommended preset");
+    setTimeout(() => {
+      setAppliedToast(null);
+    }, 4000);
   };
 
   const handleIncomingAgentResponse = (resp: ExplanationResponse) => {
@@ -427,6 +437,27 @@ export function AssistantDrawer() {
 
     setMessages((prev) => [...prev, userMsg]);
     setInputText("");
+
+    const trimmedQuery = text.trim().toLowerCase();
+    if (/^(apply|apply preset|apply changes|apply recommendation|apply to cockpit|yes apply|apply now)\b/i.test(trimmedQuery)) {
+      const lastPresetMsg = [...messages].reverse().find((m) => m.actionPayload || parseActionPayload(m.text, m.explanation));
+      if (lastPresetMsg) {
+        const preset = lastPresetMsg.actionPayload || parseActionPayload(lastPresetMsg.text, lastPresetMsg.explanation);
+        if (preset) {
+          handleApplyCockpitPreset(preset, lastPresetMsg.id);
+          const confirmMsg: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            sender: "assistant",
+            text: "✓ **Changes Applied!** The recommended furnace setpoints and process parameters have been configured on your Decarbonization Cockpit sliders.",
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            isTargetExplain: false,
+          };
+          setMessages((prev) => [...prev, confirmMsg]);
+          return;
+        }
+      }
+    }
+
     setIsProcessing(true);
 
     try {
@@ -569,6 +600,22 @@ export function AssistantDrawer() {
             {/* TAB 1: SCADA TEXT CHAT & SHAP */}
             {activeTab === "chat" && (
               <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Changes Applied Notification Toast */}
+                {appliedToast && (
+                  <div className="mx-4 mt-3 px-3 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-medium flex items-center justify-between gap-2 shadow-lg shadow-emerald-500/10 animate-in fade-in slide-in-from-top-1 duration-200 shrink-0">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>{appliedToast}</span>
+                    </div>
+                    <button
+                      onClick={() => setAppliedToast(null)}
+                      className="text-emerald-400/80 hover:text-emerald-300 text-xs font-mono"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
                 {/* Message Stream */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                   {messages.length === 0 ? (
@@ -703,13 +750,29 @@ export function AssistantDrawer() {
                               preset.hotFecrCharging !== undefined
                             );
                             if (!hasPresetValues) return null;
+                            const isApplied = Boolean(m.id && appliedPresets[m.id]);
+
                             return (
-                              <div className="pt-2.5 mt-2 border-t border-steel-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-obsidian-950/80 p-2.5 rounded-lg border border-amber-500/30">
-                                <div className="flex items-center gap-2 text-amber-400">
-                                  <Sliders className="w-4 h-4 text-amber-400 shrink-0" />
+                              <div
+                                className={`pt-2.5 mt-2 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg transition-all ${
+                                  isApplied
+                                    ? "bg-emerald-950/40 border border-emerald-500/40"
+                                    : "bg-obsidian-950/80 border border-amber-500/30"
+                                }`}
+                              >
+                                <div className="flex items-center gap-2">
+                                  {isApplied ? (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                                  ) : (
+                                    <Sliders className="w-4 h-4 text-amber-400 shrink-0" />
+                                  )}
                                   <div>
-                                    <span className="text-[10px] font-mono uppercase tracking-wider font-bold block text-amber-300">
-                                      Recommended Process Preset
+                                    <span
+                                      className={`text-[10px] font-mono uppercase tracking-wider font-bold block ${
+                                        isApplied ? "text-emerald-300" : "text-amber-300"
+                                      }`}
+                                    >
+                                      {isApplied ? "Cockpit Parameters Configured" : "Recommended Process Preset"}
                                     </span>
                                     <span className="text-[10px] text-steel-400">
                                       {preset.scrapPct !== undefined ? `Scrap: ${preset.scrapPct}%` : ""}
@@ -719,12 +782,26 @@ export function AssistantDrawer() {
                                   </div>
                                 </div>
                                 <button
-                                  onClick={() => handleApplyCockpitPreset(preset)}
-                                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-thermal-600 via-thermal-500 to-amber-500 hover:scale-[1.02] active:scale-95 text-white font-bold text-[11px] shadow-lg shadow-thermal-500/20 transition-all flex items-center justify-center gap-1.5 shrink-0"
+                                  onClick={() => handleApplyCockpitPreset(preset, m.id)}
+                                  className={`px-3 py-1.5 rounded-lg font-bold text-[11px] shadow-lg transition-all flex items-center justify-center gap-1.5 shrink-0 ${
+                                    isApplied
+                                      ? "bg-emerald-500/25 border border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/35 shadow-emerald-500/10"
+                                      : "bg-gradient-to-r from-thermal-600 via-thermal-500 to-amber-500 hover:scale-[1.02] active:scale-95 text-white shadow-thermal-500/20"
+                                  }`}
+                                  title={isApplied ? "Preset applied to cockpit sliders. Click to re-apply." : "Apply recommended preset to cockpit sliders"}
                                 >
-                                  <Sparkles className="w-3.5 h-3.5" />
-                                  <span>Apply Recommended Preset to Cockpit Sliders</span>
-                                  <ChevronRight className="w-3.5 h-3.5" />
+                                  {isApplied ? (
+                                    <>
+                                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                      <span>Changes Applied</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Sparkles className="w-3.5 h-3.5" />
+                                      <span>Apply Recommended Preset to Cockpit Sliders</span>
+                                      <ChevronRight className="w-3.5 h-3.5" />
+                                    </>
+                                  )}
                                 </button>
                               </div>
                             );
