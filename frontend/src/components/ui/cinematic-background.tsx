@@ -110,7 +110,6 @@ export function CinematicBackground({
           autoPlay
           loop
           muted
-          defaultMuted
           playsInline
           preload="auto"
           aria-hidden="true"

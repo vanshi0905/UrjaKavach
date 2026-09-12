@@ -55,7 +55,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     institution: "National Institute of Technology (NIT) Raipur",
     contribution:
       "Developed EU CBAM Regulation 2023/956 carbon accounting, simulated Article 9 offset deduction mechanisms, modeled India BEE CCTS statutory trajectories, and computed scrap Value-in-Use (ViU) shadow pricing.",
-    email: "eshu.carbon@gmail.com",
+    email: "rajawatmehak@gmail.com",
     accentBorder: "border-emerald-500/40 shadow-emerald-500/10 group-hover:border-emerald-400",
     avatarBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
     iconColor: "text-emerald-400",
