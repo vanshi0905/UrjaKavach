@@ -20,6 +20,7 @@ import {
 import { MethodologyList } from "@/components/watermelon/methodology-list";
 import { IntegrationsStack } from "@/components/watermelon/integrations-stack";
 import { MathFormula } from "@/components/ui/math-formula";
+import { PageAtmosphere } from "@/components/ui/page-atmosphere";
 
 export default function MethodologyPage() {
   const [gradeSearch, setGradeSearch] = useState<string>("");
@@ -34,7 +35,8 @@ export default function MethodologyPage() {
   }, [gradeSearch]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <PageAtmosphere imageSrc="/images/bg-continuous-caster.jpg" glowColor="emerald">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-10">
       {/* Header */}
       <div className="border-b border-steel-800 pb-5">
         <div className="flex items-center gap-2">
@@ -649,5 +651,6 @@ export default function MethodologyPage() {
         <IntegrationsStack className="rounded-3xl border border-steel-800" />
       </div>
     </div>
+  </PageAtmosphere>
   );
 }

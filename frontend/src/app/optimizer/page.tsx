@@ -58,6 +58,7 @@ import { AdaptiveSlider, getSliderColor } from "@/components/watermelon/adaptive
 import { Select1 } from "@/components/watermelon/select-1";
 import { ChargeMixDonutWidget } from "@/components/watermelon/charge-mix-donut-widget";
 import { FloatingCockpitToolbar } from "@/components/watermelon/floating-cockpit-toolbar";
+import { PageAtmosphere } from "@/components/ui/page-atmosphere";
 
 interface RoadmapStep {
   id: string;
@@ -320,7 +321,8 @@ export default function OptimizerPage() {
   const cumulativeAbatementPct = Math.round(((baselineCo2 - currentCo2) / baselineCo2) * 1000) / 10;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <PageAtmosphere imageSrc="/images/bg-control-pulpit.jpg" glowColor="cyan">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <div className="border-b border-steel-800 pb-5">
         <div className="flex items-center gap-2.5">
@@ -1283,5 +1285,6 @@ export default function OptimizerPage() {
         }}
       />
     </div>
+  </PageAtmosphere>
   );
 }

@@ -72,7 +72,7 @@ export function ContactTeam({ className }: { className?: string }) {
   };
 
   return (
-    <section className={cn("bg-background w-full pt-4 pb-12 md:pt-6 md:pb-16 font-sans", className)}>
+    <section className={cn("bg-transparent w-full pt-4 pb-12 md:pt-6 md:pb-16 font-sans", className)}>
       <div className="container mx-auto max-w-6xl px-4 md:px-6">
         {/* Section Header - Tightened top spacing */}
         <div className="mb-8 sm:mb-10 flex flex-col items-center space-y-2.5 text-center">
@@ -100,8 +100,8 @@ export function ContactTeam({ className }: { className?: string }) {
               onClick={() => handleCopyEmail(member.id, member.email)}
               className={cn(
                 "group flex flex-col items-center px-6 py-8 sm:py-10 text-center transition-all duration-200 cursor-pointer select-none",
-                "hover:bg-muted/80 dark:hover:bg-neutral-800/80",
-                idx % 2 === 0 ? "bg-background" : "bg-muted/40"
+                "hover:bg-obsidian-800/80",
+                idx % 2 === 0 ? "bg-obsidian-950/75 backdrop-blur-md" : "bg-obsidian-900/75 backdrop-blur-md"
               )}
               title="Click to copy contact email"
             >
