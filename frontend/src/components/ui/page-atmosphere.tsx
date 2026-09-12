@@ -63,13 +63,13 @@ export function PageAtmosphere({
   const config = GLOW_CONFIG[glowColor];
 
   return (
-    <div className={cn("relative min-h-screen w-full bg-[#080c14] text-steel-100 selection:bg-thermal-500/30 selection:text-white", className)}>
+    <div className={cn("relative min-h-screen w-full bg-[#080c14] text-steel-100 selection:bg-thermal-500/30 selection:text-white isolate", className)}>
       {/* 1. Deep Obsidian Base Gradient */}
-      <div className="fixed inset-0 pointer-events-none z-0 bg-gradient-to-b from-[#0a0e17] via-[#070b12] to-[#05080e]" />
+      <div className="fixed inset-0 pointer-events-none -z-10 bg-gradient-to-b from-[#0a0e17] via-[#070b12] to-[#05080e]" />
 
       {/* 2. Precision Technical Blueprint Dual-Scale Grid */}
       <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-40"
+        className="fixed inset-0 pointer-events-none -z-10 opacity-40"
         style={{
           backgroundImage:
             "radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px), linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px)",
@@ -79,7 +79,7 @@ export function PageAtmosphere({
 
       {/* 3. Primary Directional Domain Glow Beam (Molten/Cyan/Emerald/Amber) */}
       <div
-        className="fixed inset-0 pointer-events-none z-0"
+        className="fixed inset-0 pointer-events-none -z-10"
         style={{
           background: config.beamPrimary,
         }}
@@ -87,7 +87,7 @@ export function PageAtmosphere({
 
       {/* 4. Secondary Concentrated Ambient Spotlight */}
       <div
-        className="fixed inset-0 pointer-events-none z-0"
+        className="fixed inset-0 pointer-events-none -z-10"
         style={{
           background: config.beamSecondary,
         }}
@@ -95,7 +95,7 @@ export function PageAtmosphere({
 
       {/* 5. Razor-Sharp Pyrometallurgical SVG Isotherm Contours */}
       <svg
-        className="fixed inset-0 w-full h-full pointer-events-none z-0 opacity-[0.06]"
+        className="fixed inset-0 w-full h-full pointer-events-none -z-10 opacity-[0.06]"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
@@ -136,13 +136,13 @@ export function PageAtmosphere({
       </svg>
 
       {/* 6. Peripheral Vignette (Keeps Center Focused & Legible) */}
-      <div className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(5,8,14,0.85)_100%)]" />
+      <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(5,8,14,0.85)_100%)]" />
 
       {/* 7. Top Horizon Luminous Accent Line */}
       <div className={cn("fixed top-0 left-0 right-0 h-[1px] pointer-events-none z-10", config.topHorizonLine)} />
 
       {/* 8. Page Content */}
-      <div className="relative z-10 w-full">
+      <div className="relative z-10 w-full pb-20 sm:pb-24">
         {children}
       </div>
     </div>

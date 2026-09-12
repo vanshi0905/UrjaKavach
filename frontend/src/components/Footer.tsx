@@ -4,7 +4,7 @@ import { JSLLogo } from "@/components/brand/JSLLogo";
 
 export function Footer() {
   return (
-    <footer className="border-t border-steel-800/80 bg-obsidian-950 py-10 text-steel-400">
+    <footer className="relative z-30 border-t border-steel-800/80 bg-obsidian-950 py-10 text-steel-400">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-steel-800/60">
           {/* Col 1: About */}

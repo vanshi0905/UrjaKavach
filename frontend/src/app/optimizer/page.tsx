@@ -143,7 +143,22 @@ export default function OptimizerPage() {
   const [mcRuns, setMcRuns] = useState<number>(1000); // 1,000-heat stochastic simulation
   const [activeLevers, setActiveLevers] = useState<string[]>([]);
 
+  // User-editable bath chemistry & tramp ceiling overrides
+  const [customChemistry, setCustomChemistry] = useState<Record<string, number>>({});
+  const [customTrampCeilings, setCustomTrampCeilings] = useState<{
+    Cu?: number;
+    Sn?: number;
+    P?: number;
+    S?: number;
+  }>({});
+
   const currentGrade = useMemo(() => getGrade(selectedGradeId), [selectedGradeId]);
+
+  // Reset custom overrides on grade switch
+  useEffect(() => {
+    setCustomChemistry({});
+    setCustomTrampCeilings({});
+  }, [selectedGradeId]);
 
   const handleFacilityChange = (newFacilityId: string) => {
     setFacilityId(newFacilityId);
@@ -600,40 +615,30 @@ export default function OptimizerPage() {
           </div>
         </div>
 
-        {/* Bath Chemistry Verification (5 Cols) */}
+        {/* Bath Chemistry Verification (5 Cols) - User-Editable */}
         <div className="lg:col-span-5 glass-panel rounded-2xl p-6 border border-steel-800 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-              <span>Recovered Bath Chemistry</span>
-            </span>
-            <span className="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/30">
-              100% ASTM Compliant
-            </span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 text-xs font-mono">
-            {Object.entries(optResult.finalChemistryPct).map(([elem, val]) => (
-              <div
-                key={elem}
-                className="flex items-center justify-between bg-obsidian-950/80 p-2.5 rounded-lg border border-steel-800"
-              >
-                <span className="text-steel-400 font-sans font-medium">{elem}</span>
-                <span className="font-bold text-white">{val}%</span>
-              </div>
-            ))}
-          </div>
-
           {(() => {
-            const cuCeil = currentGrade.cu_min > 0.4 ? currentGrade.cu_max : currentGrade.cu_tramp_cap;
-            const snCeil = currentGrade.sn_tramp_cap;
-            const pCeil = currentGrade.p_max ?? 0.040;
-            const sCeil = currentGrade.s_max ?? 0.030;
+            // Compute active chemistry by overlaying user overrides
+            const activeChemistry: Record<string, number> = { ...optResult.finalChemistryPct };
+            Object.entries(customChemistry).forEach(([elem, val]) => {
+              activeChemistry[elem] = val;
+            });
 
-            const cuVal = optResult.finalChemistryPct.Cu ?? 0;
-            const snVal = optResult.finalChemistryPct.Sn ?? 0;
-            const pVal = optResult.finalChemistryPct.P ?? 0;
-            const sVal = optResult.finalChemistryPct.S ?? 0;
+            // Compute active tramp ceilings
+            const defaultCuCeil = currentGrade.cu_min > 0.4 ? currentGrade.cu_max : currentGrade.cu_tramp_cap;
+            const defaultSnCeil = currentGrade.sn_tramp_cap;
+            const defaultPCeil = currentGrade.p_max ?? 0.040;
+            const defaultSCeil = currentGrade.s_max ?? 0.030;
+
+            const cuCeil = customTrampCeilings.Cu !== undefined ? customTrampCeilings.Cu : defaultCuCeil;
+            const snCeil = customTrampCeilings.Sn !== undefined ? customTrampCeilings.Sn : defaultSnCeil;
+            const pCeil = customTrampCeilings.P !== undefined ? customTrampCeilings.P : defaultPCeil;
+            const sCeil = customTrampCeilings.S !== undefined ? customTrampCeilings.S : defaultSCeil;
+
+            const cuVal = activeChemistry.Cu ?? 0;
+            const snVal = activeChemistry.Sn ?? 0;
+            const pVal = activeChemistry.P ?? 0;
+            const sVal = activeChemistry.S ?? 0;
 
             const isCuOk = cuVal <= cuCeil + 0.001;
             const isSnOk = snVal <= snCeil + 0.0005;
@@ -641,51 +646,315 @@ export default function OptimizerPage() {
             const isSOk = sVal <= sCeil + 0.0005;
             const allTrampsOk = isCuOk && isSnOk && isPOk && isSOk;
 
+            const hasCustomEdits =
+              Object.keys(customChemistry).length > 0 || Object.keys(customTrampCeilings).length > 0;
+
             return (
-              <div className="rounded-xl bg-cyan-950/20 border border-cyan-500/20 p-3 space-y-2 text-xs text-steel-300">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-cyanPulse-400 text-[11px]">
-                    4-Tramp Metallurgical Integrity Audit:
-                  </span>
-                  <span
-                    className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${
-                      allTrampsOk
-                        ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-                        : "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                    }`}
-                  >
-                    {allTrampsOk ? "All Limits Verified" : "Cap Exceeded / Slack Required"}
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-[11px] text-steel-400">
-                  <div className={`p-2 rounded-lg border ${isCuOk ? "bg-obsidian-950/60 border-steel-800/80" : "bg-red-950/20 border-red-500/30"}`}>
-                    <div className="text-steel-300">
-                      Copper (Cu): <span className="text-white font-mono font-bold">{cuVal}%</span>
-                    </div>
-                    <div className="text-steel-500 text-[10px]">
-                      Ceiling: ≤ {cuCeil}% {currentGrade.cu_min > 0.4 ? "(Alloyed)" : ""}
-                    </div>
+              <>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <CheckCircle2
+                      className={`h-4 w-4 ${allTrampsOk ? "text-emerald-400" : "text-amber-400"} shrink-0`}
+                    />
+                    <span className="text-xs font-bold text-white uppercase tracking-wider truncate">
+                      Recovered Bath Chemistry
+                    </span>
                   </div>
-                  <div className={`p-2 rounded-lg border ${isSnOk ? "bg-obsidian-950/60 border-steel-800/80" : "bg-red-950/20 border-red-500/30"}`}>
-                    <div className="text-steel-300">
-                      Tin (Sn): <span className="text-white font-mono font-bold">{snVal}%</span>
-                    </div>
-                    <div className="text-steel-500 text-[10px]">Ceiling: ≤ {snCeil}%</div>
-                  </div>
-                  <div className={`p-2 rounded-lg border ${isPOk ? "bg-obsidian-950/60 border-steel-800/80" : "bg-red-950/20 border-red-500/30"}`}>
-                    <div className="text-steel-300">
-                      Phosphorus (P): <span className="text-white font-mono font-bold">{pVal}%</span>
-                    </div>
-                    <div className="text-steel-500 text-[10px]">Ceiling: ≤ {pCeil}%</div>
-                  </div>
-                  <div className={`p-2 rounded-lg border ${isSOk ? "bg-obsidian-950/60 border-steel-800/80" : "bg-red-950/20 border-red-500/30"}`}>
-                    <div className="text-steel-300">
-                      Sulphur (S): <span className="text-white font-mono font-bold">{sVal}%</span>
-                    </div>
-                    <div className="text-steel-500 text-[10px]">Ceiling: ≤ {sCeil}%</div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {hasCustomEdits && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCustomChemistry({});
+                          setCustomTrampCeilings({});
+                        }}
+                        title="Reset all chemistry and tramp limits to calculated values"
+                        className="inline-flex items-center gap-1 text-[10px] font-medium text-cyanPulse-400 hover:text-cyanPulse-300 bg-cyanPulse-500/10 hover:bg-cyanPulse-500/20 px-2 py-0.5 rounded border border-cyanPulse-500/30 transition-colors"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                        <span>Reset</span>
+                      </button>
+                    )}
+                    <span
+                      className={`rounded px-2 py-0.5 text-[10px] font-semibold border ${
+                        allTrampsOk
+                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                          : "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                      }`}
+                    >
+                      {allTrampsOk ? "100% ASTM Compliant" : "Exceeds Ceiling"}
+                    </span>
                   </div>
                 </div>
-              </div>
+
+                <div className="flex items-center justify-between text-[11px] text-steel-400">
+                  <span>
+                    {hasCustomEdits
+                      ? "Custom overrides active. Values & ceilings are live editable."
+                      : "Directly editable inputs. Click any value or ceiling to adjust."}
+                  </span>
+                  {hasCustomEdits && (
+                    <span className="text-[10px] text-cyanPulse-400 font-mono">Custom Spec</span>
+                  )}
+                </div>
+
+                {/* 3x3 Editable Element Grid */}
+                <div className="grid grid-cols-3 gap-2 text-xs font-mono">
+                  {Object.entries(activeChemistry).map(([elem, val]) => (
+                    <div
+                      key={elem}
+                      className="flex items-center justify-between bg-obsidian-950/80 p-2 rounded-lg border border-steel-800 hover:border-steel-700 transition-colors focus-within:border-cyanPulse-500/80 focus-within:ring-1 focus-within:ring-cyanPulse-500/30 group"
+                    >
+                      <label
+                        htmlFor={`chem-${elem}`}
+                        className="text-steel-400 font-sans font-medium text-xs pr-1 group-hover:text-steel-200 transition-colors select-none"
+                      >
+                        {elem}
+                      </label>
+                      <div className="flex items-center justify-end">
+                        <input
+                          id={`chem-${elem}`}
+                          type="number"
+                          step="0.001"
+                          min="0"
+                          max="100"
+                          value={val !== undefined ? val : ""}
+                          onChange={(e) => {
+                            const num = parseFloat(e.target.value);
+                            setCustomChemistry((prev) => ({
+                              ...prev,
+                              [elem]: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                            }));
+                          }}
+                          className="w-14 sm:w-16 bg-transparent text-right font-mono font-bold text-white text-xs focus:outline-none focus:bg-steel-900/60 rounded px-1 py-0.5 border border-transparent focus:border-steel-700"
+                        />
+                        <span className="text-steel-500 font-mono text-[10px] pl-0.5">%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 4-Tramp Metallurgical Integrity Audit: Live Editable Values & Ceilings */}
+                <div className="rounded-xl bg-cyan-950/20 border border-cyan-500/20 p-3 space-y-2.5 text-xs text-steel-300">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-cyanPulse-400 text-[11px] flex items-center gap-1.5">
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                      <span>4-Tramp Metallurgical Integrity Audit:</span>
+                    </span>
+                    <span
+                      className={`text-[10px] font-semibold px-2 py-0.5 rounded border transition-colors ${
+                        allTrampsOk
+                          ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                          : "text-amber-400 bg-amber-500/10 border-amber-500/20 animate-pulse"
+                      }`}
+                    >
+                      {allTrampsOk ? "All Limits Verified" : "Cap Exceeded / Slack Required"}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-[11px]">
+                    {/* Copper (Cu) */}
+                    <div
+                      className={`p-2.5 rounded-lg border transition-all ${
+                        isCuOk
+                          ? "bg-obsidian-950/70 border-steel-800/80"
+                          : "bg-red-950/30 border-red-500/50 shadow-sm shadow-red-500/10"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-1 text-steel-300">
+                        <span className="text-[11px]">Copper (Cu):</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={cuVal}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomChemistry((prev) => ({
+                                ...prev,
+                                Cu: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-white text-xs px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-steel-500 text-[10px] mt-1.5 pt-1.5 border-t border-steel-800/60">
+                        <span>Ceiling: ≤</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={cuCeil}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomTrampCeilings((prev) => ({
+                                ...prev,
+                                Cu: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-steel-200 text-[11px] px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tin (Sn) */}
+                    <div
+                      className={`p-2.5 rounded-lg border transition-all ${
+                        isSnOk
+                          ? "bg-obsidian-950/70 border-steel-800/80"
+                          : "bg-red-950/30 border-red-500/50 shadow-sm shadow-red-500/10"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-1 text-steel-300">
+                        <span className="text-[11px]">Tin (Sn):</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={snVal}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomChemistry((prev) => ({
+                                ...prev,
+                                Sn: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-white text-xs px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-steel-500 text-[10px] mt-1.5 pt-1.5 border-t border-steel-800/60">
+                        <span>Ceiling: ≤</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={snCeil}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomTrampCeilings((prev) => ({
+                                ...prev,
+                                Sn: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-steel-200 text-[11px] px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Phosphorus (P) */}
+                    <div
+                      className={`p-2.5 rounded-lg border transition-all ${
+                        isPOk
+                          ? "bg-obsidian-950/70 border-steel-800/80"
+                          : "bg-red-950/30 border-red-500/50 shadow-sm shadow-red-500/10"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-1 text-steel-300">
+                        <span className="text-[11px]">Phosphorus (P):</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={pVal}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomChemistry((prev) => ({
+                                ...prev,
+                                P: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-white text-xs px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-steel-500 text-[10px] mt-1.5 pt-1.5 border-t border-steel-800/60">
+                        <span>Ceiling: ≤</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={pCeil}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomTrampCeilings((prev) => ({
+                                ...prev,
+                                P: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-steel-200 text-[11px] px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Sulphur (S) */}
+                    <div
+                      className={`p-2.5 rounded-lg border transition-all ${
+                        isSOk
+                          ? "bg-obsidian-950/70 border-steel-800/80"
+                          : "bg-red-950/30 border-red-500/50 shadow-sm shadow-red-500/10"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-1 text-steel-300">
+                        <span className="text-[11px]">Sulphur (S):</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={sVal}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomChemistry((prev) => ({
+                                ...prev,
+                                S: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-white text-xs px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-steel-500 text-[10px] mt-1.5 pt-1.5 border-t border-steel-800/60">
+                        <span>Ceiling: ≤</span>
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            step="0.001"
+                            min="0"
+                            value={sCeil}
+                            onChange={(e) => {
+                              const num = parseFloat(e.target.value);
+                              setCustomTrampCeilings((prev) => ({
+                                ...prev,
+                                S: isNaN(num) ? 0 : Math.round(num * 1000) / 1000,
+                              }));
+                            }}
+                            className="w-14 bg-steel-900/60 border border-steel-700/60 focus:border-cyanPulse-400 focus:outline-none text-right font-mono font-bold text-steel-200 text-[11px] px-1 py-0.5 rounded"
+                          />
+                          <span className="text-steel-400 font-mono text-[10px] pl-0.5">%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
             );
           })()}
         </div>
