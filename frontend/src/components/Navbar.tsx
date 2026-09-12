@@ -63,7 +63,7 @@ export function Navbar() {
     { label: "Overview", href: "/", icon: Flame },
     { label: "Calculator", href: "/calculator", icon: Cpu },
     { label: "Optimizer & Risk", href: "/optimizer", icon: Sliders },
-    { label: "Methodology & Case", href: "/methodology", icon: BookOpen },
+    { label: "Audit & Evidence", href: "/methodology", icon: BookOpen },
     { label: "Team Hind", href: "/contact", icon: Users },
   ];
 

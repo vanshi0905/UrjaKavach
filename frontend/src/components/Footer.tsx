@@ -54,7 +54,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/methodology" className="hover:text-thermal-400 transition-colors">
-                  Methodology & Case Evidence
+                  Audit & Evidence Dossier
                 </Link>
               </li>
               <li>

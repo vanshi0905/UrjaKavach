@@ -39,7 +39,7 @@ export default function MethodologyPage() {
       <div className="border-b border-steel-800 pb-5">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            UrjaKavach Engineering Methodology & First-Principles Evidence
+            UrjaKavach Audit & First-Principles Evidence
           </h1>
           <span className="rounded bg-thermal-500/10 px-2 py-0.5 text-xs font-semibold text-thermal-400 border border-thermal-500/30">
             UrjaKavach PS-3

@@ -87,7 +87,7 @@ export default function HomePage() {
                 href="/methodology"
                 className="flex items-center gap-2 rounded-xl border border-steel-800/80 bg-obsidian-950/60 px-5 py-3.5 text-sm font-medium text-steel-400 hover:text-white hover:bg-steel-900 transition-all"
               >
-                <span>First-Principles Methodology</span>
+                <span>Audit & Evidence</span>
               </Link>
             </div>
 
