@@ -705,16 +705,64 @@ export default function OptimizerPage() {
             <p className="text-xs text-steel-400 mt-1">
               Economic shadow prices for binding metallurgical tramp constraints ($/0.01% tramp in liquid steel) and break-even Value-in-Use (ViU) procurement parity prices.
             </p>
+
+            {/* Quick Presets to demonstrate Slack vs Binding states */}
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px]">
+              <span className="text-steel-500 text-[10px] uppercase font-mono">Simulate Constraint Scenarios:</span>
+              <button
+                type="button"
+                onClick={() => setSelectedGradeId("J304")}
+                className={`px-2 py-0.5 rounded border transition-all ${
+                  selectedGradeId === "J304"
+                    ? "bg-steel-800 text-white border-thermal-500/50 shadow-sm"
+                    : "bg-obsidian-950 text-steel-400 border-steel-800 hover:text-white"
+                }`}
+              >
+                J304 (Safe Headroom)
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedGradeId("J430")}
+                className={`px-2 py-0.5 rounded border transition-all ${
+                  selectedGradeId === "J430"
+                    ? "bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm"
+                    : "bg-obsidian-950 text-steel-400 border-steel-800 hover:text-white"
+                }`}
+              >
+                J430 (Phosphorus Binds: $3.31/0.01%)
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedGradeId("J304L")}
+                className={`px-2 py-0.5 rounded border transition-all ${
+                  selectedGradeId === "J304L"
+                    ? "bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm"
+                    : "bg-obsidian-950 text-steel-400 border-steel-800 hover:text-white"
+                }`}
+              >
+                J304L (Scrap Cap Binds: $390.77/t)
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="rounded-xl bg-obsidian-950 px-3.5 py-1.5 border border-steel-800 flex items-center gap-2 text-xs">
+            <div className="rounded-xl bg-obsidian-950 px-3.5 py-2 border border-steel-800 flex items-center gap-2 text-xs">
               <span className="text-steel-400">Scrap Ceiling Shadow Price:</span>
-              <span className={`font-mono font-bold ${(optResult.scrapCeilingShadowPriceUsdPerT || 0) > 0 ? "text-amber-400" : "text-emerald-400"}`}>
-                ${(optResult.scrapCeilingShadowPriceUsdPerT || 0).toFixed(2)}/t scrap
-              </span>
+              {(optResult.scrapCeilingShadowPriceUsdPerT || 0) > 0.01 ? (
+                <span className="font-mono font-bold text-amber-400 flex items-center gap-1.5">
+                  ${optResult.scrapCeilingShadowPriceUsdPerT!.toFixed(2)}/t scrap
+                  <span className="text-[9px] font-sans px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                    BINDING CAP
+                  </span>
+                </span>
+              ) : (
+                <span className="font-mono font-semibold text-emerald-400 flex items-center gap-1.5">
+                  $0.00/t
+                  <span className="text-[10px] font-sans text-steel-400">(Safe Headroom • No Penalty)</span>
+                </span>
+              )}
             </div>
-            <div className="rounded-xl bg-obsidian-950 px-3.5 py-1.5 border border-steel-800 flex items-center gap-2 text-xs">
+            <div className="rounded-xl bg-obsidian-950 px-3.5 py-2 border border-steel-800 flex items-center gap-2 text-xs">
               <span className="text-steel-400">Flux CaO / Discard Slag:</span>
               <span className="font-mono font-bold text-white">
                 {(optResult.estimatedLimeKgPerT || 0).toFixed(1)} / {(optResult.estimatedSlagKgPerT || 0).toFixed(1)} kg/t
@@ -724,7 +772,7 @@ export default function OptimizerPage() {
         </div>
 
         {/* Tramp Shadow Prices Badges */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {optResult.trampShadowPrices && Object.entries(optResult.trampShadowPrices).map(([elem, price]) => {
             const isBinding = price > 0.001;
             const cap =
@@ -739,32 +787,90 @@ export default function OptimizerPage() {
                 : elem === "S"
                 ? currentGrade.s_max ?? 0.030
                 : currentGrade.ni_tramp_cap || 0.50;
+
+            const currentBath = (optResult.finalChemistryPct as Record<string, number>)[elem] ?? 0;
+            const headroom = Math.max(0, cap - currentBath);
+            const utilizationPct = cap > 0 ? Math.min(100, Math.round((currentBath / cap) * 100)) : 0;
+
             return (
               <div
                 key={elem}
-                className={`p-3 rounded-xl border transition-all ${
+                className={`p-3.5 rounded-xl border transition-all ${
                   isBinding
-                    ? "bg-amber-950/20 border-amber-500/40 shadow-sm shadow-amber-950/50"
-                    : "bg-obsidian-950/60 border-steel-800/80"
+                    ? "bg-amber-950/25 border-amber-500/60 shadow-lg shadow-amber-950/40"
+                    : "bg-obsidian-950/70 border-steel-800/90 hover:border-steel-700"
                 }`}
               >
-                <div className="flex items-center justify-between text-[11px] mb-1">
-                  <span className="font-semibold text-steel-200">[{elem}] Ceiling</span>
-                  <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
-                    isBinding
-                      ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                      : "bg-steel-800/50 text-steel-400"
-                  }`}>
-                    {isBinding ? "BINDING" : "SLACK"}
+                {/* Header: Element Title + Status Badge */}
+                <div className="flex items-center justify-between text-xs mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-white">[{elem}] Ceiling</span>
+                    {elem === "Cu" && currentGrade.cu_min > 0.4 && (
+                      <span className="text-[9px] px-1 py-0.2 rounded bg-steel-800 text-steel-400 font-medium">Alloyed</span>
+                    )}
+                  </div>
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase border ${
+                      isBinding
+                        ? "bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse"
+                        : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                    }`}
+                  >
+                    {isBinding ? "BINDING (100%)" : "SLACK (SAFE)"}
                   </span>
                 </div>
-                <div className="text-base font-bold font-mono text-white">
-                  ${price.toFixed(2)}
-                  <span className="text-[10px] text-steel-400 font-sans font-normal ml-1">/ 0.01%</span>
+
+                {/* Primary Metric: Bath Concentration & Cap */}
+                <div className="flex items-baseline justify-between mb-1.5">
+                  <div>
+                    <span className="text-[10px] uppercase font-mono text-steel-400 block">Current in Bath:</span>
+                    <span className={`text-lg font-mono font-bold ${isBinding ? "text-amber-300" : "text-white"}`}>
+                      {currentBath.toFixed(3)}%
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] uppercase font-mono text-steel-400 block">Cap Limit:</span>
+                    <span className="text-xs font-mono font-semibold text-steel-300">
+                      ≤ {cap.toFixed(3)}%
+                    </span>
+                  </div>
                 </div>
-                <p className="text-[10px] text-steel-400 mt-1 truncate">
-                  Limit: ≤ {cap}% in bath {elem === "Cu" && currentGrade.cu_min > 0.4 ? "(Alloyed)" : ""}
-                </p>
+
+                {/* Mini Progress Bar of Cap Utilization */}
+                <div className="w-full bg-steel-900 rounded-full h-1.5 mb-2 overflow-hidden border border-steel-800">
+                  <div
+                    className={`h-full rounded-full transition-all duration-300 ${
+                      isBinding
+                        ? "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+                        : utilizationPct > 80
+                        ? "bg-amber-500"
+                        : "bg-emerald-400"
+                    }`}
+                    style={{ width: `${Math.max(5, utilizationPct)}%` }}
+                  />
+                </div>
+
+                {/* Footer: Headroom Buffer & Dual Shadow Price */}
+                <div className="pt-2 border-t border-steel-800/80 flex items-center justify-between text-[10px]">
+                  <span className="text-steel-400">
+                    {isBinding ? (
+                      <span className="text-amber-400 font-semibold font-mono">0.000% Headroom</span>
+                    ) : (
+                      <span className="text-emerald-400 font-semibold font-mono">+{headroom.toFixed(3)}% Headroom</span>
+                    )}
+                  </span>
+                  <div>
+                    {isBinding ? (
+                      <span className="font-mono font-bold text-amber-300">
+                        ${price.toFixed(2)}/0.01% <span className="text-[9px] font-sans font-normal text-steel-400">penalty</span>
+                      </span>
+                    ) : (
+                      <span className="font-mono text-steel-400" title="Zero cost penalty because bath is within specification headroom">
+                        Shadow: $0.00 <span className="text-[9px] font-sans text-emerald-400">(Zero penalty)</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             );
           })}
