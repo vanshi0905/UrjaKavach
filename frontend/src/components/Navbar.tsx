@@ -15,10 +15,27 @@ import {
 } from "lucide-react";
 
 import { JSLLogo } from "@/components/brand/JSLLogo";
+import { UrjaKavachLogo } from "@/components/brand/UrjaKavachLogo";
+import { useEffect } from "react";
 
 export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        const current = (window.scrollY / totalScroll) * 100;
+        setScrollProgress(Math.min(100, Math.max(0, current)));
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { label: "Overview", href: "/", icon: Flame },
@@ -29,26 +46,11 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-steel-800/80 bg-obsidian-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-steel-800/80 bg-obsidian-950/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-thermal-500 via-orange-600 to-amber-700 shadow-md group-hover:shadow-thermal-500/30 transition-all">
-            <span className="font-black text-white text-lg tracking-wider">UK</span>
-            <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-400">
-              <Zap className="h-2 w-2 text-obsidian-950" />
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold tracking-tight text-white text-base">
-                URJAKAVACH
-              </span>
-            </div>
-            <span className="text-[11px] font-medium text-steel-400 tracking-tight">
-              Carbon & Energy Pyrometallurgical Cockpit
-            </span>
-          </div>
+        <Link href="/" className="group flex items-center">
+          <UrjaKavachLogo variant="compact" iconSize={36} glow={true} />
         </Link>
 
         {/* Desktop Navigation Links & JSL Co-Badge */}
@@ -76,7 +78,7 @@ export function Navbar() {
 
           {/* JSL Enterprise Co-Badge */}
           <div className="hidden lg:flex items-center pl-3 ml-2 border-l border-steel-800/80">
-            <JSLLogo variant="badge" size={24} showSubtitle={false} />
+            <JSLLogo variant="badge" size={22} showSubtitle={false} />
           </div>
         </div>
 
@@ -88,6 +90,14 @@ export function Navbar() {
         >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
+      </div>
+
+      {/* Dynamic Scroll Progress Bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-steel-900/60 overflow-hidden pointer-events-none">
+        <div
+          className="h-full bg-gradient-to-r from-thermal-500 via-orange-500 via-amber-400 to-cyanPulse-400 transition-all duration-75 ease-out shadow-[0_0_8px_rgba(249,115,22,0.8)]"
+          style={{ width: `${scrollProgress}%` }}
+        />
       </div>
 
       {/* Mobile dropdown */}
