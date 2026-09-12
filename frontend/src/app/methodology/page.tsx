@@ -35,7 +35,7 @@ export default function MethodologyPage() {
   }, [gradeSearch]);
 
   return (
-    <PageAtmosphere imageSrc="/images/bg-continuous-caster.jpg" glowColor="emerald">
+    <PageAtmosphere glowColor="emerald">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-10">
       {/* Header */}
       <div className="border-b border-steel-800 pb-5">

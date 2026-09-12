@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <PageAtmosphere imageSrc="/images/bg-hot-strip-mill.jpg" glowColor="amber">
+    <PageAtmosphere glowColor="amber">
       <div className="flex flex-col min-h-screen">
         <ContactTeam />
       </div>

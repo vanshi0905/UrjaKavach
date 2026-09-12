@@ -321,7 +321,7 @@ export default function OptimizerPage() {
   const cumulativeAbatementPct = Math.round(((baselineCo2 - currentCo2) / baselineCo2) * 1000) / 10;
 
   return (
-    <PageAtmosphere imageSrc="/images/bg-control-pulpit.jpg" glowColor="cyan">
+    <PageAtmosphere glowColor="cyan">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <div className="border-b border-steel-800 pb-5">

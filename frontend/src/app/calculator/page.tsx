@@ -256,7 +256,7 @@ export default function CalculatorPage() {
   };
 
   return (
-    <PageAtmosphere imageSrc="/images/bg-eaf-tapping.jpg" glowColor="thermal">
+    <PageAtmosphere glowColor="thermal">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Cockpit Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-steel-800 pb-5">
