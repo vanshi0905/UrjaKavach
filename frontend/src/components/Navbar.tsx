@@ -22,7 +22,6 @@ export function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [currentSection, setCurrentSection] = useState<string>("Overview");
 
   useEffect(() => {
     let rafId: number | null = null;
@@ -42,14 +41,7 @@ export function Navbar() {
 
         if (totalScroll > 0) {
           const current = (scrollTop / totalScroll) * 100;
-          const clamped = Math.min(100, Math.max(0, current));
-          setScrollProgress(clamped);
-
-          if (clamped < 20) setCurrentSection("Overview");
-          else if (clamped < 45) setCurrentSection("Trilemma Truths");
-          else if (clamped < 70) setCurrentSection("J304 Digital Twin");
-          else if (clamped < 90) setCurrentSection("Audited Tech Stack");
-          else setCurrentSection("Action & Access");
+          setScrollProgress(Math.min(100, Math.max(0, current)));
         } else {
           setScrollProgress(0);
         }
@@ -78,32 +70,10 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-steel-800/80 bg-obsidian-950/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand Logo & Interactive Scroll Progress Chip */}
-        <div className="flex items-center gap-3">
-          <Link href="/" className="group flex items-center">
-            <UrjaKavachLogo variant="compact" iconSize={36} glow={true} />
-          </Link>
-
-          {/* Dynamic Scroll Progress Chip (Landing Page & Global) */}
-          {scrollProgress > 1 && (
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-obsidian-900/90 border border-thermal-500/30 text-[11px] font-mono text-steel-300 shadow-md backdrop-blur-md animate-in fade-in slide-in-from-left-2 duration-200">
-              <span className="w-1.5 h-1.5 rounded-full bg-thermal-400 animate-pulse" />
-              {pathname === "/" && (
-                <>
-                  <span className="text-white font-medium truncate max-w-[130px]">{currentSection}</span>
-                  <span className="text-steel-600">•</span>
-                </>
-              )}
-              <span className="font-bold text-thermal-300 tabular-nums">{Math.round(scrollProgress)}%</span>
-              <div className="w-14 h-1.5 rounded-full bg-steel-800/80 overflow-hidden ml-0.5">
-                <div
-                  className="h-full bg-gradient-to-r from-thermal-500 via-amber-400 to-cyanPulse-400 transition-all duration-100"
-                  style={{ width: `${scrollProgress}%` }}
-                />
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Brand Logo & Name */}
+        <Link href="/" className="group flex items-center">
+          <UrjaKavachLogo variant="compact" iconSize={36} glow={true} />
+        </Link>
 
         {/* Desktop Navigation Links & JSL Co-Badge */}
         <div className="hidden md:flex items-center gap-1">
@@ -134,21 +104,14 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu toggle & Mobile Progress Indicator */}
-        <div className="flex md:hidden items-center gap-2">
-          {scrollProgress > 1 && (
-            <span className="text-[10px] font-mono text-thermal-300 font-bold px-2 py-0.5 rounded-full bg-obsidian-900 border border-thermal-500/30">
-              {Math.round(scrollProgress)}%
-            </span>
-          )}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg text-steel-400 hover:text-white hover:bg-steel-800"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
+        {/* Mobile menu toggle */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="flex md:hidden p-2 rounded-lg text-steel-400 hover:text-white hover:bg-steel-800"
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </div>
 
       {/* Dynamic Molten Steel Scroll Progress Bar */}
