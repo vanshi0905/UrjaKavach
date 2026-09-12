@@ -485,13 +485,20 @@ export function IntegrationsStack({ className }: { className?: string }) {
     <section
       id="tech-stack"
       className={cn(
-        "relative py-12 md:py-20 bg-obsidian-950 border-t border-b border-steel-800/80 overflow-hidden font-sans scroll-mt-20",
+        "relative py-12 md:py-20 bg-[#0c111e] border-t border-b border-steel-800/80 overflow-hidden font-sans scroll-mt-20",
         className
       )}
     >
-      {/* Subtle Background Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-thermal-500/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-[400px] h-[300px] bg-cyanPulse-500/5 blur-[100px] rounded-full pointer-events-none" />
+      {/* Subtle Industrial Background & Grid */}
+      <div
+        className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-[0.08] mix-blend-luminosity"
+        style={{ backgroundImage: "url('/images/bg-control-pulpit.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-industrial-grid opacity-30 pointer-events-none" />
+
+      {/* Subtle Ambient Background Glows */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-thermal-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-[400px] h-[300px] bg-cyanPulse-500/10 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* SECTION HEADER */}

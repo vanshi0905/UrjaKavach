@@ -26,7 +26,7 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"baseline" | "optimized">("optimized");
 
   return (
-    <div className="flex flex-col min-h-screen bg-obsidian-950 text-steel-100">
+    <div className="flex flex-col min-h-screen bg-[#0a0e17] text-steel-100 relative selection:bg-thermal-500/30 selection:text-white">
       {/* ========================================================================= */}
       {/* BEAT 1: CINEMATIC HERO & HOOK                                             */}
       {/* ========================================================================= */}
@@ -117,8 +117,16 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* BEAT 2: THE THREE HARD TRUTHS OF STAINLESS STEEL                          */}
       {/* ========================================================================= */}
-      <section className="py-12 md:py-16 bg-obsidian-950 border-b border-steel-800/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-12 md:py-16 bg-[#0a0e17] border-b border-steel-800/80 relative overflow-hidden">
+        {/* Subtle Real Steel Mill EAF backdrop layer */}
+        <div
+          className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-10 mix-blend-luminosity"
+          style={{ backgroundImage: "url('/images/bg-eaf-tapping.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-industrial-grid opacity-30 pointer-events-none" />
+        <div className="absolute inset-0 glow-thermal-ambient pointer-events-none" />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyanPulse-500/30 bg-cyanPulse-500/10 px-3.5 py-1 text-xs font-semibold text-cyanPulse-400">
               <AlertTriangle className="h-3.5 w-3.5" />
@@ -215,8 +223,16 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* BEAT 3: INTERACTIVE PROOF OF VALUE (FLAGSHIP J304 HEAT)                   */}
       {/* ========================================================================= */}
-      <section className="py-12 md:py-16 bg-obsidian-900/60 border-b border-steel-800/80 relative">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-12 md:py-16 bg-[#0c1220] border-b border-steel-800/80 relative overflow-hidden">
+        {/* Real Continuous Caster strand photo */}
+        <div
+          className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-12 mix-blend-luminosity"
+          style={{ backgroundImage: "url('/images/bg-continuous-caster.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-industrial-grid-subtle opacity-35 pointer-events-none" />
+        <div className="absolute inset-0 glow-cyan-ambient pointer-events-none" />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-thermal-500/30 bg-thermal-500/10 px-3.5 py-1 text-xs font-semibold text-thermal-400">
               <Sparkles className="h-3.5 w-3.5" />
@@ -435,8 +451,16 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* CLOSING LAUNCHPAD: EVALUATOR COCKPIT NAVIGATION                           */}
       {/* ========================================================================= */}
-      <section className="py-12 md:py-20 bg-obsidian-950 border-t border-steel-800/80 relative">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-12 md:py-20 bg-[#0a0e17] border-t border-steel-800/80 relative overflow-hidden">
+        {/* Real Industrial Hot Strip Mill photo backdrop */}
+        <div
+          className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-10 mix-blend-luminosity"
+          style={{ backgroundImage: "url('/images/bg-hot-strip-mill.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-industrial-grid opacity-25 pointer-events-none" />
+        <div className="absolute inset-0 glow-thermal-ambient pointer-events-none" />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-semibold text-emerald-400">
               <Sparkles className="h-3.5 w-3.5" />

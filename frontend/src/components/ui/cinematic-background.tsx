@@ -81,10 +81,10 @@ export function CinematicBackground({
     <div className={cn("relative w-full overflow-hidden bg-obsidian-950", className)}>
       {/* 1. Base Fallback Poster Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none transition-transform duration-1000 will-change-transform scale-105"
         style={{
           backgroundImage: "url('/images/hero-melt-shop.jpg')",
-          filter: "brightness(0.50) contrast(1.15) saturate(1.15)",
+          filter: "brightness(0.65) contrast(1.10) saturate(1.15)",
         }}
       />
 
@@ -101,10 +101,10 @@ export function CinematicBackground({
           aria-hidden="true"
           className={cn(
             "absolute inset-0 h-full w-full object-cover pointer-events-none transition-opacity duration-1000",
-            isPlaying ? "opacity-90" : "opacity-0"
+            isPlaying ? "opacity-95" : "opacity-0"
           )}
           style={{
-            filter: "brightness(0.55) contrast(1.15) saturate(1.2)",
+            filter: "brightness(0.72) contrast(1.12) saturate(1.2)",
           }}
         >
           <source src="/videos/hero-melt-shop.mp4" type="video/mp4" />
@@ -112,20 +112,24 @@ export function CinematicBackground({
         </video>
       )}
 
-      {/* 3. Deep Obsidian Vignettes for High Text Contrast and Clean Readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/80 via-obsidian-950/35 to-obsidian-950 pointer-events-none z-[2]" />
+      {/* 3. Engineering Precision Grid & Ambient Thermal Glow Layers */}
+      <div className="absolute inset-0 bg-industrial-grid opacity-35 pointer-events-none z-[2]" />
+      <div className="absolute inset-0 glow-thermal-ambient pointer-events-none z-[2]" />
+
+      {/* 4. Balanced Obsidian Carbon Vignette for Sharp Text Contrast Without Crushing Detail */}
+      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/75 via-obsidian-950/25 to-obsidian-950 pointer-events-none z-[2]" />
       <div
         className="absolute inset-0 pointer-events-none z-[2]"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 38%, rgba(5, 7, 9, 0.40) 0%, rgba(5, 7, 9, 0.70) 75%, #050709 100%)",
+            "radial-gradient(ellipse at 50% 36%, rgba(10, 14, 23, 0.20) 0%, rgba(10, 14, 23, 0.55) 68%, #0a0e17 100%)",
         }}
       />
 
-      {/* 4. Subtle Molten Orange Horizon Accent */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-thermal-500/40 to-transparent pointer-events-none z-[3]" />
+      {/* 5. Molten Orange & Cyan Horizon Accent */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-thermal-500/50 via-amber-400/40 to-transparent pointer-events-none z-[3]" />
 
-      {/* 5. Foreground Content */}
+      {/* 6. Foreground Content */}
       <div className="relative z-10 w-full">
         {children}
       </div>
