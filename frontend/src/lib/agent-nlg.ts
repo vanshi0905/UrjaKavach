@@ -10,6 +10,21 @@ import { CalculatorInputs } from './calculator';
 import { getGrade, GRADES } from './grades';
 import { computeClientShapley, MultiTargetShapReport, TargetShapResult } from './shap-client';
 
+import {
+  AssistantLanguage,
+  LanguageMeta,
+  SUPPORTED_LANGUAGES,
+  detectQueryLanguage,
+  getMultilingualGreeting,
+  getMultilingualTrampCopper,
+  getMultilingualMoltenFeCr,
+  getMultilingualOptimization,
+  LocalizedContentParams,
+} from './multilingual-agent';
+
+export type { AssistantLanguage, LanguageMeta };
+export { SUPPORTED_LANGUAGES, detectQueryLanguage };
+
 export interface ExplanationResponse {
   target: string;
   targetName: string;
@@ -278,15 +293,39 @@ function attachActionPayloadAndToken(
 
 function answerClientConversationalQueryInner(
   query: string,
-  inputs: CalculatorInputs
+  inputs: CalculatorInputs,
+  shapReportOverride?: MultiTargetShapReport,
+  langOverride?: AssistantLanguage
 ): ExplanationResponse {
+  const lang = detectQueryLanguage(query, langOverride);
   const qLower = query.toLowerCase().trim();
   const grade = getGrade(inputs.gradeId);
-  const shapReport = computeClientShapley(inputs);
+  const shapReport = shapReportOverride || computeClientShapley(inputs);
   const facility = (inputs.facilityId || "jajpur") === "jajpur" ? "Jajpur" : (inputs.facilityId === "chhattisgarh" ? "Raigarh Hub (Chhattisgarh)" : "Hisar");
+  const co2Data = shapReport.targets.total_co2_t;
+  const secData = shapReport.targets.eaf_sec_kwh;
+  const currentCo2 = co2Data.userValue;
+  const currentSec = secData.userValue;
+  const currentScrap = inputs.scrapPct ?? 60.0;
+  const recScrap = Math.min(70.0, grade.scrap_cap);
+  const feSrc = inputs.feSource || "coalDRI";
+
+  const locParams: LocalizedContentParams = {
+    facility,
+    gradeName: grade.name,
+    gradeId: grade.id,
+    scrapCap: grade.scrap_cap,
+    cuTrampCap: grade.cu_tramp_cap,
+    currentScrap,
+    currentCo2,
+    currentSec,
+    recScrap,
+    query,
+    feSrc,
+  };
 
   // Check if query targets any of the deep-dive formula topics
-  const hasFormulaQuery = /phosphorus|dephosphoriz|non[\s-]?removal|ellingham|eta_p|iron credit|stoichiometric|double[\s-]?count|inherent fe|virgin iron|fe_virgin|swerim|rawmatmix|shadow price|dual shadow|value[\s-]?in[\s-]?use|viu|reduced cost|lp dual|dynamic eaf|sec_eaf|specific electrical consumption|hot charge|molten|fecr|sensible|saf|ladle|npi|indonesia|class 1|rkef|cbam|sefa|article 9|article9|ccts|bee|carbon credit|ccc|inr|crore|ebitda|gas dri|coal dri|rotary kiln|gangue|copper|tramp|hot-shortness|hot shortness/.test(qLower);
+  const hasFormulaQuery = /phosphorus|dephosphoriz|non[\s-]?removal|ellingham|eta_p|iron credit|stoichiometric|double[\s-]?count|inherent fe|virgin iron|fe_virgin|swerim|rawmatmix|shadow price|dual shadow|value[\s-]?in[\s-]?use|viu|reduced cost|lp dual|dynamic eaf|sec_eaf|specific electrical consumption|hot charge|molten|fecr|sensible|saf|ladle|npi|indonesia|class 1|rkef|cbam|sefa|article 9|article9|ccts|bee|carbon credit|ccc|inr|crore|ebitda|gas dri|coal dri|rotary kiln|gangue|copper|tramp|hot-shortness|hot shortness|तांबा|कॉपर|दरार|ତମ୍ବା|ଫାଟ|kupfer|cuivre/.test(qLower);
 
   if (!hasFormulaQuery) {
     // 1. Social Pleasantries & Conversational Inquiries
@@ -376,11 +415,28 @@ function answerClientConversationalQueryInner(
     }
 
     // 2. Greetings & Salutations (e.g. "hi", "hello", "hi or hello", "good morning")
-    const greetingPattern = /^(hi|hello|hey|namaste|good\s+(morning|afternoon|evening|day)|sup|yo|start|hola|greetings)(\b|[\s!?.,]|$)|(\b(hi\s+(or|and)\s+hello|hello\s+(or|and)\s+hi|hi\s+there|hello\s+there|hey\s+there|hi\s+copilot|hello\s+copilot|hi\s+saathi|hello\s+saathi|hi\s+urjasaathi|hello\s+urjasaathi)\b)/i;
-    if (greetingPattern.test(qLower)) {
+    const greetingPattern = /^(hi|hello|hey|namaste|good\s+(morning|afternoon|evening|day)|sup|yo|start|hola|greetings|नमस्ते|नमस्कार|जय\s*जोहार|जोहार|प्रणाम|ନମସ୍କାର|ଜୟ\s*ଜଗନ୍ନାଥ|guten\s*tag|hallo|bonjour|salut)(\b|[\s!?.,]|$)|(\b(hi\s+(or|and)\s+hello|hello\s+(or|and)\s+hi|hi\s+there|hello\s+there|hey\s+there|hi\s+copilot|hello\s+copilot|hi\s+saathi|hello\s+saathi|hi\s+urjasaathi|hello\s+urjasaathi)\b)/i;
+    if (greetingPattern.test(qLower) || (lang !== "en" && /^(hi|hello|hey|start|greetings|start chat)$/i.test(qLower))) {
       const co2Data = shapReport.targets.total_co2_t;
       const currentCo2 = co2Data.userValue;
       const currentScrap = inputs.scrapPct ?? 60.0;
+
+      if (lang !== "en") {
+        const localized = getMultilingualGreeting(lang, locParams);
+        return {
+          target: "total_co2_t",
+          targetName: "UrjaSaathi AI",
+          title: "UrjaSaathi AI",
+          topic: "greeting",
+          summary: localized.summary,
+          metaphor: "I operate as your digital process companion, coupling first-principles pyrometallurgy with continuous linear programming optimization.",
+          metrics: `Active Cockpit State: Grade ${grade.name} (${grade.id}) • Scrap: ${currentScrap}% • Carbon: ${currentCo2.toFixed(2)} tCO2/t.`,
+          action: "Select a suggested metallurgical query or prompt me to optimize your melt-shop operating parameters.",
+          fullText: localized.fullText,
+          shap: co2Data,
+          isConversational: true,
+        };
+      }
 
       return {
         target: "total_co2_t",
@@ -436,9 +492,36 @@ function answerClientConversationalQueryInner(
     }
 
     // 5. Direct Optimization Requests ("optimize", "least cost charge", etc.)
-    if (/optimize|least cost|least carbon|pareto|cheapest charge|best recipe|optimal recipe/i.test(qLower)) {
+    if (/optimize|least cost|least carbon|pareto|cheapest charge|best recipe|optimal recipe|ऑप्टिमाइज़|सुधारव|ସର୍ବୋତ୍ତମ|optimieren|optimiser/i.test(qLower)) {
       const co2Data = shapReport.targets.total_co2_t;
       const recScrap = Math.min(70.0, grade.scrap_cap);
+
+      if (lang !== "en") {
+        const localized = getMultilingualOptimization(lang, locParams);
+        return {
+          target: "total_co2_t",
+          targetName: `Optimize ${grade.id}`,
+          topic: "optimization",
+          title: `Charge Optimization: ${grade.name} (${grade.id})`,
+          summary: localized.summary,
+          metaphor: "Linear programming identifies the Pareto frontier balancing scrap circularity against tramp element penalties.",
+          metrics: `Optimal Setpoints: Scrap ${recScrap.toFixed(0)}% • Gas DRI • RE 70% • Hot FeCr: Enabled.`,
+          action: `Apply recommended ${recScrap.toFixed(0)}% scrap and clean DRI setpoints to achieve least-carbon production.`,
+          fullText: localized.fullText,
+          isConversational: true,
+          actionPayload: {
+            gradeId: grade.id,
+            scrapPct: recScrap,
+            feSource: "gasDRI",
+            fecrSource: "fecrLowC",
+            niSource: "niClass1",
+            renewablePct: 70.0,
+            hotFecrCharging: true,
+          },
+          shap: co2Data,
+        };
+      }
+
       return {
         target: "total_co2_t",
         targetName: `Optimize ${grade.id}`,
@@ -622,11 +705,29 @@ function answerClientConversationalQueryInner(
   }
 
   // Topic 4: Dynamic EAF SEC & Molten FeCr Sensible Heat (Formula 02)
-  if (/dynamic eaf|sec_eaf|specific electrical consumption|hot charge|molten|fecr|sensible|butter|saf|ladle/.test(qLower)) {
+  if (/dynamic eaf|sec_eaf|specific electrical consumption|hot charge|molten|fecr|sensible|butter|saf|ladle|पिघला|गर्म fecr|ତରଳ|flüssiges|enfournement chaud/.test(qLower)) {
     const analogy = DOMAIN_ANALOGIES.hot_fecr_charging.analogy;
     const secData = shapReport.targets.eaf_sec_kwh;
     const hotAttr = secData.attributions.find((a) => a.feature === "hotFecrCharging");
     const saving = hotAttr ? Math.abs(hotAttr.attribution) : 112.91;
+
+    if (lang !== "en") {
+      const localized = getMultilingualMoltenFeCr(lang, locParams);
+      return {
+        target: "eaf_sec_kwh",
+        targetName: "Molten FeCr Sensible Heat",
+        title: "Molten FeCr Sensible Heat Charging",
+        topic: "hot_fecr_charging",
+        summary: localized.summary,
+        metaphor: analogy,
+        metrics: `Thermal Credit: -${saving.toFixed(1)} kWh/t electrical enthalpy at Jajpur EAF-2 • ~₹310/t electricity cost savings.`,
+        action: DOMAIN_ANALOGIES.hot_fecr_charging.action,
+        fullText: localized.fullText,
+        shap: secData,
+        isConversational: true,
+      };
+    }
+
     const metrics = `Dynamic EAF SEC Formulation: SEC_EAF = (Q_scrap + Q_DRI + Q_alloys - Q_hotSAF) / η_thermal + E_aux. Molten FeCr transferred at 1600°C from captive SAF delivers an immediate thermodynamic credit of -${saving.toFixed(1)} kWh/t to the EAF (62.6% of maximum furnace electrical savings). Baseline cold FeCr charging requires ~591 kWh/t EAF SEC; hot charging reduces this to ~411 kWh/t.`;
     const action = DOMAIN_ANALOGIES.hot_fecr_charging.action;
 
@@ -739,9 +840,29 @@ function answerClientConversationalQueryInner(
   }
 
   // Topic 9: Tramp copper, scrap limit, hot shortness
-  if (/scrap|copper|tramp|crack|shortness|cap|limit|revert/.test(qLower)) {
+  if (/scrap|copper|tramp|crack|shortness|cap|limit|revert|तांबा|कॉपर|दरार|ତମ୍ବା|ଫାଟ|kupfer|rotbruch|cuivre|criques/.test(qLower)) {
     const analogy = DOMAIN_ANALOGIES.tramp_copper.analogy;
     const userScrap = inputs.scrapPct ?? 60.0;
+
+    if (lang !== "en") {
+      const localized = getMultilingualTrampCopper(lang, locParams);
+      return {
+        target: "total_co2_t",
+        targetName: "Tramp Copper Ceilings",
+        title: "Tramp Copper Ceilings & Scrap Limits",
+        topic: "tramp_copper",
+        summary: localized.summary,
+        metaphor: analogy,
+        metrics: `For Grade ${grade.name} (${grade.id}), the metallurgical tramp scrap cap is strictly ${grade.scrap_cap}%. Current cockpit setting is ${userScrap}% (effective scrap: ${Math.min(userScrap, grade.scrap_cap)}%). Tramp copper limit is [Cu] <= ${grade.cu_tramp_cap}%.`,
+        action: DOMAIN_ANALOGIES.tramp_copper.action
+          .replace("{scrapCap}", grade.scrap_cap.toString())
+          .replace("{cuTrampCap}", grade.cu_tramp_cap.toString()),
+        fullText: localized.fullText,
+        shap: shapReport.targets.total_co2_t,
+        isConversational: true,
+      };
+    }
+
     const metrics = `For Grade ${grade.name} (${grade.id}), the metallurgical tramp scrap cap is strictly ${grade.scrap_cap}%. Current cockpit setting is ${userScrap}% (effective scrap: ${Math.min(userScrap, grade.scrap_cap)}%). Tramp copper limit is [Cu] <= ${grade.cu_tramp_cap}%. In EAF melting, copper cannot be oxidized into slag because its oxygen affinity is lower than iron and chromium.`;
     const action = DOMAIN_ANALOGIES.tramp_copper.action
       .replace("{scrapCap}", grade.scrap_cap.toString())
@@ -763,12 +884,22 @@ function answerClientConversationalQueryInner(
   }
 
   // Default fallback: Contextually Grounded in Active Heat & Facility
-  const co2Data = shapReport.targets.total_co2_t;
-  const secData = shapReport.targets.eaf_sec_kwh;
-  const currentCo2 = co2Data.userValue;
-  const currentSec = secData.userValue;
-  const currentScrap = inputs.scrapPct ?? 60.0;
-  const feSrc = inputs.feSource || "coalDRI";
+  if (lang !== "en") {
+    const greetingObj = getMultilingualGreeting(lang, locParams);
+    return {
+      target: "total_co2_t",
+      targetName: `${grade.id} Assessment`,
+      topic: "general",
+      title: `Process Assessment: ${grade.name} (${grade.id})`,
+      summary: `Process analysis for ${grade.name} at ${facility}: ${currentCo2.toFixed(2)} tCO2/t carbon footprint, ${currentSec.toFixed(1)} kWh/t EAF SEC.`,
+      metaphor: `Optimizing ${grade.name} requires balancing pyrometallurgical tramp boundaries, thermodynamic enthalpy, and trade carbon regulations.`,
+      metrics: `Active Run: Grade ${grade.name} at ${facility} • Scrap: ${currentScrap}% • Footprint: ~${currentCo2.toFixed(2)} tCO2/t • SEC: ${currentSec.toFixed(1)} kWh/t.`,
+      action: `Adjust scrap up to ${grade.scrap_cap}% and evaluate high-efficiency feeds to reduce specific carbon intensity.`,
+      fullText: `### 💡 Process Intelligence: ${grade.name} (${grade.id})\n\n${greetingObj.fullText}`,
+      isConversational: true,
+      shap: co2Data,
+    };
+  }
 
   return {
     target: "total_co2_t",
@@ -787,8 +918,10 @@ function answerClientConversationalQueryInner(
 
 export function answerClientConversationalQuery(
   query: string,
-  inputs: CalculatorInputs
+  inputs: CalculatorInputs,
+  shapReport?: MultiTargetShapReport,
+  lang?: AssistantLanguage
 ): ExplanationResponse {
-  const res = answerClientConversationalQueryInner(query, inputs);
+  const res = answerClientConversationalQueryInner(query, inputs, shapReport, lang);
   return attachActionPayloadAndToken(res, inputs);
 }

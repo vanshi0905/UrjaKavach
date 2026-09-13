@@ -70,6 +70,7 @@ class QueryRequest(BaseModel):
     query: str = Field(description="Conversational question from user")
     params: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Cockpit calculation parameters")
     tool_call: Optional[Dict[str, Any]] = Field(default=None, description="Optional deterministic tool call request")
+    lang: Optional[str] = Field(default="en", description="Assistant language code")
 
 
 class TTSRequest(BaseModel):

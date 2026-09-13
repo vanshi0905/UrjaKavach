@@ -8,6 +8,13 @@ import {
   answerClientConversationalQuery,
   ExplanationResponse,
 } from "@/lib/agent-nlg";
+import {
+  AssistantLanguage,
+  SUPPORTED_LANGUAGES,
+  SUGGESTED_QUERIES_BY_LANG,
+  INPUT_PLACEHOLDERS_BY_LANG,
+  detectQueryLanguage,
+} from "@/lib/multilingual-agent";
 import { VoiceAgentClient, VoiceState } from "@/lib/voice-agent";
 import { VoiceOrb } from "./VoiceOrb";
 import { ShapWaterfallChart } from "./ShapWaterfallChart";
@@ -31,6 +38,7 @@ import {
   Volume2,
   VolumeX,
   CheckCircle2,
+  Globe,
 } from "lucide-react";
 
 interface ChatMessage {
@@ -216,12 +224,29 @@ const SUGGESTED_QUERIES = [
 export function AssistantDrawer() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"chat" | "voice">("chat");
+  const [currentLang, setCurrentLang] = useState<AssistantLanguage>("en");
   const [inputs, setInputs] = useState<CalculatorInputs>(DEFAULT_INPUTS);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [appliedPresets, setAppliedPresets] = useState<Record<string, boolean>>({});
   const [appliedToast, setAppliedToast] = useState<string | null>(null);
+
+  const handleLanguageChange = (newLang: AssistantLanguage) => {
+    setCurrentLang(newLang);
+    let targetVoice = "en-IN-PrabhatNeural";
+    if (newLang === "hi" || newLang === "hn" || newLang === "cg" || newLang === "bho") {
+      targetVoice = "hi-IN-MadhurNeural";
+    } else if (newLang === "de") {
+      targetVoice = "de-DE-ConradNeural";
+    } else if (newLang === "fr") {
+      targetVoice = "fr-FR-HenriNeural";
+    }
+    setSelectedVoice(targetVoice);
+    if (voiceAgentRef.current) {
+      voiceAgentRef.current.setVoice(targetVoice);
+    }
+  };
 
   // Voice Agent State
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
@@ -458,6 +483,11 @@ export function AssistantDrawer() {
       }
     }
 
+    const detectedLang = detectQueryLanguage(text, currentLang);
+    if (detectedLang !== currentLang) {
+      setCurrentLang(detectedLang);
+    }
+
     setIsProcessing(true);
 
     try {
@@ -466,7 +496,7 @@ export function AssistantDrawer() {
         const res = await fetch("http://localhost:8000/api/agent/query", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: text, params: activeInputs }),
+          body: JSON.stringify({ query: text, params: activeInputs, lang: detectedLang }),
         });
         if (res.ok) {
           const data = await res.json();
@@ -488,7 +518,7 @@ export function AssistantDrawer() {
           throw new Error("Backend offline");
         }
       } catch (e) {
-        resp = answerClientConversationalQuery(text, activeInputs);
+        resp = answerClientConversationalQuery(text, activeInputs, undefined, detectedLang);
       }
 
       const shapReport = computeClientShapley(activeInputs);
@@ -597,6 +627,32 @@ export function AssistantDrawer() {
               </button>
             </div>
 
+            {/* MULTILINGUAL LANGUAGE SELECTOR BAR */}
+            <div className="px-4 py-2 border-b border-steel-800/80 bg-obsidian-950/90 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              <span className="text-[10px] font-mono uppercase text-steel-400 shrink-0 mr-1 flex items-center gap-1">
+                <Globe className="w-3.5 h-3.5 text-thermal-400" />
+                <span>Lang:</span>
+              </span>
+              {SUPPORTED_LANGUAGES.map((lang) => {
+                const isActive = currentLang === lang.id;
+                return (
+                  <button
+                    key={lang.id}
+                    onClick={() => handleLanguageChange(lang.id)}
+                    title={`${lang.label} (${lang.region})`}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all shrink-0 flex items-center gap-1.5 border ${
+                      isActive
+                        ? "bg-thermal-500/20 border-thermal-500 text-white shadow-sm shadow-thermal-500/20 font-semibold"
+                        : "bg-steel-900/60 border-steel-800 text-steel-400 hover:text-steel-200 hover:border-steel-700"
+                    }`}
+                  >
+                    <span>{lang.flag}</span>
+                    <span>{lang.nativeLabel}</span>
+                  </button>
+                );
+              })}
+            </div>
+
             {/* TAB 1: SCADA TEXT CHAT & SHAP */}
             {activeTab === "chat" && (
               <div className="flex-1 flex flex-col overflow-hidden">
@@ -636,7 +692,7 @@ export function AssistantDrawer() {
                           Recommended Industrial Questions:
                         </span>
                         <div className="space-y-1.5">
-                          {SUGGESTED_QUERIES.map((sq, idx) => (
+                          {(SUGGESTED_QUERIES_BY_LANG[currentLang] || SUGGESTED_QUERIES_BY_LANG.en).map((sq, idx) => (
                             <button
                               key={idx}
                               onClick={() => handleSendQuery(sq)}
@@ -842,7 +898,7 @@ export function AssistantDrawer() {
                         handleSendQuery();
                       }
                     }}
-                    placeholder="Ask about scrap limits, tramp copper, CBAM tariffs, or molten FeCr..."
+                    placeholder={INPUT_PLACEHOLDERS_BY_LANG[currentLang] || INPUT_PLACEHOLDERS_BY_LANG.en}
                     className="flex-1 bg-obsidian-950 border border-steel-700 rounded-xl px-3 py-2 text-xs text-white placeholder-steel-500 focus:outline-none focus:border-thermal-500"
                   />
                   <button
@@ -911,7 +967,9 @@ export function AssistantDrawer() {
                     <option value="en-IN-PrabhatNeural">Prabhat (Indian English Male Engineer)</option>
                     <option value="en-IN-NeerjaNeural">Neerja (Indian English Female Metallurgist)</option>
                     <option value="en-GB-RyanNeural">Ryan (UK English Industrial)</option>
-                    <option value="hi-IN-MadhurNeural">Madhur (Hindi Process Expert)</option>
+                    <option value="hi-IN-MadhurNeural">Madhur (Hindi / Indic Process Expert)</option>
+                    <option value="de-DE-ConradNeural">Conrad (Deutsch / EU CBAM Expert)</option>
+                    <option value="fr-FR-HenriNeural">Henri (Français / EU Export Specialist)</option>
                   </select>
                 </div>
               </div>
