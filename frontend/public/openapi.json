@@ -1,0 +1,1081 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "JSL Stainless Steel Carbon & Energy Engine",
+    "description": "Industrial-grade pyrometallurgical carbon footprint, thermodynamics, and LP optimization engine for Jindal Stainless Limited.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/agent/shap": {
+      "post": {
+        "tags": [
+          "Agent & Voice Copilot"
+        ],
+        "summary": "Get Shap Attributions",
+        "description": "Computes exact Permutation Shapley attributions across all 4 operational targets\nwith mathematical additive closure verification.",
+        "operationId": "get_shap_attributions_api_agent_shap_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Req"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/explain": {
+      "post": {
+        "tags": [
+          "Agent & Voice Copilot"
+        ],
+        "summary": "Get Pedagogical Explanation",
+        "description": "Generates structured 3-layer pedagogical explanation:\nPhysical Metaphor -> Grounded Metric -> Operational Action.",
+        "operationId": "get_pedagogical_explanation_api_agent_explain_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExplainRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/tools": {
+      "get": {
+        "tags": [
+          "Agent & Voice Copilot"
+        ],
+        "summary": "List Deterministic Tools",
+        "description": "Returns OpenAI function calling schemas for all 8 deterministic metallurgical tools.",
+        "operationId": "list_deterministic_tools_api_agent_tools_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/tools/execute": {
+      "post": {
+        "tags": [
+          "Agent & Voice Copilot"
+        ],
+        "summary": "Execute Deterministic Tool",
+        "description": "Directly executes one of the 8 deterministic pyrometallurgical tools.",
+        "operationId": "execute_deterministic_tool_api_agent_tools_execute_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToolExecuteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/query": {
+      "post": {
+        "tags": [
+          "Agent & Voice Copilot"
+        ],
+        "summary": "Process Agent Query",
+        "description": "Processes natural language metallurgical queries with first-principles reasoning\nand deterministic tool execution.",
+        "operationId": "process_agent_query_api_agent_query_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/voices": {
+      "get": {
+        "tags": [
+          "Agent & Voice Copilot"
+        ],
+        "summary": "List Available Voices",
+        "description": "Returns available open-source neural TTS voices.",
+        "operationId": "list_available_voices_api_agent_voices_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/tts": {
+      "post": {
+        "tags": [
+          "Agent & Voice Copilot"
+        ],
+        "summary": "Generate Tts Audio",
+        "description": "Synthesizes speech audio using neural edge-tts and streams the resulting MP3 bytes.",
+        "operationId": "generate_tts_audio_api_agent_tts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TTSRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/grades": {
+      "get": {
+        "summary": "List Grades",
+        "description": "List all 43 authentic JSL grades grouped by family.",
+        "operationId": "list_grades_api_grades_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/grades/{grade_id}": {
+      "get": {
+        "summary": "Grade Detail",
+        "description": "Retrieve full chemical and tramp specifications of a specific grade.",
+        "operationId": "grade_detail_api_grades__grade_id__get",
+        "parameters": [
+          {
+            "name": "grade_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Grade Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/facilities": {
+      "get": {
+        "summary": "List Facilities",
+        "description": "Retrieve profiles for JSL Jajpur and Hisar facilities.",
+        "operationId": "list_facilities_api_facilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products": {
+      "get": {
+        "summary": "List Products",
+        "description": "List finishing products with yield factors and energy intensities.",
+        "operationId": "list_products_api_products_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/calculate": {
+      "post": {
+        "summary": "Calculate Emissions Endpoint",
+        "description": "Executes the full pyrometallurgical pipeline:\nMass balance -> Thermodynamics -> Emissions -> Slag kinetics -> Financial liabilities.",
+        "operationId": "calculate_emissions_endpoint_api_calculate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalculationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/optimize": {
+      "post": {
+        "summary": "Optimize Charge Endpoint",
+        "description": "Continuous Simplex/HiGHS LP solver for optimal stainless steel charge mix.",
+        "operationId": "optimize_charge_endpoint_api_optimize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OptimizationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pareto": {
+      "post": {
+        "summary": "Pareto Endpoint",
+        "description": "Sweeps multi-objective weights to construct the Pareto Frontier.",
+        "operationId": "pareto_endpoint_api_pareto_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParetoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monte-carlo": {
+      "post": {
+        "summary": "Monte Carlo Endpoint",
+        "description": "Monte Carlo stochastic robustness simulation for charge sheet compliance.",
+        "operationId": "monte_carlo_endpoint_api_monte_carlo_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonteCarloRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonteCarloResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Serve Dashboard",
+        "description": "Serves pure headless REST API status page.",
+        "operationId": "serve_dashboard_dashboard_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Serve Dashboard",
+        "description": "Serves pure headless REST API status page.",
+        "operationId": "serve_dashboard__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CalculationRequest": {
+        "properties": {
+          "grade": {
+            "type": "string",
+            "title": "Grade",
+            "description": "JSL grade ID (e.g. J304, J4, J430, J2205)",
+            "default": "J304"
+          },
+          "scrap_pct": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Scrap Pct",
+            "description": "% recycled stainless scrap",
+            "default": 60.0
+          },
+          "facility": {
+            "type": "string",
+            "title": "Facility",
+            "description": "Facility profile ('jajpur' or 'hisar')",
+            "default": "jajpur"
+          },
+          "fe_source": {
+            "type": "string",
+            "title": "Fe Source",
+            "description": "'coalDRI', 'gasDRI', or 'pigIron'",
+            "default": "coalDRI"
+          },
+          "fecr_source": {
+            "type": "string",
+            "title": "Fecr Source",
+            "description": "'fecrStandard' (HC) or 'fecrLowC' (LC)",
+            "default": "fecrStandard"
+          },
+          "ni_source": {
+            "type": "string",
+            "title": "Ni Source",
+            "description": "'niStandard', 'niClass1' (Hydro), or 'niNPI' (Indonesian coal RKEF)",
+            "default": "niStandard"
+          },
+          "recovery": {
+            "type": "string",
+            "title": "Recovery",
+            "description": "'standard' (92% Cr) or 'optimised' (96% Cr)",
+            "default": "standard"
+          },
+          "product": {
+            "type": "string",
+            "title": "Product",
+            "description": "Finished product (crCoil, hrCoil, slab, plate, specialty, rebar, wireRod)",
+            "default": "crCoil"
+          },
+          "casting": {
+            "type": "string",
+            "title": "Casting",
+            "description": "'continuous' or 'ingot'",
+            "default": "continuous"
+          },
+          "refining": {
+            "type": "string",
+            "title": "Refining",
+            "description": "'aod' or 'aodvod'",
+            "default": "aod"
+          },
+          "renewable_pct": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Renewable Pct",
+            "description": "% renewable power PPA share",
+            "default": 47.0
+          },
+          "hot_fecr_charging": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hot Fecr Charging",
+            "description": "Hot molten FeCr sensible heat charging (auto if Jajpur)"
+          },
+          "ideal_yield": {
+            "type": "boolean",
+            "title": "Ideal Yield",
+            "description": "If True, bypass downstream finishing yield loss",
+            "default": false
+          },
+          "eu_ets_price_eur": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Eu Ets Price Eur",
+            "description": "EU ETS carbon allowance price (\u20ac/tCO2)",
+            "default": 80.0
+          },
+          "india_ccc_price_inr": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "India Ccc Price Inr",
+            "description": "India CCTS Carbon Credit Certificate price (\u20b9/tCO2)",
+            "default": 1500.0
+          }
+        },
+        "type": "object",
+        "title": "CalculationRequest"
+      },
+      "ExplainRequest": {
+        "properties": {
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target",
+            "description": "total_co2_t, eaf_sec_kwh, cbam_tariff_eur, ccts_value_inr",
+            "default": "total_co2_t"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query",
+            "description": "Optional conversational question"
+          },
+          "params": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Params",
+            "description": "Cockpit calculation parameters"
+          }
+        },
+        "type": "object",
+        "title": "ExplainRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MonteCarloRequest": {
+        "properties": {
+          "grade": {
+            "type": "string",
+            "title": "Grade",
+            "description": "Target stainless grade",
+            "default": "J304"
+          },
+          "runs": {
+            "type": "integer",
+            "maximum": 5000.0,
+            "minimum": 10.0,
+            "title": "Runs",
+            "description": "Number of Monte Carlo heats",
+            "default": 1000
+          },
+          "alpha_cost_weight": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Alpha Cost Weight",
+            "description": "Cost vs Carbon weight",
+            "default": 0.5
+          },
+          "std_dev_cr": {
+            "type": "number",
+            "maximum": 5.0,
+            "minimum": 0.0,
+            "title": "Std Dev Cr",
+            "default": 0.8
+          },
+          "std_dev_ni": {
+            "type": "number",
+            "maximum": 5.0,
+            "minimum": 0.0,
+            "title": "Std Dev Ni",
+            "default": 0.4
+          },
+          "std_dev_cu": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Std Dev Cu",
+            "default": 0.04
+          },
+          "std_dev_sn": {
+            "type": "number",
+            "maximum": 0.1,
+            "minimum": 0.0,
+            "title": "Std Dev Sn",
+            "default": 0.003
+          },
+          "facility": {
+            "type": "string",
+            "title": "Facility",
+            "description": "Facility profile",
+            "default": "jajpur"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed",
+            "description": "Random seed for reproducibility"
+          }
+        },
+        "type": "object",
+        "title": "MonteCarloRequest"
+      },
+      "MonteCarloResponse": {
+        "properties": {
+          "grade_id": {
+            "type": "string",
+            "title": "Grade Id"
+          },
+          "runs": {
+            "type": "integer",
+            "title": "Runs"
+          },
+          "p10_cost_usd_per_t": {
+            "type": "number",
+            "title": "P10 Cost Usd Per T"
+          },
+          "p50_cost_usd_per_t": {
+            "type": "number",
+            "title": "P50 Cost Usd Per T"
+          },
+          "p90_cost_usd_per_t": {
+            "type": "number",
+            "title": "P90 Cost Usd Per T"
+          },
+          "p10_co2_t_per_t": {
+            "type": "number",
+            "title": "P10 Co2 T Per T"
+          },
+          "p50_co2_t_per_t": {
+            "type": "number",
+            "title": "P50 Co2 T Per T"
+          },
+          "p90_co2_t_per_t": {
+            "type": "number",
+            "title": "P90 Co2 T Per T"
+          },
+          "compliance_probability_pct": {
+            "type": "number",
+            "title": "Compliance Probability Pct"
+          },
+          "compliant_runs": {
+            "type": "integer",
+            "title": "Compliant Runs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "grade_id",
+          "runs",
+          "p10_cost_usd_per_t",
+          "p50_cost_usd_per_t",
+          "p90_cost_usd_per_t",
+          "p10_co2_t_per_t",
+          "p50_co2_t_per_t",
+          "p90_co2_t_per_t",
+          "compliance_probability_pct",
+          "compliant_runs"
+        ],
+        "title": "MonteCarloResponse"
+      },
+      "OptimizationRequest": {
+        "properties": {
+          "grade": {
+            "type": "string",
+            "title": "Grade",
+            "description": "Target stainless grade",
+            "default": "J304"
+          },
+          "alpha_cost_weight": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Alpha Cost Weight",
+            "description": "1.0 = Least Cost, 0.0 = Least Carbon",
+            "default": 0.5
+          },
+          "facility": {
+            "type": "string",
+            "title": "Facility",
+            "description": "Facility profile ('jajpur' or 'hisar')",
+            "default": "jajpur"
+          },
+          "allow_npi": {
+            "type": "boolean",
+            "title": "Allow Npi",
+            "description": "Allow Indonesian Coal RKEF NPI",
+            "default": true
+          },
+          "allow_gas_dri": {
+            "type": "boolean",
+            "title": "Allow Gas Dri",
+            "description": "Allow Gas-based DRI",
+            "default": true
+          },
+          "allow_pig_iron": {
+            "type": "boolean",
+            "title": "Allow Pig Iron",
+            "description": "Allow Blast Furnace Pig Iron",
+            "default": true
+          },
+          "enforce_scrap_cap": {
+            "type": "boolean",
+            "title": "Enforce Scrap Cap",
+            "description": "Enforce grade-specific tramp scrap cap",
+            "default": true
+          },
+          "custom_scrap_cap": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Scrap Cap",
+            "description": "Override scrap cap %"
+          },
+          "electricity_cost_usd_kwh": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Electricity Cost Usd Kwh",
+            "description": "Optional electricity tariff override in USD/kWh"
+          }
+        },
+        "type": "object",
+        "title": "OptimizationRequest"
+      },
+      "ParetoRequest": {
+        "properties": {
+          "grade": {
+            "type": "string",
+            "title": "Grade",
+            "description": "Target stainless grade",
+            "default": "J304"
+          },
+          "steps": {
+            "type": "integer",
+            "maximum": 51.0,
+            "minimum": 3.0,
+            "title": "Steps",
+            "description": "Number of alpha evaluation steps",
+            "default": 11
+          },
+          "facility": {
+            "type": "string",
+            "title": "Facility",
+            "description": "Facility profile",
+            "default": "jajpur"
+          }
+        },
+        "type": "object",
+        "title": "ParetoRequest"
+      },
+      "QueryRequest": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "Conversational question from user"
+          },
+          "params": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Params",
+            "description": "Cockpit calculation parameters"
+          },
+          "tool_call": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Call",
+            "description": "Optional deterministic tool call request"
+          },
+          "lang": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lang",
+            "description": "Assistant language code",
+            "default": "en"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "QueryRequest"
+      },
+      "TTSRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "voice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voice",
+            "default": "en-IN-PrabhatNeural"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "TTSRequest"
+      },
+      "ToolExecuteRequest": {
+        "properties": {
+          "tool_name": {
+            "type": "string",
+            "title": "Tool Name",
+            "description": "Name of the deterministic tool to execute"
+          },
+          "arguments": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arguments",
+            "description": "Tool arguments (dict or JSON string)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tool_name"
+        ],
+        "title": "ToolExecuteRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
